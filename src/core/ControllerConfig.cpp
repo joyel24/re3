@@ -737,11 +737,11 @@ void CControllerConfigManager::AffectControllerStateOn_ButtonDown_Driving(int32 
 	if (button == GetControllerKeyAssociatedWithAction(VEHICLE_HANDBRAKE, type))
 		state.RightShoulder1 = 255;
 	if (button == GetControllerKeyAssociatedWithAction(VEHICLE_ACCELERATE, type))
-		state.Cross = m_NewState.rt;
+		state.Cross = 255;
 	if (button == GetControllerKeyAssociatedWithAction(VEHICLE_CHANGE_RADIO_STATION, type))
 		state.LeftShoulder1 = 255;
 	if (button == GetControllerKeyAssociatedWithAction(VEHICLE_BRAKE, type))
-		state.Square = m_NewState.lt;
+		state.Square = 255;
 	if (button == GetControllerKeyAssociatedWithAction(TOGGLE_SUBMISSIONS, type))
 		state.RightShock = 255;
 	
