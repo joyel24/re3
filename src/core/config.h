@@ -157,9 +157,7 @@ enum Config {
 #define GTA_VERSION GTA3_PC_11
 
 // Enable configuration for handheld console ports
-#if defined(__SWITCH__) || defined(PSP2)
-	#define GTA_HANDHELD
-#endif
+#define GTA_HANDHELD
 
 #if defined GTA_PS2
 #	define GTA_PS2_STUFF
@@ -260,7 +258,6 @@ enum Config {
 #	define USE_MY_DOCUMENTS	// use my documents directory for user files
 #else
 	// not in any game
-#	define CHATTYSPLASH	// print what the game is loading
 #	define TIMEBARS		// print debug timers
 #endif
 
@@ -300,11 +297,6 @@ enum Config {
 #define USE_TXD_CDIMAGE		// generate and load textures from txd.img
 #define PS2_ALPHA_TEST		// emulate ps2 alpha test 
 #define IMPROVED_VIDEOMODE	// save and load videomode parameters instead of a magic number
-#define DISABLE_LOADING_SCREEN // disable the loading screen which vastly improves the loading time
-#ifdef DISABLE_LOADING_SCREEN
-// enable the PC splash
-#undef RANDOMSPLASH
-#endif
 #define DISABLE_VSYNC_ON_TEXTURE_CONVERSION // make texture conversion work faster by disabling vsync
 #define ANISOTROPIC_FILTERING	// set all textures to max anisotropic filtering
 //#define USE_TEXTURE_POOL
@@ -360,8 +352,8 @@ enum Config {
 #	endif
 
 #	define SCROLLABLE_STATS_PAGE	// only draggable by mouse atm
-#	define TRIANGLE_BACK_BUTTON
-//#	define CIRCLE_BACK_BUTTON
+//#	define TRIANGLE_BACK_BUTTON
+#	define CIRCLE_BACK_BUTTON
 //#	define PS2_LIKE_MENU	// An effort to recreate PS2 menu, cycling through tabs, different bg etc.
 //#	define PS2_SAVE_DIALOG		// PS2 style save dialog with transparent black box
 #	define CUSTOM_FRONTEND_OPTIONS
