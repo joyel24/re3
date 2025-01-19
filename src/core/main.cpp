@@ -2441,9 +2441,10 @@ void PlayIntroMPEGs()
 int
 main(int argc, char *argv[])
 {
-	printf(_NSGetExecutablePath());
-	chdir(strrchr(strrchr(_NSGetExecutablePath(), '/'), '/') + "/Resources");
-	printf(strrchr(strrchr(_NSGetExecutablePath(), '/'), '/') + "/Resources");
+	char path[1024];
+	uint32_t size = sizeof(path);
+	_NSGetExecutablePath(path, &size)
+	chdir(dirname(dirname(path)) + "/Resources");
 #ifdef __MWERKS__
 	mwInit(); // metrowerks initialisation
 #endif
