@@ -2441,6 +2441,7 @@ void PlayIntroMPEGs()
 int
 main(int argc, char *argv[])
 {
+	chdir("../Resources");
 #ifdef __MWERKS__
 	mwInit(); // metrowerks initialisation
 #endif
