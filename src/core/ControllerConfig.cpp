@@ -2521,7 +2521,7 @@ void CControllerConfigManager::GetWideStringOfCommandKeys(uint16 action, wchar *
 			break;
 		}
 
-		if(Buttons[CPad::GetPad(0)->Mode][action] != nil);
+		if(Buttons[CPad::GetPad(0)->Mode][action] != nil)
 		{	
 			AsciiToUnicode(Buttons[CPad::GetPad(0)->Mode][action], wstr);
 		}
