@@ -2444,14 +2444,6 @@ void PlayIntroMPEGs()
 int
 main(int argc, char *argv[])
 {
-#ifdef APPLE
-	char path[PATH_MAX];
-	uint32_t pathLen = sizeof(path);
-	int err = _NSGetExecutablePath(path, &pathLen);
-	assert(!err);
-	chdir(dirname(path));
-	chdir("../Resources");
-#endif
 #ifdef __MWERKS__
 	mwInit(); // metrowerks initialisation
 #endif
@@ -2477,7 +2469,15 @@ main(int argc, char *argv[])
 #endif
 
 	PlayIntroMPEGs();
-
+	
+#ifdef APPLE
+	char path[PATH_MAX];
+	uint32_t pathLen = sizeof(path);
+	_NSGetExecutablePath(path, &pathLen);
+	chdir(dirname(path));
+	chdir("../Resources");
+#endif
+	
 	GameInit();
 
 	if ( CGame::frenchGame || CGame::germanGame )
