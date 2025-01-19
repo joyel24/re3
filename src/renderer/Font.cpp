@@ -1463,7 +1463,7 @@ CFont::SetScale(float x, float y)
 		y *= 1.25f;
 	}*/
 #endif
-	Details.scaleX = x;
+	Details.scaleX = y * 0.5f;
 	Details.scaleY = y;
 }
 
