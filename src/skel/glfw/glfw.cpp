@@ -2479,9 +2479,10 @@ void CapturePad(RwInt32 padID)
 		// otherwise if this axis is present, -1 = released, 1 = pressed
 		if (lt != 0.0f)
 			ControlsManager.m_NewState.mappedButtons[15] = lt > -0.8f;
-
+			ControlsManager.m_NewState.lt = (uint8)((1.0f + lt) * 255.0f);
 		if (rt != 0.0f)
 			ControlsManager.m_NewState.mappedButtons[16] = rt > -0.8f;
+			ControlsManager.m_NewState.rt = (uint8)((1.0f + rt) * 255.0f);
 	}
 	// TODO? L2-R2 axes(not buttons-that's fine) on joysticks that don't have SDL gamepad mapping AREN'T handled, and I think it's impossible to do without mapping.
 
