@@ -2443,8 +2443,12 @@ main(int argc, char *argv[])
 {
 	char path[1024];
 	uint32_t size = sizeof(path);
-	_NSGetExecutablePath(path, &size)
-	chdir(dirname(dirname(path)) + "/Resources");
+	_NSGetExecutablePath(path, &size);
+	unsigned found = std::string(path).find_last_of("/");
+	std::string final = std::string(path).substr(0,found);
+	found = final.find_last_of("/");
+	final = std::string(path).substr(0,found) + std::string("/Resources/");
+	chdir(final.c_str());
 #ifdef __MWERKS__
 	mwInit(); // metrowerks initialisation
 #endif
