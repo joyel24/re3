@@ -110,6 +110,8 @@ struct GlfwJoyState {
 	uint8 numButtons;
 	uint8* buttons;
 	bool mappedButtons[17];
+	uint8 lt;
+	uint8 rt;
 };
 #endif
 
