@@ -1,3 +1,6 @@
+#ifdef APPLE
+#include <mach-o/dyld.h> //For _NSGetExecutablePath()
+#endif
 #include "common.h"
 #include <time.h>
 #include "rpmatfx.h"
@@ -2441,16 +2444,14 @@ void PlayIntroMPEGs()
 int
 main(int argc, char *argv[])
 {
+#ifdef APPLE
 	char path[PATH_MAX];
 	uint32_t pathLen = sizeof(path);
 	int err = _NSGetExecutablePath(path, &pathLen);
 	assert(!err);
 	chdir(dirname(path));
 	chdir("../Resources");
-
-	char cwd[PATH_MAX];
-	getcwd(cwd, sizeof(cwd));
-	printf("Working directory is %s\n", cwd);
+#endif
 #ifdef __MWERKS__
 	mwInit(); // metrowerks initialisation
 #endif
