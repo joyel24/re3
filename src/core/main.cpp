@@ -2475,7 +2475,6 @@ main(int argc, char *argv[])
 	uint32_t pathLen = sizeof(path);
 	_NSGetExecutablePath(path, &pathLen);
 	chdir(dirname(path));
-	chdir("../Resources");
 #endif
 	
 	GameInit();
