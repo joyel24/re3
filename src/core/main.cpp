@@ -2471,7 +2471,8 @@ main(int argc, char *argv[])
 	PlayIntroMPEGs();
 	
 #ifdef APPLE
-	char path[PATH_MAX];
+	chdir("/")
+	char path[4096];
 	uint32_t pathLen = sizeof(path);
 	_NSGetExecutablePath(path, &pathLen);
 	chdir(dirname(path));
