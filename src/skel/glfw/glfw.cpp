@@ -828,7 +828,7 @@ psSelectDevice()
 			const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 			FrontEndMenuManager.m_nPrefsWidth = xscale * mode->width;
 			FrontEndMenuManager.m_nPrefsHeight = yscale * mode->height;
-			printf("Wide: %d , Tall: %d", mode->width, mode->height);
+			printf("Wide: %d , Tall: %d", FrontEndMenuManager.m_nPrefsWidth, FrontEndMenuManager.m_nPrefsHeight);
 			FrontEndMenuManager.m_nPrefsDepth = 32;
 			FrontEndMenuManager.m_nPrefsWindowed = 0;
 		}
