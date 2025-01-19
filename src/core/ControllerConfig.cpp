@@ -473,11 +473,12 @@ void CControllerConfigManager::InitDefaultControlConfigJoyPad(uint32 buttons)
 		IF_BTN_IN_RANGE(3)
 			SetControllerKeyAssociatedWithAction(PED_JUMPING,                        3, JOYSTICK);
 			SetControllerKeyAssociatedWithAction(PED_SNIPER_ZOOM_IN,                 3, JOYSTICK);
+			SetControllerKeyAssociatedWithAction(TOGGLE_SUBMISSIONS,                 3, JOYSTICK);
 		IF_BTN_IN_RANGE(2)
 			SetControllerKeyAssociatedWithAction(PED_SPRINT,                         2, JOYSTICK);
 			SetControllerKeyAssociatedWithAction(PED_SNIPER_ZOOM_OUT,                2, JOYSTICK);
 		IF_BTN_IN_RANGE(1)
-			SetControllerKeyAssociatedWithAction(TOGGLE_SUBMISSIONS,                 1, JOYSTICK);
+			SetControllerKeyAssociatedWithAction(VEHICLE_HANDBRAKE,                 1, JOYSTICK);
 #ifdef BIND_VEHICLE_FIREWEAPON
 			SetControllerKeyAssociatedWithAction(VEHICLE_FIREWEAPON,                 1, JOYSTICK);
 #endif
