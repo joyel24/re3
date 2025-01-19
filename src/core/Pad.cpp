@@ -636,7 +636,7 @@ CControllerState CPad::ReconcileTwoControllersInput(CControllerState const &Stat
 	ReconState.Clear();
 
 #define _RECONCILE_BUTTON(button) \
-	{ if ( State1.button || State2.button ) ReconState.button = 255; }
+	{ if ( State1.button || State2.button ) ReconState.button = Max(State1.button, State2.button); }
 
 #define _RECONCILE_AXIS_POSITIVE(axis) \
 	{ if ( State1.axis >= 0 && State2.axis >= 0 ) ReconState.axis = Max(State1.axis, State2.axis); }
