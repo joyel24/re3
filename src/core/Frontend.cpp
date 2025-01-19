@@ -1445,22 +1445,6 @@ CMenuManager::Draw()
 				else
 					rightText = TheText.Get("FEM_OFF");
 				break;
-			case MENUACTION_CTRLCONFIG:
-				switch (CPad::GetPad(0)->Mode) {
-				case 0:
-					rightText = TheText.Get("FEC_CF1");
-					break;
-				case 1:
-					rightText = TheText.Get("FEC_CF2");
-					break;
-				case 2:
-					rightText = TheText.Get("FEC_CF3");
-					break;
-				case 3:
-					rightText = TheText.Get("FEC_CF4");
-					break;
-				}
-				break;
 			case MENUACTION_CTRLDISPLAY:
 				if (m_DisplayControllerOnFoot)
 					rightText = TheText.Get("FEC_ONF");
@@ -5347,17 +5331,6 @@ CMenuManager::ProcessButtonPresses(void)
 
 	if (changeValueBy != 0) {
 		switch (aScreens[m_nCurrScreen].m_aEntries[m_nCurrOption].m_Action) {
-#ifdef FIX_BUGS
-			case MENUACTION_CTRLCONFIG:
-				CPad::GetPad(0)->Mode += changeValueBy;
-				if (CPad::GetPad(0)->Mode > 3)
-					CPad::GetPad(0)->Mode = 0;
-				else if (CPad::GetPad(0)->Mode < 0)
-					CPad::GetPad(0)->Mode = 3;
-				SaveSettings();
-				DMAudio.PlayFrontEndSound(SOUND_FRONTEND_MENU_SETTING_CHANGE, 0);
-				break;
-#endif
 			case MENUACTION_RADIO:
 				m_PrefsRadioStation += changeValueBy;
 				DMAudio.PlayFrontEndSound(SOUND_FRONTEND_MENU_SETTING_CHANGE, 0);
@@ -5500,14 +5473,6 @@ CMenuManager::ProcessOnOffMenuOptions()
 		SaveSettings();
 #endif // !FIX_BUGS
 		break;
-#ifndef FIX_BUGS
-	case MENUACTION_CTRLCONFIG:
-		CPad::GetPad(0)->Mode++;
-		if (CPad::GetPad(0)->Mode > 3)
-			CPad::GetPad(0)->Mode = 0;
-		DMAudio.PlayFrontEndSound(SOUND_FRONTEND_MENU_SETTING_CHANGE, 0);
-		break;
-#endif // !FIX_BUGS
 	case MENUACTION_CTRLDISPLAY:
 		m_DisplayControllerOnFoot = !m_DisplayControllerOnFoot;
 		DMAudio.PlayFrontEndSound(SOUND_FRONTEND_MENU_SETTING_CHANGE, 0);
