@@ -333,12 +333,12 @@ enum Config {
 #define BUTTON_ICONS // use textures to show controller buttons
 
 // Hud, frontend and radar
-//#define PS2_HUD
+#define PS2_HUD
 #define HUD_ENHANCEMENTS	// Adjusts some aspects to make the HUD look/behave a little bit better.
 // #define BETA_SLIDING_TEXT
 #define TRIANGULAR_BLIPS	// height indicating triangular radar blips, as in VC
 #define FIX_RADAR			// use radar size from early version before R* broke it
-// #define XBOX_SUBTITLES	// the infamous outlines
+#define XBOX_SUBTITLES	// the infamous outlines
 #define RADIO_OFF_TEXT
 #define PC_MENU
 
@@ -359,7 +359,7 @@ enum Config {
 #	define CUSTOM_FRONTEND_OPTIONS
 
 #	ifdef CUSTOM_FRONTEND_OPTIONS
-#		define MENU_MAP			// VC-like menu map. Won't appear if you don't have our menu.txd
+//#		define MENU_MAP			// VC-like menu map. Won't appear if you don't have our menu.txd
 #		define GRAPHICS_MENU_OPTIONS // otherwise Display settings will be scrollable
 #		define NO_ISLAND_LOADING  // disable loadscreen between islands via loading all island data at once, consumes more memory and CPU
 #		define CUTSCENE_BORDERS_SWITCH
