@@ -445,46 +445,39 @@ void CControllerConfigManager::InitDefaultControlConfigJoyPad(uint32 buttons)
 		switch (btn)
 		{
 		IF_BTN_IN_RANGE(16)
-			SetControllerKeyAssociatedWithAction(GO_LEFT,                           16, JOYSTICK);
+			SetControllerKeyAssociatedWithAction(PED_CYCLE_WEAPON_LEFT,             16, JOYSTICK);
 		IF_BTN_IN_RANGE(15)
-			SetControllerKeyAssociatedWithAction(GO_BACK,                           15, JOYSTICK);
 		IF_BTN_IN_RANGE(14)
-			SetControllerKeyAssociatedWithAction(GO_RIGHT,                          14, JOYSTICK);
+			SetControllerKeyAssociatedWithAction(PED_CYCLE_WEAPON_RIGHT,            14, JOYSTICK);
 		IF_BTN_IN_RANGE(13)
-			SetControllerKeyAssociatedWithAction(GO_FORWARD,                        13, JOYSTICK);
 		IF_BTN_IN_RANGE(12)
 		IF_BTN_IN_RANGE(11)
 			SetControllerKeyAssociatedWithAction(PED_LOOKBEHIND,                    11, JOYSTICK);
-			SetControllerKeyAssociatedWithAction(TOGGLE_SUBMISSIONS,                11, JOYSTICK);
 		IF_BTN_IN_RANGE(10)
 			SetControllerKeyAssociatedWithAction(VEHICLE_HORN,                      10, JOYSTICK);
 		IF_BTN_IN_RANGE(9)
-			SetControllerKeyAssociatedWithAction(CAMERA_CHANGE_VIEW_ALL_SITUATIONS,  9, JOYSTICK);
 		IF_BTN_IN_RANGE(8)
-			SetControllerKeyAssociatedWithAction(VEHICLE_HANDBRAKE,                  8, JOYSTICK);
-			SetControllerKeyAssociatedWithAction(PED_LOCK_TARGET,                    8, JOYSTICK);
+			SetControllerKeyAssociatedWithAction(PED_CENTER_CAMERA_BEHIND_PLAYER,    8, JOYSTICK);
+			SetControllerKeyAssociatedWithAction(VEHICLE_CHANGE_RADIO_STATION,       8, JOYSTICK);
 		IF_BTN_IN_RANGE(7)
-			SetControllerKeyAssociatedWithAction(PED_CENTER_CAMERA_BEHIND_PLAYER,    7, JOYSTICK);
-			SetControllerKeyAssociatedWithAction(VEHICLE_CHANGE_RADIO_STATION,       7, JOYSTICK);
+			SetControllerKeyAssociatedWithAction(CAMERA_CHANGE_VIEW_ALL_SITUATIONS,  7, JOYSTICK);
 		IF_BTN_IN_RANGE(6)
-			SetControllerKeyAssociatedWithAction(PED_CYCLE_WEAPON_RIGHT,             6, JOYSTICK);
-			SetControllerKeyAssociatedWithAction(VEHICLE_LOOKRIGHT,                  6, JOYSTICK);
+			SetControllerKeyAssociatedWithAction(PED_FIREWEAPON,                     6, JOYSTICK);
+			SetControllerKeyAssociatedWithAction(VEHICLE_ACCELERATE,                 6, JOYSTICK);
 		IF_BTN_IN_RANGE(5)
-			SetControllerKeyAssociatedWithAction(PED_CYCLE_WEAPON_LEFT,              5, JOYSTICK);
-			SetControllerKeyAssociatedWithAction(VEHICLE_LOOKLEFT,                   5, JOYSTICK);
+			SetControllerKeyAssociatedWithAction(PED_LOCK_TARGET,                    5, JOYSTICK);
+			SetControllerKeyAssociatedWithAction(VEHICLE_BRAKE,                      5, JOYSTICK);
 		/*******************************************************************************************/
 		IF_BTN_IN_RANGE(4)
 			SetControllerKeyAssociatedWithAction(VEHICLE_ENTER_EXIT,                 4, JOYSTICK);
 		IF_BTN_IN_RANGE(3)
-			SetControllerKeyAssociatedWithAction(VEHICLE_BRAKE,                      3, JOYSTICK);
 			SetControllerKeyAssociatedWithAction(PED_JUMPING,                        3, JOYSTICK);
 			SetControllerKeyAssociatedWithAction(PED_SNIPER_ZOOM_IN,                 3, JOYSTICK);
 		IF_BTN_IN_RANGE(2)
-			SetControllerKeyAssociatedWithAction(VEHICLE_ACCELERATE,                 2, JOYSTICK);
 			SetControllerKeyAssociatedWithAction(PED_SPRINT,                         2, JOYSTICK);
 			SetControllerKeyAssociatedWithAction(PED_SNIPER_ZOOM_OUT,                2, JOYSTICK);
 		IF_BTN_IN_RANGE(1)
-			SetControllerKeyAssociatedWithAction(PED_FIREWEAPON,                     1, JOYSTICK);
+			SetControllerKeyAssociatedWithAction(TOGGLE_SUBMISSIONS,                 1, JOYSTICK);
 #ifdef BIND_VEHICLE_FIREWEAPON
 			SetControllerKeyAssociatedWithAction(VEHICLE_FIREWEAPON,                 1, JOYSTICK);
 #endif
@@ -2435,9 +2428,9 @@ int32 CControllerConfigManager::GetNumOfSettingsForAction(e_ControllerAction act
 
 #define CONTROLLER_BUTTONS(T, O, X, Q, L1, L2, L3, R1, R2, R3, SELECT)                                                                                         \
 	{{                                                                                                                                                         \
-	     O,      /* PED_FIREWEAPON */                                                                                                                          \
-	     R2,     /* PED_CYCLE_WEAPON_RIGHT */                                                                                                                  \
-	     L2,     /* PED_CYCLE_WEAPON_LEFT */                                                                                                                   \
+	     R2,      /* PED_FIREWEAPON */                                                                                                                          \
+	     nil,     /* PED_CYCLE_WEAPON_RIGHT */                                                                                                                  \
+	     nil,     /* PED_CYCLE_WEAPON_LEFT */                                                                                                                   \
 	     nil,    /* GO_FORWARD */                                                                                                                              \
 	     nil,    /* GO_BACK */                                                                                                                                 \
 	     nil,    /* GO_LEFT */                                                                                                                                 \
@@ -2450,12 +2443,12 @@ int32 CControllerConfigManager::GetNumOfSettingsForAction(e_ControllerAction act
 	     X,      /* PED_SPRINT */                                                                                                                              \
 	     R3,     /* PED_LOOKBEHIND */                                                                                                                          \
 	     VFB(O)  /* VEHICLE_FIREWEAPON */                                                                                                                      \
-	     X,      /* VEHICLE_ACCELERATE */                                                                                                                      \
-	     Q,      /* VEHICLE_BRAKE */                                                                                                                           \
-	     L1,     /* VEHICLE_CHANGE_RADIO_STATION */                                                                                                            \
+	     R2,      /* VEHICLE_ACCELERATE */                                                                                                                      \
+	     L2,      /* VEHICLE_BRAKE */                                                                                                                           \
+	     R1,     /* VEHICLE_CHANGE_RADIO_STATION */                                                                                                            \
 	     L3,     /* VEHICLE_HORN */                                                                                                                            \
-	     R3,     /* TOGGLE_SUBMISSIONS */                                                                                                                      \
-	     R1,     /* VEHICLE_HANDBRAKE */                                                                                                                       \
+	     Q,     /* TOGGLE_SUBMISSIONS */                                                                                                                      \
+	     O,     /* VEHICLE_HANDBRAKE */                                                                                                                       \
 	     nil,    /* PED_1RST_PERSON_LOOK_LEFT */                                                                                                               \
 	     nil,    /* PED_1RST_PERSON_LOOK_RIGHT */                                                                                                              \
 	     L2,     /* VEHICLE_LOOKLEFT */                                                                                                                        \
@@ -2465,10 +2458,10 @@ int32 CControllerConfigManager::GetNumOfSettingsForAction(e_ControllerAction act
 	     nil,    /* VEHICLE_TURRETRIGHT */                                                                                                                     \
 	     nil,    /* VEHICLE_TURRETUP */                                                                                                                        \
 	     nil,    /* VEHICLE_TURRETDOWN */                                                                                                                      \
-	     L2,     /* PED_CYCLE_TARGET_LEFT */                                                                                                                   \
-	     R2,     /* PED_CYCLE_TARGET_RIGHT */                                                                                                                  \
-	     L1,     /* PED_CENTER_CAMERA_BEHIND_PLAYER */                                                                                                         \
-	     R1,     /* PED_LOCK_TARGET */                                                                                                                         \
+	     nil,     /* PED_CYCLE_TARGET_LEFT */                                                                                                                   \
+	     nil,     /* PED_CYCLE_TARGET_RIGHT */                                                                                                                  \
+	     R1,     /* PED_CENTER_CAMERA_BEHIND_PLAYER */                                                                                                         \
+	     L2,     /* PED_LOCK_TARGET */                                                                                                                         \
 	     nil,    /* NETWORK_TALK */                                                                                                                            \
 	     nil,    /* PED_1RST_PERSON_LOOK_UP */                                                                                                                 \
 	     nil,    /* PED_1RST_PERSON_LOOK_DOWN */                                                                                                               \
