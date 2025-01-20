@@ -294,7 +294,7 @@ enum Config {
 #define ASPECT_RATIO_SCALE	// Not just makes everything scale with aspect ratio, also adds support for all aspect ratios
 #define PROPER_SCALING		// use original DEFAULT_SCREEN_WIDTH/DEFAULT_SCREEN_HEIGHT from PS2 instead of PC(R* changed HEIGHT here to make radar look better, but broke other hud elements aspect ratio).
 #define DEFAULT_NATIVE_RESOLUTION	// Set default video mode to your native resolution (fixes Windows 10 launch)
-#define USE_TXD_CDIMAGE		// generate and load textures from txd.img
+//#define USE_TXD_CDIMAGE		// generate and load textures from txd.img
 #define PS2_ALPHA_TEST		// emulate ps2 alpha test 
 #define IMPROVED_VIDEOMODE	// save and load videomode parameters instead of a magic number
 #define DISABLE_VSYNC_ON_TEXTURE_CONVERSION // make texture conversion work faster by disabling vsync
@@ -354,13 +354,13 @@ enum Config {
 #	define SCROLLABLE_STATS_PAGE	// only draggable by mouse atm
 //#	define TRIANGLE_BACK_BUTTON
 #	define CIRCLE_BACK_BUTTON
-//#	define PS2_LIKE_MENU	// An effort to recreate PS2 menu, cycling through tabs, different bg etc.
-//#	define PS2_SAVE_DIALOG		// PS2 style save dialog with transparent black box
+#	define PS2_LIKE_MENU	// An effort to recreate PS2 menu, cycling through tabs, different bg etc.
+#	define PS2_SAVE_DIALOG		// PS2 style save dialog with transparent black box
 #	define CUSTOM_FRONTEND_OPTIONS
 
 #	ifdef CUSTOM_FRONTEND_OPTIONS
 //#		define MENU_MAP			// VC-like menu map. Won't appear if you don't have our menu.txd
-#		define GRAPHICS_MENU_OPTIONS // otherwise Display settings will be scrollable
+//#		define GRAPHICS_MENU_OPTIONS // otherwise Display settings will be scrollable
 #		define NO_ISLAND_LOADING  // disable loadscreen between islands via loading all island data at once, consumes more memory and CPU
 #		define CUTSCENE_BORDERS_SWITCH
 #		define MULTISAMPLING		// adds MSAA option
