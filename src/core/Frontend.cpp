@@ -872,7 +872,7 @@ CMenuManager::CheckCodesForControls(int typeOfControl)
 		m_KeyPressedCode = -1;
 		m_bStartWaitingForKeyBind = false;
 #ifdef LOAD_INI_SETTINGS
-		SaveINIControllerSettings();
+		//SaveINIControllerSettings();
 #else
 		SaveSettings();
 #endif
@@ -884,7 +884,7 @@ CMenuManager::CheckCodesForControls(int typeOfControl)
 		m_KeyPressedCode = -1;
 		m_bStartWaitingForKeyBind = false;
 #ifdef LOAD_INI_SETTINGS
-		SaveINIControllerSettings();
+		//SaveINIControllerSettings();
 #else
 		SaveSettings();
 #endif
@@ -3802,7 +3802,7 @@ CMenuManager::LoadSettings()
 
 #ifdef LOAD_INI_SETTINGS
 	if (LoadINISettings()) {
-		LoadINIControllerSettings();
+		//LoadINIControllerSettings();
 	}
 #endif
 
@@ -5142,7 +5142,7 @@ CMenuManager::ProcessButtonPresses(void)
 						TheCamera.m_bHeadBob = false;
 						SaveSettings();
 #ifdef LOAD_INI_SETTINGS
-						SaveINIControllerSettings();
+						//SaveINIControllerSettings();
 #endif
 					}
 					SetHelperText(2);
@@ -5674,7 +5674,7 @@ CMenuManager::SwitchMenuOnAndOff()
 			ShutdownJustMenu();
 			SaveSettings();
 #ifdef LOAD_INI_SETTINGS
-			SaveINIControllerSettings();
+			//SaveINIControllerSettings();
 #endif
 			m_bStartUpFrontEndRequested = false;
 			pControlEdit = nil;
