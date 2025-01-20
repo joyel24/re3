@@ -378,7 +378,7 @@ void DetectJoystickGoBack() {
 	if (cachedButtonNum != -1) {
 #ifdef LOAD_INI_SETTINGS
 		ControlsManager.InitDefaultControlConfigJoyPad(cachedButtonNum);
-		SaveINIControllerSettings();
+		//SaveINIControllerSettings();
 #else
 		// Otherwise no way to save gSelectedJoystickName or ms_padButtonsInited anyway :shrug: Why do you even use this config.??
 #endif
