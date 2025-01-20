@@ -169,8 +169,13 @@ const char *_psGetUserFilesFolder()
 	strcpy(szUserFiles, "data");
 	return szUserFiles;
 #else
+	FSRef ref;
+	OSType folderType = kApplicationSupportFolderType;
+	char path[PATH_MAX];
+	FSFindFolder( kUserDomain, folderType, kCreateFolder, &ref );
+	FSRefMakePath( &ref, (UInt8*)&path, PATH_MAX );
 	static char szUserFiles[256];
-	strcpy(szUserFiles, "userfiles");
+	strcpy(szUserFiles, path + "/com.rockstargames.gta3/userfiles");
 	_psCreateFolder(szUserFiles);
 	return szUserFiles;
 #endif
