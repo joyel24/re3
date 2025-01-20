@@ -157,7 +157,7 @@ int8 CMenuManager::m_PrefsVsyncDisp = 1;
 int8 CMenuManager::m_PrefsFrameLimiter = 1;
 int8 CMenuManager::m_PrefsShowSubtitles = 1;
 int8 CMenuManager::m_PrefsSpeakers;
-int32 CMenuManager::m_ControlMethod;
+int32 CMenuManager::m_ControlMethod = CONTROL_CLASSIC;
 int8 CMenuManager::m_PrefsDMA = 1;
 int32 CMenuManager::m_PrefsLanguage;
 uint8 CMenuManager::m_PrefsStereoMono; // unused except restore settings
