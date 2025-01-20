@@ -1,6 +1,3 @@
-#ifdef APPLE
-#include <mach-o/dyld.h> //For _NSGetExecutablePath()
-#endif
 #include "common.h"
 #include <time.h>
 #include "rpmatfx.h"
@@ -2469,14 +2466,6 @@ main(int argc, char *argv[])
 #endif
 
 	PlayIntroMPEGs();
-	
-#ifdef APPLE
-	chdir("/")
-	char path[4096];
-	uint32_t pathLen = sizeof(path);
-	_NSGetExecutablePath(path, &pathLen);
-	chdir(dirname(path));
-#endif
 	
 	GameInit();
 
