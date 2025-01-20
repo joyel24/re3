@@ -2219,7 +2219,7 @@ main(int argc, char *argv[])
 #ifdef PS2_MENU
 						gGameState = GS_INIT_PLAYING_GAME;
 #else
-						gGameState = GS_INIT_FRONTEND;
+						gGameState = GS_INIT_PLAYING_GAME;
 						TRACE("gGameState = GS_INIT_FRONTEND;");
 #endif
 						break;
