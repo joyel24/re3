@@ -19,6 +19,7 @@ long _dwOperatingSystemVersion;
 #include <mach/mach_host.h>
 #include <mach-o/dyld.h> 
 #include <sys/sysctl.h>
+#include <CoreServices/CoreServices.h>
 #endif
 #endif
 #include <errno.h>
