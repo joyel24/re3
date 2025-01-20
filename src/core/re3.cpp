@@ -57,6 +57,8 @@
 extern "C" int vsprintf(char* const _Buffer, char const* const _Format, va_list  _ArgList);
 #endif
 
+const char *_psGetUserFilesFolder();
+
 
 #ifdef USE_PS2_RAND
 unsigned long long myrand_seed = 1;
@@ -183,8 +185,9 @@ CustomFrontendOptionsPopulate(void)
 #ifdef LOAD_INI_SETTINGS
 #define MINI_CASE_SENSITIVE
 #include "ini.h"
-
-mINI::INIFile ini("re3.ini");
+const char *userfiles = _psGetUserFilesFolder();
+strcat(userfiles, "/re3.ini");
+mINI::INIFile ini(userfiles);
 mINI::INIStructure cfg;
 
 bool ReadIniIfExists(const char *cat, const char *key, uint32 *out)
