@@ -1866,10 +1866,18 @@ main(int argc, char *argv[])
 {
 #endif
 #ifdef APPLE
-	char path[4096];
-	uint32_t pathLen = sizeof(path);
-	_NSGetExecutablePath(path, &pathLen);
-	chdir(dirname(dirname(path)) + "/Resources/");
+	char path[1024];
+	uint32_t size = sizeof(path);
+	if (_NSGetExecutablePath(path, &size) == 0)
+		printf("executable path is %s\n", path);
+	else
+		printf("buffer too small; need size %u\n", size);
+
+	unsigned found = std::string(path).find_last_of("/");
+	std::string final = std::string(path).substr(0,found);
+	found = final.find_last_of("/");
+	final = std::string(path).substr(0,found) + std::string("/Resources/");
+	chdir(final.c_str());
 #endif
 	RwV2d pos;
 	RwInt32 i;
