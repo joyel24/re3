@@ -185,9 +185,7 @@ CustomFrontendOptionsPopulate(void)
 #ifdef LOAD_INI_SETTINGS
 #define MINI_CASE_SENSITIVE
 #include "ini.h"
-const char *userfiles = _psGetUserFilesFolder();
-strcat(userfiles, "/re3.ini");
-mINI::INIFile ini(userfiles);
+mINI::INIFile ini(strcat(_psGetUserFilesFolder(), "/re3.ini"));
 mINI::INIStructure cfg;
 
 bool ReadIniIfExists(const char *cat, const char *key, uint32 *out)
