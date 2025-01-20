@@ -1865,7 +1865,7 @@ int
 main(int argc, char *argv[])
 {
 #endif
-#ifdef APPLE
+#ifdef __APPLE__
 	char path[1024];
 	uint32_t size = sizeof(path);
 	if (_NSGetExecutablePath(path, &size) == 0)
