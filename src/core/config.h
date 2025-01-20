@@ -373,9 +373,6 @@ enum Config {
 #define USE_DEBUG_SCRIPT_LOADER	// Loads main.scm by default. Hold R for main_freeroam.scm and D for main_d.scm
 #define USE_MEASUREMENTS_IN_METERS // makes game use meters instead of feet in script
 #define USE_PRECISE_MEASUREMENT_CONVERTION // makes game convert feet to meeters more precisely
-#ifdef PC_MENU
-#	define MISSION_REPLAY // mobile feature
-#endif
 //#define SIMPLIER_MISSIONS // apply simplifications from mobile
 #define USE_ADVANCED_SCRIPT_DEBUG_OUTPUT
 #define SCRIPT_LOG_FILE_LEVEL 0 // 0 == no log, 1 == overwrite every frame, 2 == full log
