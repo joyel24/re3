@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-set(EXECUTABLE re3)
+set(EXECUTABLE gta3)
 set(PROJECT RE3)
 
 project(${EXECUTABLE} C CXX)
