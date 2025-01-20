@@ -455,6 +455,7 @@ void CControllerConfigManager::InitDefaultControlConfigJoyPad(uint32 buttons)
 		IF_BTN_IN_RANGE(12)
 		IF_BTN_IN_RANGE(11)
 			SetControllerKeyAssociatedWithAction(PED_LOOKBEHIND,                    11, JOYSTICK);
+			SetControllerKeyAssociatedWithAction(VEHICLE_LOOKBEHIND,                    11, JOYSTICK);
 		IF_BTN_IN_RANGE(10)
 			SetControllerKeyAssociatedWithAction(VEHICLE_HORN,                      10, JOYSTICK);
 		IF_BTN_IN_RANGE(9)
@@ -2429,7 +2430,7 @@ int32 CControllerConfigManager::GetNumOfSettingsForAction(e_ControllerAction act
 #define VFB(b)
 #endif
 
-#define CONTROLLER_BUTTONS(T, O, X, Q, L1, L2, L3, R1, R2, R3, SELECT, LEFT, RIGHT)                                                                                         \
+#define CONTROLLER_BUTTONS(T, O, X, Q, L1, L2, L3, R1, R2, R3, SELECT, UP, DOWN, LEFT, RIGHT)                                                                                         \
 	{{                                                                                                                                                         \
 	     R2,      /* PED_FIREWEAPON */                                                                                                                          \
 	     RIGHT,     /* PED_CYCLE_WEAPON_RIGHT */                                                                                                                  \
@@ -2441,7 +2442,7 @@ int32 CControllerConfigManager::GetNumOfSettingsForAction(e_ControllerAction act
 	     Q,      /* PED_SNIPER_ZOOM_IN */                                                                                                                      \
 	     X,      /* PED_SNIPER_ZOOM_OUT */                                                                                                                     \
 	     T,      /* VEHICLE_ENTER_EXIT */                                                                                                                      \
-	     SELECT, /* CAMERA_CHANGE_VIEW_ALL_SITUATIONS */                                                                                                       \
+	     L1, /* CAMERA_CHANGE_VIEW_ALL_SITUATIONS */                                                                                                       \
 	     Q,      /* PED_JUMPING */                                                                                                                             \
 	     X,      /* PED_SPRINT */                                                                                                                              \
 	     R3,     /* PED_LOOKBEHIND */                                                                                                                          \
@@ -2456,7 +2457,7 @@ int32 CControllerConfigManager::GetNumOfSettingsForAction(e_ControllerAction act
 	     nil,    /* PED_1RST_PERSON_LOOK_RIGHT */                                                                                                              \
 	     LEFT,     /* VEHICLE_LOOKLEFT */                                                                                                                        \
 	     RIGHT,     /* VEHICLE_LOOKRIGHT */                                                                                                                       \
-	     nil,    /* VEHICLE_LOOKBEHIND */                                                                                                                      \
+	     R3,    /* VEHICLE_LOOKBEHIND */                                                                                                                      \
 	     nil,    /* VEHICLE_TURRETLEFT */                                                                                                                      \
 	     nil,    /* VEHICLE_TURRETRIGHT */                                                                                                                     \
 	     nil,    /* VEHICLE_TURRETUP */                                                                                                                        \
@@ -2476,10 +2477,10 @@ int32 CControllerConfigManager::GetNumOfSettingsForAction(e_ControllerAction act
 	 }}
 
 
-const char *XboxButtons_noIcons[][MAX_CONTROLLERACTIONS] = CONTROLLER_BUTTONS("Y", "B", "A", "X", "LB", "LT", "LS", "RB", "RT", "RS", "BACK", "LEFT", "RIGHT");
+const char *XboxButtons_noIcons[][MAX_CONTROLLERACTIONS] = CONTROLLER_BUTTONS("Y", "B", "A", "X", "LB", "LT", "LS", "RB", "RT", "RS", "BACK", "UP", "DOWN", "LEFT", "RIGHT");
 
 #ifdef BUTTON_ICONS
-const char *XboxButtons[][MAX_CONTROLLERACTIONS] = CONTROLLER_BUTTONS("~T~", "~O~", "~X~", "~Q~", "~K~", "~M~", "~A~", "~J~", "~V~", "~C~", "BACK", "~<~", "~>~");
+const char *XboxButtons[][MAX_CONTROLLERACTIONS] = CONTROLLER_BUTTONS("~T~", "~O~", "~X~", "~Q~", "~K~", "~M~", "~A~", "~J~", "~V~", "~C~", "BACK", "~U~", "~D~", "~<~", "~>~");
 #endif
 
 
@@ -2489,11 +2490,11 @@ const char *XboxButtons[][MAX_CONTROLLERACTIONS] = CONTROLLER_BUTTONS("~T~", "~O
 #define PS2_SQUARE "^"
 
 const char *PlayStationButtons_noIcons[][MAX_CONTROLLERACTIONS] =
-    CONTROLLER_BUTTONS(PS2_TRIANGLE, PS2_CIRCLE, PS2_CROSS, PS2_SQUARE, "L1", "L2", "L3", "R1", "R2", "R3", "SELECT", "LEFT", "RIGHT");
+    CONTROLLER_BUTTONS(PS2_TRIANGLE, PS2_CIRCLE, PS2_CROSS, PS2_SQUARE, "L1", "L2", "L3", "R1", "R2", "R3", "SELECT", "UP", "DOWN", "LEFT", "RIGHT");
 
 #ifdef BUTTON_ICONS
 const char *PlayStationButtons[][MAX_CONTROLLERACTIONS] =
-    CONTROLLER_BUTTONS("~T~", "~O~", "~X~", "~Q~", "~K~", "~M~", "~A~", "~J~", "~V~", "~C~", "SELECT", "~<~", "~>~");
+    CONTROLLER_BUTTONS("~T~", "~O~", "~X~", "~Q~", "~K~", "~M~", "~A~", "~J~", "~V~", "~C~", "SELECT", "~U~", "~D~", "~<~", "~>~");
 #endif
 
 #undef PS2_TRIANGLE
@@ -2502,11 +2503,11 @@ const char *PlayStationButtons[][MAX_CONTROLLERACTIONS] =
 #undef PS2_SQUARE
 
 const char *NintendoSwitchButtons_noIcons[][MAX_CONTROLLERACTIONS] =
-    CONTROLLER_BUTTONS("Y", "A", "B", "X", "L", "ZL", "LS", "R", "ZR", "RS", "BACK", "LEFT", "RIGHT");
+    CONTROLLER_BUTTONS("Y", "A", "B", "X", "L", "ZL", "LS", "R", "ZR", "RS", "BACK", "UP", "DOWN", "LEFT", "RIGHT");
 
 #ifdef BUTTON_ICONS
 const char *NintendoSwitchButtons[][MAX_CONTROLLERACTIONS] =
-    CONTROLLER_BUTTONS("~T~", "~O~", "~X~", "~Q~", "~K~", "~M~", "~A~", "~J~", "~V~", "~C~", "BACK", "~<~", "~>~");
+    CONTROLLER_BUTTONS("~T~", "~O~", "~X~", "~Q~", "~K~", "~M~", "~A~", "~J~", "~V~", "~C~", "BACK", "~U~", "~D~", "~<~", "~>~");
 #endif
 
 #undef CONTROLLER_BUTTONS
