@@ -2036,13 +2036,11 @@ main(int argc, char *argv[])
 		CFileMgr::SetDir("");
 
 #ifdef LOAD_INI_SETTINGS
-		LoadINIControllerSettings();
 		if (connectedPadButtons != 0)
 			ControlsManager.InitDefaultControlConfigJoyPad(connectedPadButtons); // add (connected-saved) amount of new button assignments on top of ours
 
 		// these have 2 purposes: creating .ini at the start, and adding newly introduced settings to old .ini at the start
 		SaveINISettings();
-		SaveINIControllerSettings();
 #endif
 	}
 	
