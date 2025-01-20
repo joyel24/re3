@@ -17,6 +17,7 @@ long _dwOperatingSystemVersion;
 #include <sys/sysinfo.h>
 #else
 #include <mach/mach_host.h>
+#include <mach-o/dyld.h> 
 #include <sys/sysctl.h>
 #endif
 #endif
@@ -1863,6 +1864,12 @@ WinMain(HINSTANCE instance,
 int
 main(int argc, char *argv[])
 {
+#endif
+#ifdef APPLE
+	char path[4096];
+	uint32_t pathLen = sizeof(path);
+	_NSGetExecutablePath(path, &pathLen);
+	chdir(dirname(dirname(path)) + "/Resources/");
 #endif
 	RwV2d pos;
 	RwInt32 i;
