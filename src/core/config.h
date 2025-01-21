@@ -441,13 +441,6 @@ enum Config {
 
 #endif
 
-// Streaming
-#if !defined(_WIN32) && !defined(__SWITCH__)
-	//#define ONE_THREAD_PER_CHANNEL // Don't use if you're not on SSD/Flash - also not utilized too much right now(see commented LoadAllRequestedModels in Streaming.cpp)
-	#define FLUSHABLE_STREAMING // Make it possible to interrupt reading when processing file isn't needed anymore.
-#endif
-#define BIG_IMG // Not complete - allows to read larger img files
-
 //#define SQUEEZE_PERFORMANCE
 #ifdef SQUEEZE_PERFORMANCE
 	#undef PS2_ALPHA_TEST
