@@ -218,14 +218,8 @@ CStreaming::Init2(void)
 	// PC only, figure out how much memory we got
 #ifdef GTA_PC
 #define MB (1024*1024)
-
-	extern size_t _dwMemAvailPhys;
-	ms_memoryAvailable = (_dwMemAvailPhys - 10*MB)/2;
-	if(ms_memoryAvailable < 50*MB)
-		ms_memoryAvailable = 50*MB;
-	desiredNumVehiclesLoaded = (int32)((ms_memoryAvailable / MB - 50) / 3 + 12);
-	if(desiredNumVehiclesLoaded > MAXVEHICLESLOADED)
-		desiredNumVehiclesLoaded = MAXVEHICLESLOADED;
+	ms_memoryAvailable = 2048 * MB;
+	desiredNumVehiclesLoaded = MAXVEHICLESLOADED;
 	debug("Memory allocated to Streaming is %zuMB", ms_memoryAvailable/MB); // original modifier was %d
 #undef MB
 #endif
@@ -2687,9 +2681,7 @@ CStreaming::MakeSpaceFor(int32 size)
 #ifdef FIX_BUGS
 #define MB (1024 * 1024)
 	if(ms_memoryAvailable == 0) {
-		extern size_t _dwMemAvailPhys;
-		ms_memoryAvailable = (_dwMemAvailPhys - 10 * MB) / 2;
-		if(ms_memoryAvailable < 50 * MB) ms_memoryAvailable = 50 * MB;
+		ms_memoryAvailable = 2048 * MB;
 	}
 #undef MB
 #endif
