@@ -1743,7 +1743,7 @@ bool CPad::GetLookLeft(void)
 	if ( ArePlayerControlsDisabled() )
 		return false;
 
-	return !!(NewState.LeftShoulder2 && !NewState.RightShoulder2);
+	return !!(NewState.DPadLeft && !NewState.DPadRight);
 }
 
 bool CPad::GetLookRight(void)
@@ -1751,7 +1751,7 @@ bool CPad::GetLookRight(void)
 	if ( ArePlayerControlsDisabled() )
 		return false;
 
-	return !!(NewState.RightShoulder2 && !NewState.LeftShoulder2);
+	return !!(NewState.DPadRight && !NewState.DPadLeft);
 }
 
 
@@ -1760,7 +1760,7 @@ bool CPad::GetLookBehindForCar(void)
 	if ( ArePlayerControlsDisabled() )
 		return false;
 
-	return !!(NewState.RightShoulder2 && NewState.LeftShoulder2);
+	return !!(NewState.RightShock);
 }
 
 bool CPad::GetLookBehindForPed(void)
@@ -1914,7 +1914,7 @@ int16 CPad::GetHandBrake(void)
 		case 0:
 		case 1:
 		{
-			return NewState.RightShoulder1;
+			return NewState.Circle;
 
 			break;
 		}
@@ -1947,7 +1947,7 @@ int16 CPad::GetBrake(void)
 		case 0:
 		case 2:
 		{
-			return NewState.Square;
+			return NewState.LeftShoulder2;
 
 			break;
 		}
@@ -2039,7 +2039,7 @@ int32 CPad::GetWeapon(void)
 		case 0:
 		case 1:
 		{
-			return NewState.Circle;
+			return NewState.RightShoulder2;
 
 			break;
 		}
@@ -2072,7 +2072,7 @@ bool CPad::WeaponJustDown(void)
 		case 0:
 		case 1:
 		{
-			return !!(NewState.Circle && !OldState.Circle);
+			return !!(NewState.RightShoulder2 && !OldState.RightShoulder2);
 
 			break;
 		}
@@ -2105,7 +2105,7 @@ int16 CPad::GetAccelerate(void)
 		case 0:
 		case 2:
 		{
-			return NewState.Cross;
+			return NewState.RightShoulder2;
 
 			break;
 		}
@@ -2141,7 +2141,7 @@ bool CPad::CycleCameraModeUpJustDown(void)
 		case 2:
 		case 3:
 		{
-			return !!(NewState.Select && !OldState.Select);
+			return !!(NewState.LeftShoulder1 && !OldState.LeftShoulder1);
 
 			break;
 		}
@@ -2190,7 +2190,7 @@ bool CPad::ChangeStationJustDown(void)
 	{
 		case 0:
 		{
-			return !!(NewState.LeftShoulder1 && !OldState.LeftShoulder1);
+			return !!(NewState.RightShoulder1 && !OldState.RightShoulder1);
 
 			break;
 		}
@@ -2226,7 +2226,7 @@ bool CPad::CycleWeaponLeftJustDown(void)
 	if ( ArePlayerControlsDisabled() )
 		return false;
 
-	return !!(NewState.LeftShoulder2 && !OldState.LeftShoulder2);
+	return !!(NewState.DPadLeft && !OldState.DPadLeft);
 }
 
 bool CPad::CycleWeaponRightJustDown(void)
@@ -2234,7 +2234,7 @@ bool CPad::CycleWeaponRightJustDown(void)
 	if ( ArePlayerControlsDisabled() )
 		return false;
 
-	return !!(NewState.RightShoulder2 && !OldState.RightShoulder2);
+	return !!(NewState.DPadRight && !OldState.DPadRight);
 }
 
 bool CPad::GetTarget(void)
@@ -2248,7 +2248,7 @@ bool CPad::GetTarget(void)
 		case 1:
 		case 2:
 		{
-			return !!NewState.RightShoulder1;
+			return !!NewState.LeftShoulder2;
 
 			break;
 		}
@@ -2275,7 +2275,7 @@ bool CPad::TargetJustDown(void)
 		case 1:
 		case 2:
 		{
-			return !!(NewState.RightShoulder1 && !OldState.RightShoulder1);
+			return !!(NewState.LeftShoulder2 && !OldState.LeftShoulder2);
 
 			break;
 		}
@@ -2331,7 +2331,7 @@ bool CPad::ShiftTargetLeftJustDown(void)
 	if ( ArePlayerControlsDisabled() )
 		return false;
 
-	return !!(NewState.LeftShoulder2 && !OldState.LeftShoulder2);
+	return !!(NewState.DPadLeft && !OldState.DPadLeft);
 }
 
 bool CPad::ShiftTargetRightJustDown(void)
@@ -2339,7 +2339,7 @@ bool CPad::ShiftTargetRightJustDown(void)
 	if ( ArePlayerControlsDisabled() )
 		return false;
 
-	return !!(NewState.RightShoulder2 && !OldState.RightShoulder2);
+	return !!(NewState.DPadRight && !OldState.DPadRight);
 }
 
 #ifdef FIX_BUGS
@@ -2580,7 +2580,7 @@ bool CPad::ForceCameraBehindPlayer(void)
 		case 0:
 		case 1:
 		{
-			return !!NewState.LeftShoulder1;
+			return !!NewState.RightShoulder1;
 
 			break;
 		}
