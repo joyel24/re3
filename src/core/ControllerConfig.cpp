@@ -727,26 +727,25 @@ void CControllerConfigManager::AffectControllerStateOn_ButtonDown_Driving(int32 
 #endif
 	if (button == GetControllerKeyAssociatedWithAction(VEHICLE_LOOKBEHIND, type))
 	{
-		state.LeftShoulder2 = 255;
-		state.RightShoulder2 = 255;
+		state.RightShock = 255;
 	}
 
 	if (button == GetControllerKeyAssociatedWithAction(VEHICLE_LOOKLEFT, type))
-		state.LeftShoulder2 = 255;
+		state.DPadLeft = 255;
 	if (button == GetControllerKeyAssociatedWithAction(VEHICLE_LOOKRIGHT, type))
-		state.RightShoulder2 = 255;
+		state.DPadRight = 255;
 	if (button == GetControllerKeyAssociatedWithAction(VEHICLE_HORN, type))
 		state.LeftShock = 255;
 	if (button == GetControllerKeyAssociatedWithAction(VEHICLE_HANDBRAKE, type))
-		state.RightShoulder1 = 255;
+		state.Circle = 255;
 	if (button == GetControllerKeyAssociatedWithAction(VEHICLE_ACCELERATE, type))
-		state.Cross = m_NewState.rt;
+		state.RightShoulder2 = m_NewState.rt;
 	if (button == GetControllerKeyAssociatedWithAction(VEHICLE_CHANGE_RADIO_STATION, type))
-		state.LeftShoulder1 = 255;
+		state.RightShoulder1 = 255;
 	if (button == GetControllerKeyAssociatedWithAction(VEHICLE_BRAKE, type))
-		state.Square = m_NewState.lt;
+		state.LeftShoulder2 = m_NewState.lt;
 	if (button == GetControllerKeyAssociatedWithAction(TOGGLE_SUBMISSIONS, type))
-		state.RightShock = 255;
+		state.Square = 255;
 	
 	if (button == GetControllerKeyAssociatedWithAction(VEHICLE_TURRETLEFT, type))
 	{
@@ -849,20 +848,20 @@ void CControllerConfigManager::AffectControllerStateOn_ButtonDown_ThirdPersonOnl
 	if (button == GetControllerKeyAssociatedWithAction(PED_JUMPING, type))
 		state.Square = 255;
 	if (button == GetControllerKeyAssociatedWithAction(PED_CYCLE_WEAPON_LEFT, type))
-		state.LeftShoulder2 = 255;
+		state.DPadLeft = 255;
 	if (button == GetControllerKeyAssociatedWithAction(PED_CYCLE_WEAPON_RIGHT, type))
-		state.RightShoulder2 = 255;
+		state.DPadRight = 255;
 	if (button == GetControllerKeyAssociatedWithAction(PED_SPRINT, type))
 		state.Cross = 255;
 	
 	if (CMenuManager::m_ControlMethod == CONTROL_CLASSIC)
 	{
 		if (button == GetControllerKeyAssociatedWithAction(PED_CYCLE_TARGET_LEFT, type))
-			state.LeftShoulder2 = 255;
+			state.DPadLeft = 255;
 		if (button == GetControllerKeyAssociatedWithAction(PED_CYCLE_TARGET_RIGHT, type))
-			state.RightShoulder2 = 255;
+			state.DPadRight = 255;
 		if (button == GetControllerKeyAssociatedWithAction(PED_CENTER_CAMERA_BEHIND_PLAYER, type))
-			state.LeftShoulder1 = 255;
+			state.RightShoulder1 = 255;
 	}
 }
 
@@ -872,34 +871,10 @@ void CControllerConfigManager::AffectControllerStateOn_ButtonDown_FirstAndThirdP
 
 #ifdef BIND_VEHICLE_FIREWEAPON
 	if (button == GetControllerKeyAssociatedWithAction(PED_FIREWEAPON, type))
-		state.Circle = 255;
+		state.RightShoulder2 = 255;
 #endif
 	if (button == GetControllerKeyAssociatedWithAction(PED_LOCK_TARGET, type))
-		state.RightShoulder1 = 255;
-
-	if (button == GetControllerKeyAssociatedWithAction(GO_FORWARD, type))
-	{
-		if (state.DPadDown || m_aSimCheckers[SIM_Y1][type])
-		{
-			m_aSimCheckers[SIM_Y1][type] = true;
-			state.DPadDown = 0;
-			state.DPadUp = 0;
-		}
-		else
-			state.DPadUp = 255;
-	}
-
-	if (button == GetControllerKeyAssociatedWithAction(GO_BACK, type))
-	{
-		if (state.DPadUp || m_aSimCheckers[SIM_Y1][type])
-		{
-			m_aSimCheckers[SIM_Y1][type] = true;
-			state.DPadDown = 0;
-			state.DPadUp = 0;
-		}
-		else
-			state.DPadDown = 255;
-	}
+		state.LeftShoulder2 = 255;
 
 	if (button == GetControllerKeyAssociatedWithAction(PED_1RST_PERSON_LOOK_LEFT, type))
 	{
@@ -954,36 +929,12 @@ void CControllerConfigManager::AffectControllerStateOn_ButtonDown_FirstAndThirdP
 void CControllerConfigManager::AffectControllerStateOn_ButtonDown_AllStates(int32 button, eControllerType type, CControllerState &state)
 {
 	if (button == GetControllerKeyAssociatedWithAction(CAMERA_CHANGE_VIEW_ALL_SITUATIONS, type))
-		state.Select = 255;
+		state.LeftShoulder1 = 255;
 
 #ifndef BIND_VEHICLE_FIREWEAPON
 	if (button == GetControllerKeyAssociatedWithAction(PED_FIREWEAPON, type))
-		state.Circle = 255;
+		state.RightShoulder2 = 255;
 #endif
-
-	if (button == GetControllerKeyAssociatedWithAction(GO_LEFT, type))
-	{
-		if (state.DPadRight || m_aSimCheckers[SIM_X1][type])
-		{
-			m_aSimCheckers[SIM_X1][type] = true;
-			state.DPadLeft = 0;
-			state.DPadRight = 0;
-		}
-		else
-			state.DPadLeft = 255;
-	}
-
-	if (button == GetControllerKeyAssociatedWithAction(GO_RIGHT, type))
-	{
-		if (state.DPadLeft || m_aSimCheckers[SIM_X1][type])
-		{
-			m_aSimCheckers[SIM_X1][type] = true;
-			state.DPadLeft = 0;
-			state.DPadRight = 0;
-		}
-		else
-			state.DPadRight = 255;
-	}
 
 	if (button == GetControllerKeyAssociatedWithAction(NETWORK_TALK, type))
 		state.NetworkTalk = 255;
