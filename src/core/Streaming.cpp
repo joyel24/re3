@@ -2524,8 +2524,8 @@ CStreaming::DeleteRwObjectsBehindCamera(size_t mem)
 			}
 		}
 
-		if(RemoveReferencedTxds(mem))
-			return;
+		//if(RemoveReferencedTxds(mem))
+		//	return;
 
 		// As last resort, delete objects from the last step more aggressively
 		for(y = ymin; y <= ymax; y++){
@@ -2588,8 +2588,8 @@ CStreaming::DeleteRwObjectsBehindCamera(size_t mem)
 			}
 		}
 
-		if(RemoveReferencedTxds(mem))
-			return;
+		//if(RemoveReferencedTxds(mem))
+		//	return;
 
 		// As last resort, delete objects from the last step more aggressively
 		for(x = xmin; x <= xmax; x++){
