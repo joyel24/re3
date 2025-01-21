@@ -220,7 +220,7 @@ enum Config {
 #define NASTY_GAME	// nasty game for all languages
 
 // those infamous texts
-#define DRAW_GAME_VERSION_TEXT
+//#define DRAW_GAME_VERSION_TEXT
 #ifdef DRAW_GAME_VERSION_TEXT
 	// unlike R* development builds, ours has runtime switch on debug menu & .ini, and disabled as default.
 	// If you disable this then game will fetch version from peds.col, as R* did while in development.
@@ -250,7 +250,7 @@ enum Config {
 	// not in master builds
 	#define VALIDATE_SAVE_SIZE
 
-	#define DEBUGMENU
+//	#define DEBUGMENU
 #endif
 
 #ifdef FINAL
@@ -258,7 +258,7 @@ enum Config {
 #	define USE_MY_DOCUMENTS	// use my documents directory for user files
 #else
 	// not in any game
-#	define TIMEBARS		// print debug timers
+//#	define TIMEBARS		// print debug timers
 #endif
 
 #define FIX_BUGS		// fixes bugs that we've came across during reversing. You can undefine this only on release builds.
