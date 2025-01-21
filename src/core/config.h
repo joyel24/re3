@@ -250,7 +250,7 @@ enum Config {
 	// not in master builds
 	#define VALIDATE_SAVE_SIZE
 
-//	#define DEBUGMENU
+	#define DEBUGMENU
 #endif
 
 #ifdef FINAL
