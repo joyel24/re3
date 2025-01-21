@@ -455,7 +455,7 @@ void CControllerConfigManager::InitDefaultControlConfigJoyPad(uint32 buttons)
 		IF_BTN_IN_RANGE(12)
 		IF_BTN_IN_RANGE(11)
 			SetControllerKeyAssociatedWithAction(PED_LOOKBEHIND,                    11, JOYSTICK);
-			SetControllerKeyAssociatedWithAction(VEHICLE_LOOKBEHIND,                    11, JOYSTICK);
+			SetControllerKeyAssociatedWithAction(VEHICLE_LOOKBEHIND,                11, JOYSTICK);
 		IF_BTN_IN_RANGE(10)
 			SetControllerKeyAssociatedWithAction(VEHICLE_HORN,                      10, JOYSTICK);
 		IF_BTN_IN_RANGE(9)
@@ -651,28 +651,6 @@ void CControllerConfigManager::AffectControllerStateOn_ButtonDown(int32 button, 
 	{
 		CPad *pad = CPad::GetPad(PAD1);
 
-		bool firstPerson = false;
-		bool playerDriving = false;
-
-		if (FindPlayerVehicle() != NULL)
-		{
-			CPlayerPed *plr = FindPlayerPed();
-			if (plr != NULL)
-			{
-				if (plr->m_nPedState == PED_DRIVING)
-					playerDriving = true;
-			}
-		}
-
-		int16 mode = TheCamera.Cams[TheCamera.ActiveCam].Mode;
-		if (   mode == CCam::MODE_1STPERSON
-			|| mode == CCam::MODE_SNIPER
-			|| mode == CCam::MODE_ROCKETLAUNCHER
-			|| mode == CCam::MODE_M16_1STPERSON)
-		{
-			firstPerson = true;
-		}
-
 		CControllerState *state;
 		
 		switch (type)
@@ -691,30 +669,62 @@ void CControllerConfigManager::AffectControllerStateOn_ButtonDown(int32 button, 
 		}
 
 		if (pad != NULL)
-		{
-			if (playerDriving)
+		{	
+			switch (button)
 			{
-				AffectControllerStateOn_ButtonDown_Driving(button, type, *state);
-				AffectControllerStateOn_ButtonDown_VehicleAndThirdPersonOnly(button, type, *state);
-			}
-			else
-			{
-				AffectControllerStateOn_ButtonDown_FirstAndThirdPersonOnly(button, type, *state);
-				if (firstPerson)
-					AffectControllerStateOn_ButtonDown_FirstPersonOnly(button, type, *state);
-				else
-				{
-					AffectControllerStateOn_ButtonDown_ThirdPersonOnly(button, type, *state);
-					AffectControllerStateOn_ButtonDown_VehicleAndThirdPersonOnly(button, type, *state);
-				}
-			}
-
-			AffectControllerStateOn_ButtonDown_AllStates(button, type, *state);
-
+			case 1:
+				state->Circle = 255;
+				break;				
+			case 2:
+				state->Cross = 255;
+				break;				
+			case 3:
+				state->Square = 255;
+				break;
+			case 4:
+				state->Triangle = 255;
+				break;
+			case 5:
+				state->LeftShoulder2 = m_NewState.lt;
+				break;
+			case 6:
+				state->RightShoulder2 = m_NewState.rt;
+				break;
+			case 7:
+				state->LeftShoulder1 = 255;
+				break;
+			case 8:	
+				state->RightShoulder1 = 255;
+				break;
+			case 9:
+				state->Select = 255;
+				break;
+			case 10:
+				state->LeftShock = 255;
+				break;
+			case 11:
+				state->RightShock = 255;
+				break;
 #ifdef REGISTER_START_BUTTON
-			if (button == 12)
+			case 12:
 				state->Start = 255;
+				break;
 #endif
+			case 13:
+				state->DPadUp = 255;
+				break;
+			case 14:
+				state->DPadRight = 255;
+				break;
+			case 15:
+				state->DPadDown = 255;
+				break;
+			case 16:
+				state->DPadLeft = 255;
+				break;
+			default: 
+				break;
+			}
 		}
 	}
 }
