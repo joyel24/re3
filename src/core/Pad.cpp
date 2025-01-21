@@ -1530,18 +1530,6 @@ int16 CPad::GetSteeringLeftRight(void)
 	{
 		case 0:
 		case 2:
-		{
-			int16 axis = NewState.LeftStickX;
-			int16 dpad = (NewState.DPadRight - NewState.DPadLeft) / 2;
-
-			if ( Abs(axis) > Abs(dpad) )
-				return axis;
-			else
-				return dpad;
-
-			break;
-		}
-
 		case 1:
 		case 3:
 		{
@@ -1563,18 +1551,6 @@ int16 CPad::GetSteeringUpDown(void)
 	{
 		case 0:
 		case 2:
-		{
-			int16 axis = NewState.LeftStickY;
-			int16 dpad = (NewState.DPadUp - NewState.DPadDown) / 2;
-
-			if ( Abs(axis) > Abs(dpad) )
-				return axis;
-			else
-				return dpad;
-
-			break;
-		}
-
 		case 1:
 		case 3:
 		{
@@ -1650,18 +1626,6 @@ int16 CPad::GetPedWalkLeftRight(void)
 	{
 		case 0:
 		case 2:
-		{
-			int16 axis = NewState.LeftStickX;
-			int16 dpad = (NewState.DPadRight - NewState.DPadLeft) / 2;
-
-			if ( Abs(axis) > Abs(dpad) )
-				return axis;
-			else
-				return dpad;
-
-			break;
-		}
-
 		case 1:
 		case 3:
 		{
@@ -1684,18 +1648,6 @@ int16 CPad::GetPedWalkUpDown(void)
 	{
 		case 0:
 		case 2:
-		{
-			int16 axis = NewState.LeftStickY;
-			int16 dpad = (NewState.DPadDown - NewState.DPadUp) / 2;
-
-			if ( Abs(axis) > Abs(dpad) )
-				return axis;
-			else
-				return dpad;
-
-			break;
-		}
-
 		case 1:
 		case 3:
 		{
@@ -1714,18 +1666,6 @@ int16 CPad::GetAnalogueUpDown(void)
 	{
 		case 0:
 		case 2:
-		{
-			int16 axis = NewState.LeftStickY;
-			int16 dpad = (NewState.DPadDown - NewState.DPadUp) / 2;
-
-			if ( Abs(axis) > Abs(dpad) )
-				return axis;
-			else
-				return dpad;
-
-			break;
-		}
-
 		case 1:
 		case 3:
 		{
@@ -2661,37 +2601,21 @@ bool CPad::SniperZoomOut(void)
 
 int16 CPad::SniperModeLookLeftRight(void)
 {
-	int16 axis = NewState.LeftStickX;
-	int16 dpad = (NewState.DPadRight - NewState.DPadLeft) / 2;
-
-	if ( Abs(axis) > Abs(dpad) )
-		return axis;
-	else
-		return dpad;
+	return NewState.LeftStickX;
 }
 
 int16 CPad::SniperModeLookUpDown(void)
 {
 	int16 axis = NewState.LeftStickY;
-	int16 dpad;
 #ifdef FIX_BUGS
 	axis = -axis;
 #endif
-#ifndef INVERT_LOOK_FOR_PAD
-	dpad = (NewState.DPadUp - NewState.DPadDown) / 2;
-#else
-	if (CPad::bInvertLook4Pad) {
+#ifdef INVERT_LOOK_FOR_PAD
+	if (CPad::bInvertLook4Pad)
 		axis = -axis;
-		dpad = (NewState.DPadDown - NewState.DPadUp) / 2;
-	} else {
-		dpad = (NewState.DPadUp - NewState.DPadDown) / 2;
-	}
 #endif
 
-	if ( Abs(axis) > Abs(dpad) )
-		return axis;
-	else
-		return dpad;
+	return axis;
 }
 
 int16 CPad::LookAroundLeftRight(void)
