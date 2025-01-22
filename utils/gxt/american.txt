@@ -2966,7 +2966,7 @@ out of
 Turret control
 
 [FEC_SM3]
-Special mission trigger
+Special mission trigger (R3 button)
 
 [FEC_RS3]
 Radio station cycle (L3 button)
