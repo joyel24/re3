@@ -3651,8 +3651,6 @@ CMenuManager::LoadAllTextures()
 void
 CMenuManager::LoadController()
 {
-	CFont::LoadButtons("MODELS/PS3BTNS.TXD");
-
 	// Unload current textures
 	for (int i = FE_CONTROLLER; i <= FE_ARROWS4; i++)
 		m_aFrontEndSprites[i].Delete();
