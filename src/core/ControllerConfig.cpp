@@ -2444,12 +2444,7 @@ int32 CControllerConfigManager::GetNumOfSettingsForAction(e_ControllerAction act
 #define PS2_SQUARE "^"
 
 const char *PlayStationButtons_noIcons[][MAX_CONTROLLERACTIONS] =
-    CONTROLLER_BUTTONS(PS2_TRIANGLE, PS2_CIRCLE, PS2_CROSS, PS2_SQUARE, "L1", "L2", "L3", "R1", "R2", "R3", "SELECT", "UP", "DOWN", "LEFT", "RIGHT");
-
-#ifdef BUTTON_ICONS
-const char *PlayStationButtons[][MAX_CONTROLLERACTIONS] =
-    CONTROLLER_BUTTONS("~T~", "~O~", "~X~", "~Q~", "~K~", "~M~", "~A~", "~J~", "~V~", "~C~", "SELECT", "~U~", "~D~", "~<~", "~>~");
-#endif
+    CONTROLLER_BUTTONS(PS2_TRIANGLE, PS2_CIRCLE, PS2_CROSS, PS2_SQUARE, "L1", "L2", "L3", "R1", "R2", "R3", "SELECT", "Directional Pad UP", "Directional Pad DOWN", "Directional Pad LEFT", "Directional Pad RIGHT");
 
 #undef PS2_TRIANGLE
 #undef PS2_CIRCLE
@@ -2467,11 +2462,7 @@ void CControllerConfigManager::GetWideStringOfCommandKeys(uint16 action, wchar *
 
 		const char* (*Buttons)[MAX_CONTROLLERACTIONS];
 		
-#ifdef BUTTON_ICONS
-		Buttons = CFont::ButtonsSlot != -1 ? PlayStationButtons : PlayStationButtons_noIcons;
-#else
 		Buttons = PlayStationButtons_noIcons;
-#endif
 
 		if(Buttons[CPad::GetPad(0)->Mode][action] != nil)
 		{	
