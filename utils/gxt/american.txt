@@ -6587,7 +6587,7 @@ Weather cheat
 ~r~You failed to lead the Deathsquad into the Yakuza trap!!
 
 [FEDS_BA]
-" button - BACK
+| button - BACK
 
 [RAMP_A]
 ALL RAMPAGES COMPLETED!
