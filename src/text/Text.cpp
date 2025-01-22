@@ -30,7 +30,7 @@ CText::Load(void)
 	filedata = new uint8[0x40000];
 
 	CFileMgr::SetDir("TEXT");
-	length = CFileMgr::LoadFile("AMERICAN.GXT, filedata, 0x40000, "rb");
+	length = CFileMgr::LoadFile("AMERICAN.GXT", filedata, 0x40000, "rb");
 	CFileMgr::SetDir("");
 
 	offset = 0;
