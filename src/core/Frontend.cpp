@@ -3613,7 +3613,7 @@ CMenuManager::LoadAllTextures()
 	}
 
 #ifdef GAMEPAD_MENU
-	LoadController(m_PrefsControllerType);
+	LoadController();
 #endif
 
 	int menuTxdSlot = CTxdStore::FindTxdSlot("menu");
@@ -3656,32 +3656,10 @@ CMenuManager::LoadAllTextures()
 }
 
 #ifdef GAMEPAD_MENU
-const char* controllerTypesPaths[] = {
-	nil,
-	"MODELS/FRONTEND_DS3.TXD",
-	"MODELS/FRONTEND_DS4.TXD",
-	"MODELS/FRONTEND_X360.TXD",
-	"MODELS/FRONTEND_XONE.TXD",
-	"MODELS/FRONTEND_NSW.TXD",
-};
-
 void
-CMenuManager::LoadController(int8 type)
+CMenuManager::LoadController()
 {
-	switch (type)
-	{
-	case CONTROLLER_DUALSHOCK2:
-	case CONTROLLER_DUALSHOCK3:
-	case CONTROLLER_DUALSHOCK4:
-		CFont::LoadButtons("MODELS/PS3BTNS.TXD");
-		break;
-	case CONTROLLER_NINTENDO_SWITCH:
-		CFont::LoadButtons("MODELS/NSWBTNS.TXD");
-		break;
-	default:
-		CFont::LoadButtons("MODELS/X360BTNS.TXD");
-		break;
-	}
+	CFont::LoadButtons("MODELS/PS3BTNS.TXD");
 
 	// Unload current textures
 	for (int i = FE_CONTROLLER; i <= FE_ARROWS4; i++)
@@ -3694,11 +3672,9 @@ CMenuManager::LoadController(int8 type)
 
 	// Find the new txd to load
 	bool bTxdMissing = true;
-	if (controllerTypesPaths[type])
-		if (int file = CFileMgr::OpenFile(controllerTypesPaths[type])) {
-			CFileMgr::CloseFile(file);
-			bTxdMissing = false;
-		}
+	if (int file = CFileMgr::OpenFile("MODELS/FRONTEND_DS3.TXD")) {
+		CFileMgr::CloseFile(file);
+		bTxdMissing = false;
 
 	int txdSlot = -1;
 
@@ -3710,7 +3686,7 @@ CMenuManager::LoadController(int8 type)
 		txdSlot = frontend_controller;
 		if (txdSlot == -1)
 			txdSlot = CTxdStore::AddTxdSlot("frontend_controller");
-		CTxdStore::LoadTxd(txdSlot, controllerTypesPaths[type]);
+		CTxdStore::LoadTxd(txdSlot, "MODELS/FRONTEND_DS3.TXD");
 		CTxdStore::AddRef(txdSlot);
 	}
 
