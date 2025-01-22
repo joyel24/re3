@@ -89,38 +89,6 @@ mysrand(unsigned int seed)
 #ifdef CUSTOM_FRONTEND_OPTIONS
 #include "frontendoption.h"
 
-#ifdef MORE_LANGUAGES
-void LangPolSelect(int8 action)
-{
-	if (action == FEOPTION_ACTION_SELECT) {
-		FrontEndMenuManager.m_PrefsLanguage = CMenuManager::LANGUAGE_POLISH;
-		FrontEndMenuManager.m_bFrontEnd_ReloadObrTxtGxt = true;
-		FrontEndMenuManager.InitialiseChangedLanguageSettings();
-		FrontEndMenuManager.SaveSettings();
-	}
-}
-
-void LangRusSelect(int8 action)
-{
-	if (action == FEOPTION_ACTION_SELECT) {
-		FrontEndMenuManager.m_PrefsLanguage = CMenuManager::LANGUAGE_RUSSIAN;
-		FrontEndMenuManager.m_bFrontEnd_ReloadObrTxtGxt = true;
-		FrontEndMenuManager.InitialiseChangedLanguageSettings();
-		FrontEndMenuManager.SaveSettings();
-	}
-}
-
-void LangJapSelect(int8 action)
-{
-	if (action == FEOPTION_ACTION_SELECT) {
-		FrontEndMenuManager.m_PrefsLanguage = CMenuManager::LANGUAGE_JAPANESE;
-		FrontEndMenuManager.m_bFrontEnd_ReloadObrTxtGxt = true;
-		FrontEndMenuManager.InitialiseChangedLanguageSettings();
-		FrontEndMenuManager.SaveSettings();
-	}
-}
-#endif
-
 void
 CustomFrontendOptionsPopulate(void)
 {
@@ -146,35 +114,6 @@ CustomFrontendOptionsPopulate(void)
 		FrontendOptionAddSelect("FED_WLM", off_on, 2, (int8*)&CustomPipes::LightmapEnable, false, nil, "Graphics", "NeoLightMaps");
 		FrontendOptionAddSelect("FED_RGL", off_on, 2, (int8*)&CustomPipes::GlossEnable, false, nil, "Graphics", "NeoRoadGloss");
 #endif
-		CFileMgr::CloseFile(fd);
-	}
-#endif
-
-	// Add outsourced language translations, if files are found
-#ifdef MORE_LANGUAGES
-	int fd2;
-	FrontendOptionSetCursor(MENUPAGE_LANGUAGE_SETTINGS, 5, false);
-	if (fd = CFileMgr::OpenFile("text/polish.gxt","r")) {
-		if (fd2 = CFileMgr::OpenFile("models/fonts_p.txd","r")) {
-			FrontendOptionAddDynamic("FEL_POL", nil, nil, LangPolSelect, nil, nil);
-			CFileMgr::CloseFile(fd2);
-		}
-		CFileMgr::CloseFile(fd);
-	}
-
-	if (fd = CFileMgr::OpenFile("text/russian.gxt","r")) {
-		if (fd2 = CFileMgr::OpenFile("models/fonts_r.txd","r")) {
-			FrontendOptionAddDynamic("FEL_RUS", nil, nil, LangRusSelect, nil, nil);
-			CFileMgr::CloseFile(fd2);
-		}
-		CFileMgr::CloseFile(fd);
-	}
-
-	if (fd = CFileMgr::OpenFile("text/japanese.gxt","r")) {
-		if (fd2 = CFileMgr::OpenFile("models/fonts_j.txd","r")) {
-			FrontendOptionAddDynamic("FEL_JAP", nil, nil, LangJapSelect, nil, nil);
-			CFileMgr::CloseFile(fd2);
-		}
 		CFileMgr::CloseFile(fd);
 	}
 #endif
@@ -508,7 +447,6 @@ bool LoadINISettings()
 	ReadIniIfExists("Graphics", "Trails", &CMBlur::BlurOn);
 	ReadIniIfExists("General", "SkinFile", FrontEndMenuManager.m_PrefsSkinFile, 256);
 	ReadIniIfExists("Controller", "Method", &FrontEndMenuManager.m_ControlMethod);
-	ReadIniIfExists("General", "Language", &FrontEndMenuManager.m_PrefsLanguage);
 
 #ifdef EXTENDED_COLOURFILTER
 	ReadIniIfExists("CustomPipesValues", "PostFXIntensity", &CPostFX::Intensity);
@@ -610,7 +548,6 @@ void SaveINISettings()
 	StoreIni("Graphics", "Trails", CMBlur::BlurOn);
 	StoreIni("General", "SkinFile", FrontEndMenuManager.m_PrefsSkinFile, 256);
 	StoreIni("Controller", "Method", FrontEndMenuManager.m_ControlMethod);
-	StoreIni("General", "Language", FrontEndMenuManager.m_PrefsLanguage);
 
 #ifdef EXTENDED_COLOURFILTER
 	StoreIni("CustomPipesValues", "PostFXIntensity", CPostFX::Intensity);
