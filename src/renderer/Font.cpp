@@ -348,10 +348,9 @@ CFont::Initialise(void)
 	SetDropShadowPosition(0);
 	CTxdStore::PopCurrentTxd();
 
-#if !defined(GAMEPAD_MENU) && defined(BUTTON_ICONS)
+#if defined(BUTTON_ICONS)
 	// loaded in CMenuManager with GAMEPAD_MENU defined
-	LoadButtons("MODELS/X360BTNS.TXD");
-#endif
+	LoadButtons("MODELS/PS3BTNS.TXD");
 }
 
 #ifdef BUTTON_ICONS
