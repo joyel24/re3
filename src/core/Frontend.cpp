@@ -3665,6 +3665,7 @@ CMenuManager::LoadController()
 	if (int file = CFileMgr::OpenFile("MODELS/FRONTEND_DS3.TXD")) {
 		CFileMgr::CloseFile(file);
 		bTxdMissing = false;
+	}
 
 	int txdSlot = -1;
 
