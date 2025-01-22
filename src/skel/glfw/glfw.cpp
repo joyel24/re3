@@ -451,34 +451,11 @@ psInitialize(void)
 	WORD lang	= PRIMARYLANGID(GetSystemDefaultLCID());
 #endif
 
-	if ( lang  == LANG_ITALIAN )
-		CMenuManager::m_PrefsLanguage = CMenuManager::LANGUAGE_ITALIAN;
-	else if ( lang  == LANG_SPANISH )
-		CMenuManager::m_PrefsLanguage = CMenuManager::LANGUAGE_SPANISH;
-	else if ( lang  == LANG_GERMAN )
-	{
-		CGame::germanGame = true;
-		CGame::nastyGame = false;
-		CMenuManager::m_PrefsAllowNastyGame = false;
-		CMenuManager::m_PrefsLanguage = CMenuManager::LANGUAGE_GERMAN;
-	}
-	else if ( lang  == LANG_FRENCH )
-	{
-		CGame::frenchGame = true;
-		CGame::nastyGame = false;
-		CMenuManager::m_PrefsAllowNastyGame = false;
-		CMenuManager::m_PrefsLanguage = CMenuManager::LANGUAGE_FRENCH;
-	}
-	else
-		CMenuManager::m_PrefsLanguage = CMenuManager::LANGUAGE_AMERICAN;
-
 	FrontEndMenuManager.InitialiseMenuContentsAfterLoadingGame();
 
 	TheMemoryCard.Init();
 #else
 	C_PcSave::SetSaveDirectory(_psGetUserFilesFolder());
-	
-	InitialiseLanguage();
 
 #if GTA_VERSION < GTA3_PC_11
 	FrontEndMenuManager.LoadSettings();
@@ -1184,145 +1161,6 @@ CommandLineToArgv(RwChar *cmdLine, RwInt32 *argCount)
 	*argCount = numArgs;
 
 	return (RwChar **)res;
-}
-
-/*
- *****************************************************************************
- */
-void InitialiseLanguage()
-{
-#ifndef _WIN32
-	// Mandatory for Linux(Unix? Posix?) to set lang. to environment lang.
-	setlocale(LC_ALL, "");	
-
-	char *systemLang, *keyboardLang;
-
-	systemLang = setlocale (LC_ALL, NULL);
-	keyboardLang = setlocale (LC_CTYPE, NULL);
-	
-	short primUserLCID, primSystemLCID;
-	primUserLCID = primSystemLCID = !strncmp(systemLang, "fr_",3) ? LANG_FRENCH :
-					!strncmp(systemLang, "de_",3) ? LANG_GERMAN :
-					!strncmp(systemLang, "en_",3) ? LANG_ENGLISH :
-					!strncmp(systemLang, "it_",3) ? LANG_ITALIAN :
-					!strncmp(systemLang, "es_",3) ? LANG_SPANISH :
-					LANG_OTHER;
-
-	short primLayout = !strncmp(keyboardLang, "fr_",3) ? LANG_FRENCH : (!strncmp(keyboardLang, "de_",3) ? LANG_GERMAN : LANG_ENGLISH);
-
-	short subUserLCID, subSystemLCID;
-	subUserLCID = subSystemLCID = !strncmp(systemLang, "en_AU",5) ? SUBLANG_ENGLISH_AUS : SUBLANG_OTHER;
-	short subLayout = !strncmp(keyboardLang, "en_AU",5) ? SUBLANG_ENGLISH_AUS : SUBLANG_OTHER;
-
-#else
-	WORD primUserLCID	= PRIMARYLANGID(GetSystemDefaultLCID());
-	WORD primSystemLCID = PRIMARYLANGID(GetUserDefaultLCID());
-	WORD primLayout		= PRIMARYLANGID((DWORD)GetKeyboardLayout(0));
-	
-	WORD subUserLCID	= SUBLANGID(GetSystemDefaultLCID());
-	WORD subSystemLCID	= SUBLANGID(GetUserDefaultLCID());
-	WORD subLayout		= SUBLANGID((DWORD)GetKeyboardLayout(0));
-#endif
-	if (   primUserLCID	  == LANG_GERMAN
-		|| primSystemLCID == LANG_GERMAN
-		|| primLayout	  == LANG_GERMAN )
-	{
-		CGame::nastyGame = false;
-		CMenuManager::m_PrefsAllowNastyGame = false;
-		CGame::germanGame = true;
-	}
-	
-	if (   primUserLCID	  == LANG_FRENCH
-		|| primSystemLCID == LANG_FRENCH
-		|| primLayout	  == LANG_FRENCH )
-	{
-		CGame::nastyGame = false;
-		CMenuManager::m_PrefsAllowNastyGame = false;
-		CGame::frenchGame = true;
-	}
-	
-	if (   subUserLCID	 == SUBLANG_ENGLISH_AUS
-		|| subSystemLCID == SUBLANG_ENGLISH_AUS
-		|| subLayout	 == SUBLANG_ENGLISH_AUS )
-		CGame::noProstitutes = true;
-
-#ifdef NASTY_GAME
-	CGame::nastyGame = true;
-	CMenuManager::m_PrefsAllowNastyGame = true;
-	CGame::noProstitutes = false;
-#endif
-	
-	int32 lang;
-	
-	switch ( primSystemLCID )
-	{
-		case LANG_GERMAN:
-		{
-			lang = LANG_GERMAN;
-			break;
-		}
-		case LANG_FRENCH:
-		{
-			lang = LANG_FRENCH;
-			break;
-		}
-		case LANG_SPANISH:
-		{
-			lang = LANG_SPANISH;
-			break;
-		}
-		case LANG_ITALIAN:
-		{
-			lang = LANG_ITALIAN;
-			break;
-		}
-		default:
-		{
-			lang = ( subSystemLCID == SUBLANG_ENGLISH_AUS ) ? -99 : LANG_ENGLISH;
-			break;
-		}
-	}
-	
-	CMenuManager::OS_Language = primUserLCID;
-
-	switch ( lang )
-	{
-		case LANG_GERMAN:
-		{
-			CMenuManager::m_PrefsLanguage = CMenuManager::LANGUAGE_GERMAN;
-			break;
-		}
-		case LANG_SPANISH:
-		{
-			CMenuManager::m_PrefsLanguage = CMenuManager::LANGUAGE_SPANISH;
-			break;
-		}
-		case LANG_FRENCH:
-		{
-			CMenuManager::m_PrefsLanguage = CMenuManager::LANGUAGE_FRENCH;
-			break;
-		}
-		case LANG_ITALIAN:
-		{
-			CMenuManager::m_PrefsLanguage = CMenuManager::LANGUAGE_ITALIAN;
-			break;
-		}
-		default:
-		{
-			CMenuManager::m_PrefsLanguage = CMenuManager::LANGUAGE_AMERICAN;
-			break;
-		}
-	}
-
-#ifndef _WIN32
-	// TODO this is needed for strcasecmp to work correctly across all languages, but can these cause other problems??
-	setlocale(LC_CTYPE, "C");
-	setlocale(LC_COLLATE, "C");
-	setlocale(LC_NUMERIC, "C");
-#endif
-
-	TheText.Unload();
-	TheText.Load();
 }
 
 /*
