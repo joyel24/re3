@@ -141,14 +141,6 @@ int8 CMenuManager::m_nDisplayMSAALevel = 0;
 int8 CMenuManager::m_PrefsIslandLoading = ISLAND_LOADING_LOW;
 #endif
 
-#ifdef GAMEPAD_MENU
-#ifdef __SWITCH__
-int8 CMenuManager::m_PrefsControllerType = CONTROLLER_NINTENDO_SWITCH;
-#else
-int8 CMenuManager::m_PrefsControllerType = CONTROLLER_XBOXONE;
-#endif
-#endif
-
 int32 CMenuManager::OS_Language = LANG_ENGLISH;
 int8 CMenuManager::m_PrefsUseVibration;
 int8 CMenuManager::m_DisplayControllerOnFoot;
@@ -5815,69 +5807,6 @@ CMenuManager::PrintController(void)
 	float TEXT_R3_X = 238.0f + CONTROLLER_POS_X - centerX, TEXT_R3_Y = 109.0f + CONTROLLER_POS_Y - centerY;
 	float TEXT_L3_X = 84.0f + CONTROLLER_POS_X - centerX, TEXT_L3_Y = 162.0f + CONTROLLER_POS_Y - centerY;
 	float TEXT_L2R2_X = 74.0f + CONTROLLER_POS_X - centerX, TEXT_L2R2_Y = -6.0f + CONTROLLER_POS_Y - centerY;
-
-	switch (m_PrefsControllerType)
-	{
-	case CONTROLLER_DUALSHOCK4:
-		TEXT_L1_Y += 7.0f;
-		TEXT_L1_Y_VEH = TEXT_L1_Y;
-		TEXT_R1_Y += 7.0f;
-		TEXT_TRIANGLE_Y -= 1.0f;
-		TEXT_CIRCLE_Y -= 1.0f;
-		TEXT_CROSS_Y -= 1.0f;
-		TEXT_RSTICK_Y -= 4.0f;
-		TEXT_R3_Y -= 4.0f;
-		TEXT_DPAD_Y -= 1.0f;
-		TEXT_LSTICK_Y -= 6.0f;
-		TEXT_L3_X -= 2.0f;
-		break;
-	case CONTROLLER_XBOXONE:
-		TEXT_L2_X -= 2.0f;
-		TEXT_R2_X += 2.0f;
-		TEXT_L1_Y += 15.0f;
-		TEXT_L1_Y_VEH = TEXT_L1_Y;
-		TEXT_R1_Y += 15.0f;
-		TEXT_TRIANGLE_Y += 4.0f;
-		TEXT_CIRCLE_Y += 4.0f;
-		TEXT_CROSS_Y += 4.0f;
-		TEXT_RSTICK_Y += 1.0f;
-		TEXT_R3_Y += 1.0f;
-		TEXT_DPAD_Y += 29.0f;
-		TEXT_LSTICK_Y -= 22.0f;
-		TEXT_L3_X -= 36.0f;
-		TEXT_L2R2_Y += 5.0f;
-		TEXT_SELECT_X += 4.0f;
-		break;
-	case CONTROLLER_XBOX360:
-		TEXT_L2_X += 8.0f;
-		TEXT_R2_X -= 8.0f;
-		TEXT_L1_Y += 15.0f;
-		TEXT_L1_Y_VEH = TEXT_L1_Y;
-		TEXT_R1_Y += 15.0f;
-		TEXT_TRIANGLE_Y += 4.0f;
-		TEXT_CIRCLE_Y += 4.0f;
-		TEXT_CROSS_Y += 4.0f;
-		TEXT_RSTICK_Y += 4.0f;
-		TEXT_R3_Y += 4.0f;
-		TEXT_DPAD_Y += 30.0f;
-		TEXT_LSTICK_Y -= 21.0f;
-		TEXT_L3_X -= 36.0f;
-		TEXT_L2R2_Y += 5.0f;
-		TEXT_SELECT_X += 3.0f;
-		break;
-	case CONTROLLER_NINTENDO_SWITCH:
-		TEXT_L1_Y += 5.0f;
-		TEXT_L1_Y_VEH = TEXT_L1_Y;
-		TEXT_R1_Y += 5.0f;
-		TEXT_TRIANGLE_Y += 3.0f;
-		TEXT_CIRCLE_Y += 3.0f;
-		TEXT_CROSS_Y += 3.0f;
-		TEXT_LSTICK_Y -= 23.0f;
-		TEXT_DPAD_Y += 25.0;
-		TEXT_RSTICK_Y += 1.0f;
-		TEXT_R3_Y += 1.0f;
-		break;
-	};
 
 	if (m_DisplayControllerOnFoot) {
 		CFont::SetRightJustifyOn(); // X
