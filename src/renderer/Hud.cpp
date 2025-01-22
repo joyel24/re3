@@ -750,10 +750,7 @@ void CHud::Draw()
 					CFont::SetPropOn();
 					CFont::SetBackgroundOff();
 
-					if (FrontEndMenuManager.m_PrefsLanguage == CMenuManager::LANGUAGE_SPANISH)
-						CFont::SetScale(SCREEN_SCALE_X(1.2f * 0.8f), SCREEN_SCALE_Y(1.2f));
-					else
-						CFont::SetScale(SCREEN_SCALE_X(1.2f), SCREEN_SCALE_Y(1.2f));
+					CFont::SetScale(SCREEN_SCALE_X(1.2f), SCREEN_SCALE_Y(1.2f));
 
 					CFont::SetRightJustifyOn();
 					CFont::SetRightJustifyWrap(0.0f);
@@ -844,10 +841,7 @@ void CHud::Draw()
 					CFont::SetPropOn();
 					CFont::SetBackgroundOff();
 
-					if (FrontEndMenuManager.m_PrefsLanguage != CMenuManager::LANGUAGE_ITALIAN && FrontEndMenuManager.m_PrefsLanguage != CMenuManager::LANGUAGE_SPANISH)
-						CFont::SetScale(SCREEN_SCALE_X(1.2f), SCREEN_SCALE_Y(1.2f));
-					else
-						CFont::SetScale(SCREEN_SCALE_X(1.2f * 0.85f), SCREEN_SCALE_Y(1.2f));
+					CFont::SetScale(SCREEN_SCALE_X(1.2f), SCREEN_SCALE_Y(1.2f));
 
 					CFont::SetRightJustifyOn();
 					CFont::SetRightJustifyWrap(0.0f);
@@ -1395,23 +1389,11 @@ void CHud::DrawAfterFade()
 			CFont::SetCentreOff();
 			CFont::SetPropOn();
 
-			if (CGame::germanGame)
-				CFont::SetScale(SCREEN_SCALE_X(0.52f * 0.85f), SCREEN_SCALE_Y(1.1f * 0.85f));
-#ifdef MORE_LANGUAGES
-			else if (CFont::IsJapanese())
-				CFont::SetScale(SCREEN_SCALE_X(0.52f) * 1.35f, SCREEN_SCALE_Y(1.1f) * 1.25f);
-#endif
-			else
-				CFont::SetScale(SCREEN_SCALE_X(0.52f), SCREEN_SCALE_Y(1.1f));
+			CFont::SetScale(SCREEN_SCALE_X(0.52f), SCREEN_SCALE_Y(1.1f));
 
 			CFont::SetColor(CRGBA(175, 175, 175, 255));
 			CFont::SetJustifyOff();			
-#ifdef MORE_LANGUAGES
-			if (CFont::IsJapanese())
-				CFont::SetWrapx(SCREEN_SCALE_X(229.0f) + SCREEN_SCALE_X(26.0f) - SCREEN_SCALE_X_FIX(4.0f));
-			else
-#endif
-				CFont::SetWrapx(SCREEN_SCALE_X(200.0f) + SCREEN_SCALE_X(26.0f) - SCREEN_SCALE_X_FIX(4.0f));
+			CFont::SetWrapx(SCREEN_SCALE_X(200.0f) + SCREEN_SCALE_X(26.0f) - SCREEN_SCALE_X_FIX(4.0f));
 			CFont::SetFontStyle(FONT_LOCALE(FONT_BANK));
 			CFont::SetBackgroundOn();
 			CFont::SetBackGroundOnlyTextOff();
@@ -1597,10 +1579,7 @@ void CHud::DrawAfterFade()
 			CFont::SetJustifyOff();
 			CFont::SetBackgroundOff();
 
-			if (CGame::frenchGame || FrontEndMenuManager.m_PrefsLanguage == CMenuManager::LANGUAGE_SPANISH)
-				CFont::SetScale(SCREEN_SCALE_X_PC(0.884f), SCREEN_SCALE_Y_PC(1.36f));
-			else
-				CFont::SetScale(SCREEN_SCALE_X_PC(1.04f), SCREEN_SCALE_Y_PC(1.6f));
+			CFont::SetScale(SCREEN_SCALE_X_PC(1.04f), SCREEN_SCALE_Y_PC(1.6f));
 
 			CFont::SetPropOn();
 #ifdef FIX_BUGS
