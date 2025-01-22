@@ -351,6 +351,7 @@ CFont::Initialise(void)
 #if defined(BUTTON_ICONS)
 	// loaded in CMenuManager with GAMEPAD_MENU defined
 	LoadButtons("MODELS/PS3BTNS.TXD");
+#endif
 }
 
 #ifdef BUTTON_ICONS
