@@ -2392,11 +2392,8 @@ Previous Mission Briefs:
 [FEC_NA]
 NA
 
-[FEC_CWL]
-Cycle Weapon left
-
-[FEC_CWR]
-Cycle Weapon right
+[FEC_CWS]
+Cycle Weapons
 
 [FEC_LOF]
 Look forward
