@@ -1160,16 +1160,6 @@ CMenuManager::Draw()
 			CFont::SetScale(MENU_X(MENU_TEXT_SIZE_X = BIGTEXT_X_SCALE), MENU_Y(MENU_TEXT_SIZE_Y = BIGTEXT_Y_SCALE));
 			CFont::SetCentreOn();
 			break;
-#ifdef FIX_BUGS
-		case MENUPAGE_CONTROLLER_SETTINGS:
-			columnWidth = 50;
-			headerHeight = -50;
-			lineHeight = 20;
-			CFont::SetFontStyle(FONT_LOCALE(FONT_HEADING));
-			CFont::SetScale(MENU_X(MENU_TEXT_SIZE_X = MEDIUMTEXT_X_SCALE), MENU_Y(MENU_TEXT_SIZE_Y = MEDIUMTEXT_Y_SCALE));
-			CFont::SetRightJustifyOff();
-			break;
-#endif
 		case MENUPAGE_SOUND_SETTINGS:
 		case MENUPAGE_DISPLAY_SETTINGS:
 		case MENUPAGE_MULTIPLAYER_CREATE:
@@ -1179,7 +1169,8 @@ CMenuManager::Draw()
 		case MENUPAGE_CONTROLLER_PC_OLD3:
 		case MENUPAGE_CONTROLLER_PC_OLD4:
 		case MENUPAGE_CONTROLLER_DEBUG:
-	    case MENUPAGE_MOUSE_CONTROLS:
+	    	case MENUPAGE_MOUSE_CONTROLS:
+		case MENUPAGE_CONTROLLER_SETTINGS:
 			columnWidth = 50;
 			headerHeight = 0;
 			lineHeight = 20;
@@ -2615,9 +2606,9 @@ CMenuManager::DrawFrontEndNormal()
 	RwRenderStateSet(rwRENDERSTATEZWRITEENABLE, (void*)FALSE);
 	RwRenderStateSet(rwRENDERSTATEVERTEXALPHAENABLE, (void*)TRUE);
 	m_aFrontEndSprites[FE2_MAINPANEL_UL].Draw(CRect(MENU_X_LEFT_ALIGNED(0.0f) - 1.0f, 0.0f, (SCREEN_WIDTH / 2) + 2.0f, (SCREEN_HEIGHT / 2) + 1.0f), CRGBA(255, 255, 255, 255));
-	m_aFrontEndSprites[FE2_MAINPANEL_UR].Draw(CRect((SCREEN_WIDTH / 2) - 2.0f, 0.0f, MENU_X_RIGHT_ALIGNED(0.0f), (SCREEN_HEIGHT / 2) + 1.0f) , CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_UR].Draw(CRect((SCREEN_WIDTH / 2) - 1.5f, 0.0f, MENU_X_RIGHT_ALIGNED(0.0f), (SCREEN_HEIGHT / 2) + 1.0f) , CRGBA(255, 255, 255, 255));
 	m_aFrontEndSprites[FE2_MAINPANEL_DL].Draw(CRect(MENU_X_LEFT_ALIGNED(0.0f) - 1.0f, (SCREEN_HEIGHT / 2) - 1.0f, (SCREEN_WIDTH / 2) + 2.0f, SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
-	m_aFrontEndSprites[FE2_MAINPANEL_DR].Draw(CRect((SCREEN_WIDTH / 2) - 2.0f, (SCREEN_HEIGHT / 2) - 1.0f, MENU_X_RIGHT_ALIGNED(0.0f), SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_DR].Draw(CRect((SCREEN_WIDTH / 2) - 1.5f, (SCREEN_HEIGHT / 2) - 1.0f, MENU_X_RIGHT_ALIGNED(0.0f), SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
 
 	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
 	eFrontendSprites currentSprite;
