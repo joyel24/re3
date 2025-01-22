@@ -95,12 +95,6 @@
 	#define INVERT_PAD_SELECTOR
 #endif
 
-#ifdef GAMEPAD_MENU
-	#define SELECT_CONTROLLER_TYPE  MENUACTION_CFO_SELECT, "FEC_TYP", { new CCFOSelect((int8*)&CMenuManager::m_PrefsControllerType, "Controller", "Type", controllerTypes, ARRAY_SIZE(controllerTypes), false, ControllerTypeAfterChange) },
-#else
-	#define SELECT_CONTROLLER_TYPE
-#endif
-
 const char *filterNames[] = { "FEM_NON", "FEM_SIM", "FEM_NRM", "FEM_MOB" };
 const char *off_on[] = { "FEM_OFF", "FEM_ON" };
 
@@ -426,7 +420,6 @@ CMenuScreenCustom aScreens[MENUPAGES] = {
 		MENUACTION_CTRLDISPLAY,		"FEC_CDP", { nil, SAVESLOT_NONE, MENUPAGE_CONTROLLER_SETTINGS },
 		INVERT_PAD_SELECTOR
 		MENUACTION_CTRLVIBRATION,	"FEC_VIB", { nil, SAVESLOT_NONE, MENUPAGE_CONTROLLER_SETTINGS },
-		SELECT_CONTROLLER_TYPE
 		MENUACTION_CHANGEMENU,		"FEDS_TB", { nil, SAVESLOT_NONE, MENUPAGE_NONE },
 	},
 
