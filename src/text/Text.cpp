@@ -30,36 +30,7 @@ CText::Load(void)
 	filedata = new uint8[0x40000];
 
 	CFileMgr::SetDir("TEXT");
-	switch(CMenuManager::m_PrefsLanguage){
-	case CMenuManager::LANGUAGE_AMERICAN:
-		sprintf(filename, "AMERICAN.GXT");
-		break;
-	case CMenuManager::LANGUAGE_FRENCH:
-		sprintf(filename, "FRENCH.GXT");
-		break;
-	case CMenuManager::LANGUAGE_GERMAN:
-		sprintf(filename, "GERMAN.GXT");
-		break;
-	case CMenuManager::LANGUAGE_ITALIAN:
-		sprintf(filename, "ITALIAN.GXT");
-		break;
-	case CMenuManager::LANGUAGE_SPANISH:
-		sprintf(filename, "SPANISH.GXT");
-		break;
-#ifdef MORE_LANGUAGES
-	case CMenuManager::LANGUAGE_POLISH:
-		sprintf(filename, "POLISH.GXT");
-		break;
-	case CMenuManager::LANGUAGE_RUSSIAN:
-		sprintf(filename, "RUSSIAN.GXT");
-		break;
-	case CMenuManager::LANGUAGE_JAPANESE:
-		sprintf(filename, "JAPANESE.GXT");
-		break;
-#endif
-	}
-
-	length = CFileMgr::LoadFile(filename, filedata, 0x40000, "rb");
+	length = CFileMgr::LoadFile("AMERICAN.GXT, filedata, 0x40000, "rb");
 	CFileMgr::SetDir("");
 
 	offset = 0;
