@@ -597,7 +597,6 @@ public:
 	bool m_bKeyChangeNotProcessed;
 	char m_aSkinName[256];
 	int32 m_nHelperTextMsgId;
-	bool m_bLanguageLoaded;
 	bool m_bMenuActive;
 	bool m_bMenuStateChanged;
 	bool m_bWaitingForNewKeyBind;
