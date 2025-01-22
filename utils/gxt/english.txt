@@ -2452,11 +2452,8 @@ Radio station cycle
 [FEC_BRA]
 Brake or Reverse
 
-[FEC_HAB]
-Hand brake
-
 [FEC_CAW]
-Car weapon
+Hand brake or Car weapon
 
 [FEC_ACC]
 Accelerate
