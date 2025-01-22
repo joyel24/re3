@@ -381,14 +381,6 @@ void DetectJoystickGoBack() {
 }
 #endif
 
-#ifdef GAMEPAD_MENU
-const char* controllerTypes[] = { "FEC_DS2", "FEC_DS3", "FEC_DS4", "FEC_360", "FEC_ONE", "FEC_NSW" };
-void ControllerTypeAfterChange(int8 before, int8 after)
-{
-	FrontEndMenuManager.LoadController(after);
-}
-#endif
-
 CMenuScreenCustom aScreens[MENUPAGES] = {
 	// MENUPAGE_NONE = 0
 	{ "", MENUPAGE_DISABLED, MENUPAGE_DISABLED, nil, nil, },
