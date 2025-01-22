@@ -141,7 +141,6 @@ int8 CMenuManager::m_nDisplayMSAALevel = 0;
 int8 CMenuManager::m_PrefsIslandLoading = ISLAND_LOADING_LOW;
 #endif
 
-int32 CMenuManager::OS_Language = LANG_ENGLISH;
 int8 CMenuManager::m_PrefsUseVibration;
 int8 CMenuManager::m_DisplayControllerOnFoot;
 int8 CMenuManager::m_PrefsVsync = 1;
@@ -151,7 +150,6 @@ int8 CMenuManager::m_PrefsShowSubtitles = 1;
 int8 CMenuManager::m_PrefsSpeakers;
 int32 CMenuManager::m_ControlMethod = CONTROL_CLASSIC;
 int8 CMenuManager::m_PrefsDMA = 1;
-int32 CMenuManager::m_PrefsLanguage;
 uint8 CMenuManager::m_PrefsStereoMono; // unused except restore settings
 
 bool CMenuManager::m_PrefsAllowNastyGame = true;
@@ -215,7 +213,6 @@ const char* FrontendFilenames[][2] = {
 	{"fe_iconsave", "" },
 	{"fe_iconaudio", "" },
 	{"fe_icondisplay", "" },
-	{"fe_iconlanguage", "" },
 	{"fe_controller", "" },
 	{"fe_controllersh", "" },
 	{"fe_arrows1", "" },
@@ -759,14 +756,6 @@ CMenuManager::BuildStatLine(Const char *text, void *stat, bool itsFloat, void *s
 	if (!text)
 		return;
 
-#ifdef MORE_LANGUAGES
-	if (CFont::IsJapanese() && stat2)
-		if (itsFloat)
-			sprintf(gString2, "  %.2f/%.2f", *(float*)stat, *(float*)stat2);
-		else
-			sprintf(gString2, "  %d/%d", *(int*)stat, *(int*)stat2);
-	else
-#endif
 	if (stat2) {
 		if (itsFloat) 
 			sprintf(gString2, "  %.2f %s %.2f", *(float*)stat, UnicodeToAscii(TheText.Get("FEST_OO")), *(float*)stat2);
@@ -2178,12 +2167,7 @@ CMenuManager::DrawControllerBound(int32 yStart, int32 xStart, int32 unused, int8
 					nextX += CFont::GetStringWidth(seperator, true) + bindingMargin;
 				}
 				CFont::PrintString(nextX, nextY, settingText);
-#ifdef MORE_LANGUAGES
-				if (CFont::IsJapanese())
-					nextX += CFont::GetStringWidth_Jap(settingText) + bindingMargin;
-				else
-#endif
-					nextX += CFont::GetStringWidth(settingText, true) + bindingMargin;
+				nextX += CFont::GetStringWidth(settingText, true) + bindingMargin;
 			}
 		}
 		if (controllerAction == -1) {
@@ -2473,10 +2457,7 @@ CMenuManager::DrawControllerSetupScreen()
 			CFont::SetColor(CRGBA(SELECTEDMENUOPTION_COLOR.r, SELECTEDMENUOPTION_COLOR.g, SELECTEDMENUOPTION_COLOR.b, FadeIn(255)));
 
 		CFont::SetRightJustifyOff();
-		if (m_PrefsLanguage == LANGUAGE_GERMAN && (i == 20 || i == 21))
-			CFont::SetScale(MENU_X(0.32f), MENU_Y(SMALLESTTEXT_Y_SCALE));
-		else
-			CFont::SetScale(MENU_X(SMALLESTTEXT_X_SCALE), MENU_Y(SMALLESTTEXT_Y_SCALE));
+		CFont::SetScale(MENU_X(SMALLESTTEXT_X_SCALE), MENU_Y(SMALLESTTEXT_Y_SCALE));
 
 		CFont::PrintString(MENU_X_LEFT_ALIGNED(CONTSETUP_COLUMN_1_X), MENU_Y(i * rowHeight + yStart), actionText);
 	}
@@ -2527,9 +2508,8 @@ CMenuManager::DrawFrontEnd()
 				setBbItem(bbNames[1], "FEB_CON",MENUPAGE_CONTROLLER_PC)
 				setBbItem(bbNames[2], "FEB_AUD",MENUPAGE_SOUND_SETTINGS)
 				setBbItem(bbNames[3], "FEB_DIS",MENUPAGE_DISPLAY_SETTINGS)
-				setBbItem(bbNames[4], "FEB_LAN",MENUPAGE_LANGUAGE_SETTINGS)
-				setBbItem(bbNames[5], "FESZ_QU",MENUPAGE_EXIT)
-				bbTabCount = 6;
+				setBbItem(bbNames[4], "FESZ_QU",MENUPAGE_EXIT)
+				bbTabCount = 5;
 			}
 		} else {
 			if (bbTabCount != 8) {
@@ -2539,9 +2519,8 @@ CMenuManager::DrawFrontEnd()
 				setBbItem(bbNames[3], "FEB_CON",MENUPAGE_CONTROLLER_PC)
 				setBbItem(bbNames[4], "FEB_AUD",MENUPAGE_SOUND_SETTINGS)
 				setBbItem(bbNames[5], "FEB_DIS",MENUPAGE_DISPLAY_SETTINGS)
-				setBbItem(bbNames[6], "FEB_LAN",MENUPAGE_LANGUAGE_SETTINGS)
-				setBbItem(bbNames[7], "FESZ_QU",MENUPAGE_EXIT)
-				bbTabCount = 8;
+				setBbItem(bbNames[6], "FESZ_QU",MENUPAGE_EXIT)
+				bbTabCount = 7;
 			}
 		}
 		m_nCurrScreen = bbNames[0].screenId;
@@ -2648,9 +2627,6 @@ CMenuManager::DrawFrontEndNormal()
 		case MENUPAGE_PAUSE_MENU:
 		case MENUPAGE_EXIT:
 			currentSprite = FE_ICONSTATS;
-			break;
-		case MENUPAGE_LANGUAGE_SETTINGS:
-			currentSprite = FE_ICONLANGUAGE;
 			break;
 		case MENUPAGE_CHOOSE_LOAD_SLOT:
 		case MENUPAGE_CHOOSE_DELETE_SLOT:
@@ -3140,15 +3116,7 @@ CMenuManager::DrawPlayerSetupScreen()
 	CFont::SetScale(MENU_X(MENUACTION_SCALE_MULT), MENU_Y(MENUACTION_SCALE_MULT));
 	CFont::SetRightJustifyOn();
 	CFont::PrintString(MENU_X_RIGHT_ALIGNED(PLAYERSETUP_DATE_COLUMN_RIGHT), MENU_Y(PLAYERSETUP_LIST_TOP), TheText.Get("FES_DAT"));
-	switch (m_PrefsLanguage) {
-		case LANGUAGE_FRENCH:
-		case LANGUAGE_SPANISH:
-			CFont::SetScale(MENU_X(0.6f), MENU_Y(MENUACTION_SCALE_MULT));
-			break;
-		default:
-			CFont::SetScale(MENU_X(MENUACTION_SCALE_MULT), MENU_Y(MENUACTION_SCALE_MULT));
-			break;
-	}
+	CFont::SetScale(MENU_X(MENUACTION_SCALE_MULT), MENU_Y(MENUACTION_SCALE_MULT));
 	CFont::SetRightJustifyOff();
 	CFont::PrintString(MENU_X_LEFT_ALIGNED(PLAYERSETUP_SKIN_COLUMN_LEFT), MENU_Y(PLAYERSETUP_LIST_TOP), TheText.Get("FES_SKN"));
 
@@ -3308,21 +3276,7 @@ CMenuManager::DrawPlayerSetupScreen()
 		// Big apply button
 		if (strcmp(m_aSkinName, m_PrefsSkinFile) != 0) {
 			CFont::SetFontStyle(FONT_LOCALE(FONT_HEADING));
-			switch (m_PrefsLanguage) {
-				case LANGUAGE_FRENCH:
-					CFont::SetScale(MENU_X(1.1f), MENU_Y(1.9f));
-					break;
-				case LANGUAGE_GERMAN:
-					CFont::SetScale(MENU_X(0.85f), MENU_Y(1.9f));
-					break;
-				case LANGUAGE_ITALIAN:
-				case LANGUAGE_SPANISH:
-					CFont::SetScale(MENU_X(1.4f), MENU_Y(1.9f));
-					break;
-				default:
-					CFont::SetScale(MENU_X(1.9f), MENU_Y(1.9f));
-					break;
-			}
+			CFont::SetScale(MENU_X(1.9f), MENU_Y(1.9f));
 			CFont::SetColor(CRGBA(SELECTEDMENUOPTION_COLOR.r, SELECTEDMENUOPTION_COLOR.g, SELECTEDMENUOPTION_COLOR.b, FadeIn(120)));
 			CFont::SetRightJustifyOff();
 			CFont::PrintString(MENU_X_LEFT_ALIGNED(20.0f), MENU_Y(220.0f), TheText.Get("FET_APL"));
@@ -3496,63 +3450,6 @@ CMenuManager::GetStartOptionsCntrlConfigScreens()
 }
 
 void
-CMenuManager::InitialiseChangedLanguageSettings()
-{
-	if (m_bFrontEnd_ReloadObrTxtGxt) {
-		m_bFrontEnd_ReloadObrTxtGxt = false;
-#ifdef FIX_BUGS
-		if (gGameState > GS_INIT_ONCE)
-#endif
-		CTimer::Stop();
-		TheText.Unload();
-		TheText.Load();
-#ifdef FIX_BUGS
-		if (gGameState > GS_INIT_ONCE)
-#endif
-		CTimer::Update();
-		CGame::frenchGame = false;
-		CGame::germanGame = false;
-#ifdef MORE_LANGUAGES
-		CGame::russianGame = false;
-		CGame::japaneseGame = false;
-		switch (m_PrefsLanguage) {
-		case LANGUAGE_POLISH:
-			CFont::ReloadFonts(FONT_LANGSET_POLISH);
-			break;
-		case LANGUAGE_RUSSIAN:
-			CFont::ReloadFonts(FONT_LANGSET_RUSSIAN);
-			break;
-		case LANGUAGE_JAPANESE:
-			CFont::ReloadFonts(FONT_LANGSET_JAPANESE);
-			break;
-		default:
-			CFont::ReloadFonts(FONT_LANGSET_EFIGS);
-			break;
-		}
-#endif
-
-		switch (m_PrefsLanguage) {
-		case LANGUAGE_FRENCH:
-			CGame::frenchGame = true;
-			break;
-		case LANGUAGE_GERMAN:
-			CGame::germanGame = true;
-			break;
-#ifdef MORE_LANGUAGES
-		case LANGUAGE_RUSSIAN:
-			CGame::russianGame = true;
-			break;
-		case LANGUAGE_JAPANESE:
-			CGame::japaneseGame = true;
-			break;
-#endif
-		default:
-			break;
-		}
-	}
-}
-
-void
 CMenuManager::LoadAllTextures()
 {
 	if (m_bSpritesLoaded)
@@ -3697,7 +3594,6 @@ CMenuManager::LoadSettings()
 	CFileMgr::SetDirMyDocuments();
 	int fileHandle = CFileMgr::OpenFile("gta3.set", "r");
 
-	int32 prevLang = m_PrefsLanguage;
 #if GTA_VERSION >= GTA3_PC_11
 	CMBlur::BlurOn = (_dwOperatingSystemVersion != OS_WIN98);
 #else
@@ -3760,7 +3656,6 @@ CMenuManager::LoadSettings()
 			CFileMgr::Read(fileHandle, (char*)&CMBlur::BlurOn, 1);
 			CFileMgr::Read(fileHandle, m_PrefsSkinFile, 256);
 			CFileMgr::Read(fileHandle, (char*)&m_ControlMethod, 1);
-			CFileMgr::Read(fileHandle, (char*)&m_PrefsLanguage, 1);
 		}
 	}
 
@@ -3778,21 +3673,6 @@ CMenuManager::LoadSettings()
 
 	if (m_nPrefsAudio3DProviderIndex == -1)
 		m_nPrefsAudio3DProviderIndex = -2;
-
-	if (m_PrefsLanguage == prevLang)
-		m_bLanguageLoaded = false;
-	else {
-		m_bLanguageLoaded = true;
-		// Already called in InitialiseChangedLanguageSettings
-		/*
-		TheText.Unload();
-		TheText.Load();
-		*/
-		m_bFrontEnd_ReloadObrTxtGxt = true;
-		InitialiseChangedLanguageSettings();
-
-		OutputDebugString("The previously saved language is now in use");
-	}
 
 	WIN32_FIND_DATA FindFileData;
 	char skinfile[256+16];	// Stack analysis shows 16 bits gap, but I don't trust it. It may very well be MAX_PATH(260).
@@ -3860,7 +3740,6 @@ CMenuManager::SaveSettings()
 		CFileMgr::Write(fileHandle, (char*)&CMBlur::BlurOn, 1);
 		CFileMgr::Write(fileHandle, m_PrefsSkinFile, 256);
 		CFileMgr::Write(fileHandle, (char*)&m_ControlMethod, 1);
-		CFileMgr::Write(fileHandle, (char*)&m_PrefsLanguage, 1);
 	}
 
 	CFileMgr::CloseFile(fileHandle);
@@ -4057,20 +3936,10 @@ CMenuManager::PrintStats()
 	CFont::SetColor(CRGBA(LABEL_COLOR.r, LABEL_COLOR.g, LABEL_COLOR.b, FadeIn(255)));
 	CFont::SetRightJustifyOff();
 	CFont::PrintString(nextX, MENU_Y(STATS_RATING_Y), TheText.Get("CRIMRA"));
-#ifdef MORE_LANGUAGES
-	if (CFont::IsJapanese())
-		nextX += MENU_X(10.0f) + CFont::GetStringWidth_Jap(TheText.Get("CRIMRA"));
-	else
-#endif
-		nextX += MENU_X(10.0f) + CFont::GetStringWidth(TheText.Get("CRIMRA"), true);
+	nextX += MENU_X(10.0f) + CFont::GetStringWidth(TheText.Get("CRIMRA"), true);
 	UnicodeStrcpy(gUString, CStats::FindCriminalRatingString());
 	CFont::PrintString(nextX, MENU_Y(STATS_RATING_Y), gUString);
-#ifdef MORE_LANGUAGES
-	if (CFont::IsJapanese())
-		nextX += MENU_X(6.0f) + CFont::GetStringWidth_Jap(gUString);
-	else
-#endif
-		nextX += MENU_X(6.0f) + CFont::GetStringWidth(gUString, true);
+	nextX += MENU_X(6.0f) + CFont::GetStringWidth(gUString, true);
 	sprintf(gString, "%d", CStats::FindCriminalRatingNumber());
 	AsciiToUnicode(gString, gUString);
 	CFont::PrintString(nextX, MENU_Y(STATS_RATING_Y), gUString);
@@ -4092,7 +3961,6 @@ CMenuManager::Process(void)
 		return;
 
 	m_bWantToRestart = false;
-	InitialiseChangedLanguageSettings();
 
 	// Just a hack by R* to not make game continuously resume/pause. But we it seems we can live with it.
 	if (CPad::GetPad(0)->GetEscapeJustDown())
@@ -4837,36 +4705,6 @@ CMenuManager::ProcessButtonPresses(void)
 					DMAudio.PlayFrontEndTrack(m_PrefsRadioStation, TRUE);
 					OutputDebugString("FRONTEND RADIO STATION CHANGED");
 #endif
-					break;
-				case MENUACTION_LANG_ENG:
-					m_PrefsLanguage = LANGUAGE_AMERICAN;
-					m_bFrontEnd_ReloadObrTxtGxt = true;
-					InitialiseChangedLanguageSettings();
-					SaveSettings();
-					break;
-				case MENUACTION_LANG_FRE:
-					m_PrefsLanguage = LANGUAGE_FRENCH;
-					m_bFrontEnd_ReloadObrTxtGxt = true;
-					InitialiseChangedLanguageSettings();
-					SaveSettings();
-					break;
-				case MENUACTION_LANG_GER:
-					m_PrefsLanguage = LANGUAGE_GERMAN;
-					m_bFrontEnd_ReloadObrTxtGxt = true;
-					InitialiseChangedLanguageSettings();
-					SaveSettings();
-					break;
-				case MENUACTION_LANG_ITA:
-					m_PrefsLanguage = LANGUAGE_ITALIAN;
-					m_bFrontEnd_ReloadObrTxtGxt = true;
-					InitialiseChangedLanguageSettings();
-					SaveSettings();
-					break;
-				case MENUACTION_LANG_SPA:
-					m_PrefsLanguage = LANGUAGE_SPANISH;
-					m_bFrontEnd_ReloadObrTxtGxt = true;
-					InitialiseChangedLanguageSettings();
-					SaveSettings();
 					break;
 				case MENUACTION_POPULATESLOTS_CHANGEMENU:
 					PcSaveHelper.PopulateSlotInfo();
@@ -6253,18 +6091,8 @@ CMenuManager::PrintMap(void)
 
 	float nextX = MENU_X(30.0f), nextY = 95.0f;
 	wchar *text;
-#ifdef MORE_LANGUAGES
-#define TEXT_PIECE(key,extraSpace) \
-	text = TheText.Get(key);\
-	CFont::PrintString(nextX, SCREEN_SCALE_FROM_BOTTOM(nextY), text);\
-	if (CFont::IsJapanese())\
-		nextX += CFont::GetStringWidth_Jap(text) + MENU_X(extraSpace);\
-	else\
-		nextX += CFont::GetStringWidth(text, true) + MENU_X(extraSpace);
-#else
 #define TEXT_PIECE(key,extraSpace) \
 	text = TheText.Get(key); CFont::PrintString(nextX, SCREEN_SCALE_FROM_BOTTOM(nextY), text); nextX += CFont::GetStringWidth(text, true) + MENU_X(extraSpace);
-#endif
 
 	TEXT_PIECE("FEC_MWF", 3.0f);
 	TEXT_PIECE("FEC_PGU", 1.0f);
@@ -6437,33 +6265,19 @@ CMenuManager::ConstructStatLine(int rowIdx)
 		STAT_LINE_1(int, "FEST_H4", CStats::HighestScores[4]);
 	}
 
-	switch (m_PrefsLanguage) {
-		case LANGUAGE_AMERICAN:
 #ifndef USE_MEASUREMENTS_IN_METERS
-			STAT_LINE_1(float, "FEST_DF", CStats::DistanceTravelledOnFoot * MILES_IN_METER);
-			STAT_LINE_1(float, "FEST_DC", CStats::DistanceTravelledInVehicle * MILES_IN_METER);
-			STAT_LINE_1(int, "MMRAIN", CStats::mmRain);
-			STAT_LINE_1(float, "MXCARD", CStats::MaximumJumpDistance * FEET_IN_METER);
-			STAT_LINE_1(float, "MXCARJ", CStats::MaximumJumpHeight * FEET_IN_METER);
-			break;
+		STAT_LINE_1(float, "FEST_DF", CStats::DistanceTravelledOnFoot * MILES_IN_METER);
+		STAT_LINE_1(float, "FEST_DC", CStats::DistanceTravelledInVehicle * MILES_IN_METER);
+		STAT_LINE_1(int, "MMRAIN", CStats::mmRain);
+		STAT_LINE_1(float, "MXCARD", CStats::MaximumJumpDistance * FEET_IN_METER);
+		STAT_LINE_1(float, "MXCARJ", CStats::MaximumJumpHeight * FEET_IN_METER);
+#else
+		STAT_LINE_1(float, "FESTDFM", CStats::DistanceTravelledOnFoot);
+		STAT_LINE_1(float, "FESTDCM", CStats::DistanceTravelledInVehicle);
+		STAT_LINE_1(int, "MMRAIN", CStats::mmRain);
+		STAT_LINE_1(float, "MXCARDM", CStats::MaximumJumpDistance);
+		STAT_LINE_1(float, "MXCARJM", CStats::MaximumJumpHeight);
 #endif
-		case LANGUAGE_FRENCH:
-		case LANGUAGE_GERMAN:
-		case LANGUAGE_ITALIAN:
-		case LANGUAGE_SPANISH:
-#ifdef MORE_LANGUAGES
-		case LANGUAGE_POLISH:
-		case LANGUAGE_RUSSIAN:
-		case LANGUAGE_JAPANESE:
-#endif
-			STAT_LINE_1(float, "FESTDFM", CStats::DistanceTravelledOnFoot);
-			STAT_LINE_1(float, "FESTDCM", CStats::DistanceTravelledInVehicle);
-			STAT_LINE_1(int, "MMRAIN", CStats::mmRain);
-			STAT_LINE_1(float, "MXCARDM", CStats::MaximumJumpDistance);
-			STAT_LINE_1(float, "MXCARJM", CStats::MaximumJumpHeight);
-			break;
-		default:
-			break;
 	}
 
 	STAT_LINE_1(int, "MXFLIP", CStats::MaximumJumpFlips);
