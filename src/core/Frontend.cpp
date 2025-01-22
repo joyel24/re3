@@ -6266,19 +6266,18 @@ CMenuManager::ConstructStatLine(int rowIdx)
 	}
 
 #ifndef USE_MEASUREMENTS_IN_METERS
-		STAT_LINE_1(float, "FEST_DF", CStats::DistanceTravelledOnFoot * MILES_IN_METER);
-		STAT_LINE_1(float, "FEST_DC", CStats::DistanceTravelledInVehicle * MILES_IN_METER);
-		STAT_LINE_1(int, "MMRAIN", CStats::mmRain);
-		STAT_LINE_1(float, "MXCARD", CStats::MaximumJumpDistance * FEET_IN_METER);
-		STAT_LINE_1(float, "MXCARJ", CStats::MaximumJumpHeight * FEET_IN_METER);
+	STAT_LINE_1(float, "FEST_DF", CStats::DistanceTravelledOnFoot * MILES_IN_METER);
+	STAT_LINE_1(float, "FEST_DC", CStats::DistanceTravelledInVehicle * MILES_IN_METER);
+	STAT_LINE_1(int, "MMRAIN", CStats::mmRain);
+	STAT_LINE_1(float, "MXCARD", CStats::MaximumJumpDistance * FEET_IN_METER);
+	STAT_LINE_1(float, "MXCARJ", CStats::MaximumJumpHeight * FEET_IN_METER);
 #else
-		STAT_LINE_1(float, "FESTDFM", CStats::DistanceTravelledOnFoot);
-		STAT_LINE_1(float, "FESTDCM", CStats::DistanceTravelledInVehicle);
-		STAT_LINE_1(int, "MMRAIN", CStats::mmRain);
-		STAT_LINE_1(float, "MXCARDM", CStats::MaximumJumpDistance);
-		STAT_LINE_1(float, "MXCARJM", CStats::MaximumJumpHeight);
+	STAT_LINE_1(float, "FESTDFM", CStats::DistanceTravelledOnFoot);
+	STAT_LINE_1(float, "FESTDCM", CStats::DistanceTravelledInVehicle);
+	STAT_LINE_1(int, "MMRAIN", CStats::mmRain);
+	STAT_LINE_1(float, "MXCARDM", CStats::MaximumJumpDistance);
+	STAT_LINE_1(float, "MXCARJM", CStats::MaximumJumpHeight);
 #endif
-	}
 
 	STAT_LINE_1(int, "MXFLIP", CStats::MaximumJumpFlips);
 	STAT_LINE_1(int, "MXJUMP", CStats::MaximumJumpSpins);
