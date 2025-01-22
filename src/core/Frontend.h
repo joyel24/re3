@@ -751,20 +751,6 @@ public:
 	#define ISLAND_LOADING_ISNT(p)
 #endif
 
-#ifdef GAMEPAD_MENU
-	enum
-	{
-		CONTROLLER_DUALSHOCK2 = 0,
-		CONTROLLER_DUALSHOCK3,
-		CONTROLLER_DUALSHOCK4,
-		CONTROLLER_XBOX360,
-		CONTROLLER_XBOXONE,
-		CONTROLLER_NINTENDO_SWITCH,
-	};
-
-	static int8 m_PrefsControllerType;
-#endif
-
 public:
 	static void BuildStatLine(Const char *text, void *stat, bool itsFloat, void *stat2);
 	static void CentreMousePointer();
@@ -825,7 +811,7 @@ public:
 	int8 GetPreviousPageOption();
 	void ProcessList(bool &goBack, bool &optionSelected);
 #ifdef GAMEPAD_MENU
-	void LoadController(int8 type);
+	void LoadController();
 #endif
 };
 
