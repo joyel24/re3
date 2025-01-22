@@ -5936,7 +5936,7 @@ CMenuManager::PrintController(void)
 		CFont::PrintString(MENU_X_LEFT_ALIGNED(X(TEXT_R2_X)), MENU_Y(Y(TEXT_R2_Y)), TheText.Get("FEC_ACC"));
 		CFont::PrintString(MENU_X_LEFT_ALIGNED(X(TEXT_R1_X)), MENU_Y(Y(TEXT_R1_Y)), TheText.Get("FEC_RSC"));
 		CFont::SetRightJustifyOn(); // X
-		CFont::PrintString(MENU_X_LEFT_ALIGNED(X(TEXT_SQUARE_X)), MENU_Y(Y(TEXT_SQUARE_Y)), TheText.Get("FEC_SM3"));
+		CFont::PrintString(MENU_X_LEFT_ALIGNED(X(TEXT_SQUARE_X)), MENU_Y(Y(TEXT_SQUARE_Y)), TheText.Get("FEC_SMT"));
 		CFont::SetJustifyOn(); // X
 		CFont::PrintString(MENU_X_LEFT_ALIGNED(X(TEXT_TRIANGLE_X)), MENU_Y(Y(TEXT_TRIANGLE_Y)), TheText.Get("FEC_EXV"));
 		CFont::PrintString(MENU_X_LEFT_ALIGNED(X(TEXT_CIRCLE_X)), MENU_Y(Y(TEXT_CIRCLE_Y)), TheText.Get("FEC_CAW"));
