@@ -300,7 +300,7 @@ TriggerSaveZone_FormatCard(CMenuMultiChoiceTriggered *widget)
 		else
 		{
 			if ( !MemCardAccessTriggerCaller.CanCall() )
-				MemCardAccessTriggerCaller.SetTrigger(TriggerSaveZone_FormatCard(), widget);
+				MemCardAccessTriggerCaller.SetTrigger((void *)TriggerSaveZone_FormatCard, widget);
 			else
 			{
 				// Formatting Memory Card (PS2) in MEMORY CARD slot 1.  Please do not remove the Memory Card (PS2), reset or switch off the console.
@@ -427,7 +427,7 @@ TriggerSaveZone_DeleteSaveGame(CMenuMultiChoiceTriggered *widget)
 		bIgnoreTriangleButton = false;
 		
 		if ( !MemCardAccessTriggerCaller.CanCall() )
-			MemCardAccessTriggerCaller.SetTrigger(TriggerSaveZone_DeleteSaveGame(), widget);
+			MemCardAccessTriggerCaller.SetTrigger((void *)TriggerSaveZone_DeleteSaveGame, widget);
 		else
 		{
 			// Overwriting data. Please do not remove the Memory Card (PS2) in MEMORY CARD slot 1, reset or switch off the console.
@@ -511,7 +511,7 @@ TriggerSaveZone_SaveGame(CMenuMultiChoiceTriggered *widget)
 		bMemoryCardSpecialZone = false;
 		bIgnoreTriangleButton  = false;
 		if ( !MemCardAccessTriggerCaller.CanCall() )
-			MemCardAccessTriggerCaller.SetTrigger(TriggerSaveZone_SaveGame(), widget);
+			MemCardAccessTriggerCaller.SetTrigger((void *)TriggerSaveZone_SaveGame, widget);
 		else
 		{
 			DisplayMemoryCardAccessMsg(TheText.Get("FESZ_WR"), CRGBA(200, 50, 50, 192));
@@ -891,7 +891,7 @@ TriggerSave_DeleteGameDeleteGame(CMenuMultiChoiceTriggered *widget)
 		bIgnoreTriangleButton  = false;
 		
 		if ( !MemCardAccessTriggerCaller.CanCall() )
-			MemCardAccessTriggerCaller.SetTrigger(TriggerSave_DeleteGameDeleteGame(), widget);
+			MemCardAccessTriggerCaller.SetTrigger((void *)TriggerSave_DeleteGameDeleteGame, widget);
 		else
 		{
 			// Deleting data. Please do not remove the Memory Card (PS2) in MEMORY CARD slot 1, reset or switch off the console.
@@ -985,7 +985,7 @@ TriggerSave_LoadGameLoadGame(CMenuMultiChoiceTriggered *widget)
 		bIgnoreTriangleButton  = false;
 		
 		if ( !MemCardAccessTriggerCaller.CanCall() )
-			MemCardAccessTriggerCaller.SetTrigger(TriggerSave_LoadGameLoadGame(), widget);
+			MemCardAccessTriggerCaller.SetTrigger((void *)TriggerSave_LoadGameLoadGame, widget);
 		else
 		{
 			// Loading data. Please do not remove the Memory Card (PS2) in MEMORY CARD slot 1, reset or switch off the console.
