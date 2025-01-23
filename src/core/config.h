@@ -350,9 +350,9 @@ enum Config {
 #		define GAMEPAD_MENU		// Add gamepad menu
 #	endif
 
-#	define SCROLLABLE_STATS_PAGE	// only draggable by mouse atm
-//#	define TRIANGLE_BACK_BUTTON
-#	define CIRCLE_BACK_BUTTON
+//#	define SCROLLABLE_STATS_PAGE	// only draggable by mouse atm
+#	define TRIANGLE_BACK_BUTTON
+//#	define CIRCLE_BACK_BUTTON
 #	define PS2_LIKE_MENU	// An effort to recreate PS2 menu, cycling through tabs, different bg etc.
 #	define PS2_SAVE_DIALOG		// PS2 style save dialog with transparent black box
 #	define CUSTOM_FRONTEND_OPTIONS
