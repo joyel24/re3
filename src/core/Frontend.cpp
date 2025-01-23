@@ -303,7 +303,7 @@ const char* MenuFilenames[][2] = {
 	} while(0)
 
 #define SET_FONT_FOR_MENU_HEADER \
-	CFont::SetColor(CRGBA(HEADER_COLOR.r, HEADER_COLOR.g, HEADER_COLOR.b, FadeIn(255))); \
+	CFont::SetColor(CRGBA(HEADER_COLOR.r, HEADER_COLOR.g, HEADER_COLOR.b, 255)); \
 	CFont::SetRightJustifyOn(); \
 	CFont::SetScale(MENU_X(MENUHEADER_WIDTH), MENU_Y(MENUHEADER_HEIGHT)); \
 	CFont::SetFontStyle(FONT_LOCALE(FONT_HEADING));
