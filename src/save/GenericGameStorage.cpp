@@ -420,6 +420,7 @@ bool
 FindMostRecentFileName(char *filename)
 {
 	CDate date1, date2;
+	int successfulslot = -1;
 	
 	CTimer::Stop();
 
@@ -452,59 +453,50 @@ FindMostRecentFileName(char *filename)
 			CFileMgr::CloseFile(file);
 		}
 		if (Slots[i + 1] == SLOT_OK) {
-			if (CheckDataNotCorrupt(i, savename)) {
-#ifdef FIX_INCOMPATIBLE_SAVES
-				if (!FixSave(i, GetSaveType(savename))) {
-					Slots[i + 1] = SLOT_CORRUPTED;
-					continue;
-				}
-#endif
-				SYSTEMTIME st;
-				memcpy(&st, &header.SaveDateTime, sizeof(SYSTEMTIME));
-							
-				date1.m_nSecond = st.wSecond;
-				date1.m_nMinute = st.wMinute;
-				date1.m_nHour   = st.wHour; 
-				date1.m_nDay    = st.wDay;
-				date1.m_nMonth  = st.wMonth;
-				date1.m_nYear   = st.wYear;
+			SYSTEMTIME st;
+			memcpy(&st, &header.SaveDateTime, sizeof(SYSTEMTIME));
+						
+			date1.m_nSecond = st.wSecond;
+			date1.m_nMinute = st.wMinute;
+			date1.m_nHour   = st.wHour; 
+			date1.m_nDay    = st.wDay;
+			date1.m_nMonth  = st.wMonth;
+			date1.m_nYear   = st.wYear;
+		
+			int32 d;
+			if ( date1 > date2 )      d = 1;
+			else if ( date1 < date2 ) d = 2;
+			else                      d = 0;
 			
+			if ( d == 1 )
+			{
+				date2 = date1;
+				strcpy(filename, savename);
+				successfulslot = i;
+			}
+			else
+			{
 				int32 d;
 				if ( date1 > date2 )      d = 1;
 				else if ( date1 < date2 ) d = 2;
 				else                      d = 0;
 				
-				if ( d == 1 )
+				if ( d == 0 )
 				{
 					date2 = date1;
 					strcpy(filename, savename);
+					successfulslot = i;
 				}
-				else
-				{
-					int32 d;
-					if ( date1 > date2 )      d = 1;
-					else if ( date1 < date2 ) d = 2;
-					else                      d = 0;
-					
-					if ( d == 0 )
-					{
-						date2 = date1;
-						strcpy(filename, savename);
-					}
-				}
-				
-			} else {
-				Slots[i + 1] = SLOT_CORRUPTED;
 			}
 		}
 	}
 		
-	if (   date2.m_nSecond != 0
+	if (  (successfulslot != -1) && (date2.m_nSecond != 0
 		|| date2.m_nMinute != 0
 		|| date2.m_nHour   != 0
 		|| date2.m_nDay    != 0
 		|| date2.m_nMonth  != 0
-		|| date2.m_nYear   != 0 )
+		|| date2.m_nYear   != 0) && (CheckDataNotCorrupt(successfulslot, filename)) )
 	{
 		return true;
 	}
