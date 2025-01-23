@@ -174,7 +174,7 @@ enum Config {
 #	endif
 #	define GTA_REPLAY
 #	define GTA_SCENE_EDIT
-#	define PC_MENU
+//#	define PC_MENU
 #elif defined GTA_XBOX
 #endif
 
