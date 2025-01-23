@@ -1942,7 +1942,7 @@ main(int argc, char *argv[])
 		
 		while( !RsGlobal.quit && !(FrontEndMenuManager.m_bWantToRestart || TheMemoryCard.b_FoundRecentSavedGameWantToLoad) && !glfwWindowShouldClose(PSGLOBAL(window)) )
 #else
-		while( !RsGlobal.quit && !FrontEndMenuManager.m_bWantToRestart && !glfwWindowShouldClose(PSGLOBAL(window)))
+		while( !RsGlobal.quit && !(FrontEndMenuManager.m_bWantToRestart || b_FoundRecentSavedGameWantToLoad) && !glfwWindowShouldClose(PSGLOBAL(window)))
 #endif
 		{
 			glfwPollEvents();
@@ -2057,8 +2057,8 @@ main(int argc, char *argv[])
 #ifdef PS2_MENU
 						gGameState = GS_INIT_PLAYING_GAME;
 #else
-						gGameState = GS_INIT_FRONTEND;
-						TRACE("gGameState = GS_INIT_FRONTEND;");
+						gGameState = GS_INIT_PLAYING_GAME;
+						TRACE("gGameState = GS_INIT_PLAYING_GAME;");
 #endif
 						break;
 					}
@@ -2141,6 +2141,13 @@ main(int argc, char *argv[])
 #else
 						InitialiseGame();
 
+						if ( FindMostRecentFileName(LoadFileName) == true )
+						{
+							b_FoundRecentSavedGameWantToLoad = true;
+					
+							CGame::currLevel = m_LevelToLoad;
+						}
+
 						FrontEndMenuManager.m_bGameNotLoaded = false;
 #endif
 						gGameState = GS_PLAYING_GAME;
@@ -2183,7 +2190,7 @@ main(int argc, char *argv[])
 		if ( !(FrontEndMenuManager.m_bWantToRestart || TheMemoryCard.b_FoundRecentSavedGameWantToLoad))
 			break;
 #else
-		if ( !FrontEndMenuManager.m_bWantToRestart )
+		if ( !(FrontEndMenuManager.m_bWantToRestart || b_FoundRecentSavedGameWantToLoad) )
 			break;
 #endif
 		
@@ -2219,8 +2226,13 @@ main(int argc, char *argv[])
 		
 		break;
 #else
-		if ( FrontEndMenuManager.m_bWantToLoad )
+		if ( FrontEndMenuManager.m_bWantToLoad || b_FoundRecentSavedGameWantToLoad )
 		{
+			if (b_FoundRecentSavedGameWantToLoad)
+			{
+				FrontEndMenuManager.m_bWantToRestart = true;
+				FrontEndMenuManager.m_bWantToLoad = true;
+			}
 			CGame::ShutDownForRestart();
 			CGame::InitialiseWhenRestarting();
 			DMAudio.ChangeMusicMode(MUSICMODE_GAME);
