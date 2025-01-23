@@ -11,7 +11,7 @@
 #include "Messages.h"
 #include "PCSave.h"
 #include "Text.h"
-#include <filesystem>
+#include <cstdio>
 
 const char* _psGetUserFilesFolder();
 
@@ -28,7 +28,7 @@ C_PcSave::DeleteSlot(int32 slot)
 {
 	MakeValidSaveName(slot);
 	PcSaveHelper.nErrorCode = SAVESTATUS_SUCCESSFUL;
-	std::filesystem::remove(ValidSaveName);
+	std::remove(ValidSaveName);
 	SlotSaveDate[slot][0] = '\0';
 	return true;
 }
