@@ -2442,9 +2442,11 @@ int32 CControllerConfigManager::GetNumOfSettingsForAction(e_ControllerAction act
 #define PS2_CIRCLE "|"
 #define PS2_CROSS "/"
 #define PS2_SQUARE "^"
+#define PS2_LEFT "<"
+#define PS2_RIGHT ">"
 
 const char *PlayStationButtons_noIcons[][MAX_CONTROLLERACTIONS] =
-    CONTROLLER_BUTTONS(PS2_TRIANGLE, PS2_CIRCLE, PS2_CROSS, PS2_SQUARE, "L1", "L2", "L3", "R1", "R2", "R3", "SELECT", "Directional Pad LEFT", "Directional Pad RIGHT");
+    CONTROLLER_BUTTONS(PS2_TRIANGLE, PS2_CIRCLE, PS2_CROSS, PS2_SQUARE, "L1", "L2", "L3", "R1", "R2", "R3", "SELECT", PS2_LEFT, PS2_RIGHT);
 
 #undef PS2_TRIANGLE
 #undef PS2_CIRCLE
