@@ -2391,7 +2391,7 @@ int32 CControllerConfigManager::GetNumOfSettingsForAction(e_ControllerAction act
 #define VFB(b)
 #endif
 
-#define CONTROLLER_BUTTONS(T, O, X, Q, L1, L2, L3, R1, R2, R3, SELECT, UP, DOWN, LEFT, RIGHT)                                                                                         \
+#define CONTROLLER_BUTTONS(T, O, X, Q, L1, L2, L3, R1, R2, R3, SELECT, LEFT, RIGHT)                                                                                         \
 	{{                                                                                                                                                         \
 	     R2,      /* PED_FIREWEAPON */                                                                                                                          \
 	     RIGHT,     /* PED_CYCLE_WEAPON_RIGHT */                                                                                                                  \
@@ -2444,7 +2444,7 @@ int32 CControllerConfigManager::GetNumOfSettingsForAction(e_ControllerAction act
 #define PS2_SQUARE "^"
 
 const char *PlayStationButtons_noIcons[][MAX_CONTROLLERACTIONS] =
-    CONTROLLER_BUTTONS(PS2_TRIANGLE, PS2_CIRCLE, PS2_CROSS, PS2_SQUARE, "L1", "L2", "L3", "R1", "R2", "R3", "SELECT", "Directional Pad UP", "Directional Pad DOWN", "Directional Pad LEFT", "Directional Pad RIGHT");
+    CONTROLLER_BUTTONS(PS2_TRIANGLE, PS2_CIRCLE, PS2_CROSS, PS2_SQUARE, "L1", "L2", "L3", "R1", "R2", "R3", "SELECT", "Directional Pad LEFT", "Directional Pad RIGHT");
 
 #undef PS2_TRIANGLE
 #undef PS2_CIRCLE
@@ -2458,7 +2458,7 @@ void CControllerConfigManager::GetWideStringOfCommandKeys(uint16 action, wchar *
 {
 #ifdef DETECT_PAD_INPUT_SWITCH
 	if (CPad::GetPad(0)->IsAffectedByController) {
-		wchar wstr[16];
+		wchar wstr[32];
 
 		const char* (*Buttons)[MAX_CONTROLLERACTIONS];
 		
