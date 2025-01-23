@@ -491,12 +491,16 @@ FindMostRecentFileName(char *filename)
 		}
 	}
 		
-	if (  (successfulslot != -1) && (date2.m_nSecond != 0
+	if ((successfulslot != -1) && (date2.m_nSecond != 0
 		|| date2.m_nMinute != 0
 		|| date2.m_nHour   != 0
 		|| date2.m_nDay    != 0
 		|| date2.m_nMonth  != 0
-		|| date2.m_nYear   != 0) && (CheckDataNotCorrupt(successfulslot, filename)) )
+		|| date2.m_nYear   != 0) && (CheckDataNotCorrupt(successfulslot, filename)) 
+#ifdef FIX_INCOMPATIBLE_SAVES
+		&& (FixSave(successfulslot, GetSaveType(filename))
+#endif
+		)
 	{
 		return true;
 	}
