@@ -498,7 +498,7 @@ FindMostRecentFileName(char *filename)
 		|| date2.m_nMonth  != 0
 		|| date2.m_nYear   != 0) && (CheckDataNotCorrupt(successfulslot, filename)) 
 #ifdef FIX_INCOMPATIBLE_SAVES
-		&& (FixSave(successfulslot, GetSaveType(filename))
+		&& (FixSave(successfulslot, GetSaveType(filename)))
 #endif
 		)
 	{
