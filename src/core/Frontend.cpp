@@ -62,7 +62,7 @@ const CRGBA TEXT_COLOR = CRGBA(150, 110, 30, 255); // PS2 option color
 #define TIDY_UP_PBP // ProcessButtonPresses
 #define MAX_VISIBLE_LIST_ROW 30
 #define SCROLLBAR_MAX_HEIGHT 263.0f // not in end result
-#define SCROLLABLE_PAGES
+//#define SCROLLABLE_PAGES
 #define RED_DELETE_BACKGROUND
 
 #ifdef SCROLLABLE_STATS_PAGE
