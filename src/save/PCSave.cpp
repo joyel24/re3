@@ -28,7 +28,7 @@ C_PcSave::DeleteSlot(int32 slot)
 {
 	MakeValidSaveName(slot);
 	PcSaveHelper.nErrorCode = SAVESTATUS_SUCCESSFUL;
-	std::remove(ValidSaveName);
+	unlink(casepath(ValidSaveName));
 	SlotSaveDate[slot][0] = '\0';
 	return true;
 }
