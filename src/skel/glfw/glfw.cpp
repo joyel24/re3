@@ -456,11 +456,21 @@ psInitialize(void)
 
 	TheMemoryCard.Init();
 #else
+	CPad::Initialise();
+	CPad::GetPad(0)->Mode = 0;
+
+	CGame::frenchGame = false;
+	CGame::germanGame = false;
+	CGame::nastyGame = true;
+	CMenuManager::m_PrefsAllowNastyGame = true;
+	
 	C_PcSave::SetSaveDirectory(_psGetUserFilesFolder());
 
 #if GTA_VERSION < GTA3_PC_11
 	FrontEndMenuManager.LoadSettings();
 #endif
+	
+	FrontEndMenuManager.InitialiseMenuContentsAfterLoadingGame();
 
 #endif
 
@@ -1943,6 +1953,13 @@ main(int argc, char *argv[])
 		
 		while( !RsGlobal.quit && !(FrontEndMenuManager.m_bWantToRestart || TheMemoryCard.b_FoundRecentSavedGameWantToLoad) && !glfwWindowShouldClose(PSGLOBAL(window)) )
 #else
+		if (FrontEndMenuManager.m_bWantToLoad)
+			LoadSplash(GetLevelSplashScreen(CGame::currLevel));
+		
+		FrontEndMenuManager.m_bWantToLoad = false;
+		
+		CTimer::Update();
+		
 		while( !RsGlobal.quit && !(FrontEndMenuManager.m_bWantToRestart || b_FoundRecentSavedGameWantToLoad) && !glfwWindowShouldClose(PSGLOBAL(window)))
 #endif
 		{
@@ -2140,7 +2157,7 @@ main(int argc, char *argv[])
 							CGame::currLevel = (eLevelName)TheMemoryCard.GetLevelToLoad();
 						}
 #else
-						InitialiseGame();
+						CGame::Initialise("DATA\\GTA3.DAT");
 
 						if ( FindMostRecentFileName(LoadFileName) == true )
 						{
@@ -2200,9 +2217,7 @@ main(int argc, char *argv[])
 		
 		DMAudio.ChangeMusicMode(MUSICMODE_DISABLE);
 		
-#ifdef PS2_MENU
 		CGame::ShutDownForRestart();
-#endif
 		
 		CTimer::Stop();
 		
@@ -2227,45 +2242,25 @@ main(int argc, char *argv[])
 		
 		break;
 #else
-		if ( FrontEndMenuManager.m_bWantToLoad || b_FoundRecentSavedGameWantToLoad )
+		if (FrontEndMenuManager.m_bWantToRestart || b_FoundRecentSavedGameWantToLoad)
 		{
 			if (b_FoundRecentSavedGameWantToLoad)
 			{
 				FrontEndMenuManager.m_bWantToRestart = true;
 				FrontEndMenuManager.m_bWantToLoad = true;
 			}
-			CGame::ShutDownForRestart();
+
 			CGame::InitialiseWhenRestarting();
 			DMAudio.ChangeMusicMode(MUSICMODE_GAME);
-			LoadSplash(GetLevelSplashScreen(CGame::currLevel));
-			FrontEndMenuManager.m_bWantToLoad = false;
-		}
-		else
-		{
-#ifndef MASTER
-			if ( gbModelViewer )
-				CAnimViewer::Shutdown();
-			else
-#endif
-			if ( gGameState == GS_PLAYING_GAME )
-				CGame::ShutDown();
+			FrontEndMenuManager.m_bWantToRestart = false;
 			
-			CTimer::Stop();
-			
-			if ( FrontEndMenuManager.m_bFirstTime == true )
-			{
-				gGameState = GS_INIT_FRONTEND;
-				TRACE("gGameState = GS_INIT_FRONTEND;");
-			}
-			else
-			{
-				gGameState = GS_INIT_PLAYING_GAME;
-				TRACE("gGameState = GS_INIT_PLAYING_GAME;");
-			}
+			continue;
 		}
 		
-		FrontEndMenuManager.m_bFirstTime = false;
-		FrontEndMenuManager.m_bWantToRestart = false;
+		CGame::ShutDown();	
+		CTimer::Stop();
+		
+		break;
 #endif
 	}
 	
