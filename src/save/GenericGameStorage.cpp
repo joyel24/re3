@@ -463,7 +463,7 @@ FindMostRecentFileName(char *filename)
 			date1.m_nMonth  = st.wMonth;
 			date1.m_nYear   = st.wYear;
 			
-			if (date1 > date2 || date1 = date2)
+			if (date1 > date2 || date1 == date2)
 			{
 				date2 = date1;
 				strcpy(filename, savename);
