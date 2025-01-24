@@ -449,9 +449,7 @@ bool CGame::Initialise(const char* datFile)
 	CWeather::Init();
 	CCullZones::Init();
 	CCollision::Init();
-#ifdef PS2_MENU	// TODO: is this the right define?
 	TheText.Load();
-#endif
 	CTheZones::Init();
 	CUserDisplay::Init();
 	CMessages::Init();
@@ -648,6 +646,8 @@ bool CGame::Initialise(const char* datFile)
 	LoadingScreen("Loading the Game", "Start script", nil);
 #ifdef PS2_MENU
 	if ( !TheMemoryCard.m_bWantToLoad )
+#else
+	if ( !FrontEndMenuManager.m_bWantToLoad )	
 #endif
 	{
 		CTheScripts::StartTestScript();
@@ -723,6 +723,8 @@ void CGame::ReInitGameObjectVariables(void)
 	CGameLogic::InitAtStartOfGame();
 #ifdef PS2_MENU
 	if ( !TheMemoryCard.m_bWantToLoad )
+#else
+	if ( !FrontEndMenuManager.m_bWantToLoad )	
 #endif
 	{
 		TheCamera.Init();
