@@ -1,4 +1,3 @@
-#include "config.h"
 #include "common.h"
 #include <time.h>
 #include "rpmatfx.h"
@@ -676,6 +675,9 @@ LoadingScreen(const char *str1, const char *str2, const char *splashscreen)
 	DoRWStuffStartOfFrame(0, 0, 0, 0, 0, 0, 255);
 #endif
 	{
+#ifdef ASPECT_RATIO_SCALE
+		CDraw::SetAspectRatio(CDraw::FindAspectRatio());
+#endif
 		CSprite2d::SetRecipNearClip();
 		CSprite2d::InitPerFrame();
 		CFont::InitPerFrame();
