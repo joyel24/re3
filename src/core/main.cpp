@@ -1734,6 +1734,9 @@ Idle(void *arg)
 #ifdef PS2_MENU
 	if ( TheMemoryCard.m_bWantToLoad )
 		goto popret;
+#else
+	if ( FrontEndMenuManager.m_bWantToLoad )
+		goto popret;
 #endif
 
 	tbStartTimer(0, "DoFade");
