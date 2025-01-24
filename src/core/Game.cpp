@@ -111,7 +111,7 @@ bool DoRWStuffStartOfFrame(int16 TopRed, int16 TopGreen, int16 TopBlue, int16 Bo
 void DoRWStuffEndOfFrame(void);
 void MessageScreen(char *msg)
 {
-	CRect rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	CRect rect(SCALE_AND_CENTER_X(0.0f), 0.0f, SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH), SCREEN_HEIGHT);
 	CRGBA color(255, 255, 255, 255);
 
 	DoRWStuffStartOfFrame(50, 50, 50, 0, 0, 0, 255);
@@ -123,20 +123,20 @@ void MessageScreen(char *msg)
 	CSprite2d *splash = LoadSplash(NULL);
 	splash->Draw(rect, color, color, color, color);
 #ifdef FIX_BUGS
-	splash->DrawRect(CRect(SCREEN_SCALE_X(20.0f), SCREEN_SCALE_Y(110.0f), SCREEN_WIDTH-SCREEN_SCALE_X(20.0f), SCREEN_SCALE_Y(300.0f)), CRGBA(50, 50, 50, 192));
+	splash->DrawRect(CRect(SCALE_AND_CENTER_X(20.0f), SCREEN_SCALE_Y(110.0f), SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH - 20.0f), SCREEN_SCALE_Y(300.0f)), CRGBA(50, 50, 50, 192));
 #else
 	splash->DrawRect(CRect(20.0f, 110.0f, SCREEN_WIDTH-20.0f, 300.0f), CRGBA(50, 50, 50, 192));
 #endif
 	CFont::SetFontStyle(FONT_BANK);
 	CFont::SetBackgroundOff();
-	CFont::SetWrapx(SCREEN_SCALE_FROM_RIGHT(190));
+	CFont::SetWrapx(SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH - 190));
 #ifdef FIX_BUGS
 	CFont::SetScale(SCREEN_SCALE_X(1.0f), SCREEN_SCALE_Y(1.0f));
 #else
 	CFont::SetScale(1.0f, 1.0f);
 #endif
 	CFont::SetCentreOn();
-	CFont::SetCentreSize(SCREEN_SCALE_X(DEFAULT_SCREEN_WIDTH - 190)); // 450.0f
+	CFont::SetCentreSize(SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH - 190)); // 450.0f
 	CFont::SetJustifyOff();
 	CFont::SetColor(CRGBA(255, 255, 255, 255));
 	CFont::SetDropColor(CRGBA(32, 32, 32, 255));
@@ -863,7 +863,7 @@ void CGame::ShutDownForRestart(void)
 
 void CGame::InitialiseWhenRestarting(void)
 {
-	CRect rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	CRect rect(SCALE_AND_CENTER_X(0.0f), 0.0f, SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH), SCREEN_HEIGHT);
 	CRGBA color(255, 255, 255, 255);
 	
 	CTimer::Initialise();
@@ -1011,20 +1011,20 @@ void CGame::InitialiseWhenRestarting(void)
 				CSprite2d *splash = LoadSplash(NULL);
 				splash->Draw(rect, color, color, color, color);		
 #ifdef FIX_BUGS
-				splash->DrawRect(CRect(SCREEN_SCALE_X(20.0f), SCREEN_SCALE_Y(110.0f), SCREEN_SCALE_FROM_RIGHT(20.0f), SCREEN_SCALE_Y(300.0f)), CRGBA(50, 50, 50, 192));
+				splash->DrawRect(CRect(SCALE_AND_CENTER_X(20.0f), SCREEN_SCALE_Y(110.0f), SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH - 20.0f), SCREEN_SCALE_Y(300.0f)), CRGBA(50, 50, 50, 192));
 #else
 				splash->DrawRect(CRect(20.0f, 110.0f, SCREEN_WIDTH-20.0f, 300.0f), CRGBA(50, 50, 50, 192));
 #endif
 
 				CFont::SetBackgroundOff();
 #ifdef ASPECT_RATIO_SCALE
-				CFont::SetWrapx(SCREEN_SCALE_FROM_RIGHT(160.0f)); // because SCREEN_SCALE_FROM_RIGHT(x) != SCREEN_SCALE_X(640-x)
+				CFont::SetWrapx(SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH - 160.0f)); // because SCREEN_SCALE_FROM_RIGHT(x) != SCREEN_SCALE_X(640-x)
 #else
 				CFont::SetWrapx(SCREEN_SCALE_X(480.0f));
 #endif
 				CFont::SetScale(SCREEN_SCALE_X(1.0f), SCREEN_SCALE_Y(1.0f));
 				CFont::SetCentreOn();
-				CFont::SetCentreSize(SCREEN_SCALE_X(480.0f));
+				CFont::SetCentreSize(SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH - 160.0f));
 				CFont::SetJustifyOff();
 				CFont::SetColor(CRGBA(255, 255, 255, 255));
 				CFont::SetBackGroundOnlyTextOff();
