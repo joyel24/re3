@@ -114,7 +114,7 @@ void MessageScreen(char *msg)
 	CRect rect(SCALE_AND_CENTER_X(0.0f), 0.0f, SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH), SCREEN_HEIGHT);
 	CRGBA color(255, 255, 255, 255);
 
-	DoRWStuffStartOfFrame(50, 50, 50, 0, 0, 0, 255);
+	DoRWStuffStartOfFrame(0, 0, 0, 0, 0, 0, 255);
 	
 	CSprite2d::InitPerFrame();
 	CFont::InitPerFrame();
@@ -1002,7 +1002,7 @@ void CGame::InitialiseWhenRestarting(void)
 		{
 			for ( int32 i = 0; i < 50; i++ )
 			{
-				DoRWStuffStartOfFrame(50, 50, 50, 0, 0, 0, 255);
+				DoRWStuffStartOfFrame(0, 0, 0, 0, 0, 0, 255);
 				
 				CSprite2d::InitPerFrame();
 				CFont::InitPerFrame();
