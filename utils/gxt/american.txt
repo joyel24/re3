@@ -6767,7 +6767,7 @@ To turn on this vehicle's sirens tap the ~h~~k~~VEHICLE_HORN~ button~w~.
 ~w~I'll need $100,000 to cover expenses,
 
 [MCLOAD]
-Loading Data. Please do not remove the Memory Card (PS2) in MEMORY CARD slot 1, reset or switch off the console.
+Loading Data. Please do not reset or switch off the system.
 
 [FES_GME]
 Error Reading Memory Card (PS2) in MEMORY CARD slot 1 please check and try again.
