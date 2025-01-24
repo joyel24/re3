@@ -462,31 +462,12 @@ FindMostRecentFileName(char *filename)
 			date1.m_nDay    = st.wDay;
 			date1.m_nMonth  = st.wMonth;
 			date1.m_nYear   = st.wYear;
-		
-			int32 d;
-			if ( date1 > date2 )      d = 1;
-			else if ( date1 < date2 ) d = 2;
-			else                      d = 0;
 			
-			if ( d == 1 )
+			if (date1 > date2 || date1 = date2)
 			{
 				date2 = date1;
 				strcpy(filename, savename);
 				successfulslot = i;
-			}
-			else
-			{
-				int32 d;
-				if ( date1 > date2 )      d = 1;
-				else if ( date1 < date2 ) d = 2;
-				else                      d = 0;
-				
-				if ( d == 0 )
-				{
-					date2 = date1;
-					strcpy(filename, savename);
-					successfulslot = i;
-				}
 			}
 		}
 	}
