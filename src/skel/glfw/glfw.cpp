@@ -469,8 +469,6 @@ psInitialize(void)
 #if GTA_VERSION < GTA3_PC_11
 	FrontEndMenuManager.LoadSettings();
 #endif
-	
-	FrontEndMenuManager.InitialiseMenuContentsAfterLoadingGame();
 
 #endif
 
