@@ -99,6 +99,8 @@ CCamera::Init(void)
 
 #ifdef PS2_MENU
 	if ( !TheMemoryCard.m_bWantToLoad && !FrontEndMenuManager.m_bWantToRestart )
+#else
+	if ( !FrontEndMenuManager.m_bWantToLoad && !FrontEndMenuManager.m_bWantToRestart )	
 #endif
 	{
 	#ifdef FIX_BUGS
@@ -185,7 +187,7 @@ CCamera::Init(void)
 #ifdef PS2_MENU
 	if ( !TheMemoryCard.m_bWantToLoad && !FrontEndMenuManager.m_bWantToRestart )
 #else
-	if(!FrontEndMenuManager.m_bWantToRestart)
+	if(!FrontEndMenuManager.m_bWantToLoad && !FrontEndMenuManager.m_bWantToRestart)
 #endif
 	{
 		m_bFading = false;
@@ -199,7 +201,7 @@ CCamera::Init(void)
 #ifdef PS2_MENU
 	if ( TheMemoryCard.m_bWantToLoad || FrontEndMenuManager.m_bWantToRestart )
 #else
-	if(FrontEndMenuManager.m_bWantToRestart)
+	if(FrontEndMenuManager.m_bWantToLoad || FrontEndMenuManager.m_bWantToRestart)
 #endif
 		m_bMoveCamToAvoidGeom = true;
 	m_bStartingSpline = false;
