@@ -683,13 +683,13 @@ LoadingScreen(const char *str1, const char *str2, const char *splashscreen)
 		CFont::InitPerFrame();
 		DefinedState();
 		RwRenderStateSet(rwRENDERSTATETEXTUREADDRESS, (void*)rwTEXTUREADDRESSCLAMP);
-		splash->Draw(CRect(SCALE_AND_CENTER_X(0.0f), 0.0f, SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH), SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
+		splash->Draw(CRect(0.0f, 0.0f, SCREEN_HEIGHT * 16.0f/9.0f, SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
 
 		if(str1){
 			NumberOfChunksLoaded += 1;
 
-			float hpos = SCALE_AND_CENTER_X(40);
-			float length = SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH - 100);
+			float hpos = SCREEN_SCALE_X(40);
+			float length = SCREEN_WIDTH - SCREEN_SCALE_X(100);
 			float vpos = SCREEN_HEIGHT - SCREEN_SCALE_Y(13);
 			float height = SCREEN_SCALE_Y(7);
 			CSprite2d::DrawRect(CRect(hpos, vpos, hpos + length, vpos + height), CRGBA(40, 53, 68, 255));
