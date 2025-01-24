@@ -680,6 +680,7 @@ LoadingScreen(const char *str1, const char *str2, const char *splashscreen)
 		CFont::InitPerFrame();
 		DefinedState();
 		RwRenderStateSet(rwRENDERSTATETEXTUREADDRESS, (void*)rwTEXTUREADDRESSCLAMP);
+#define ASPECT_RATIO_SCALE
 		splash->Draw(CRect(SCALE_AND_CENTER_X(0.0f), 0.0f, SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH), SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
 
 		if(str1){
