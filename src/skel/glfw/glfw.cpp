@@ -874,10 +874,6 @@ psSelectDevice()
 	FrontEndMenuManager.m_nPrefsHeight = vm.height;
 	FrontEndMenuManager.m_nPrefsDepth = vm.depth;
 #endif
-
-#ifndef PS2_MENU
-	FrontEndMenuManager.m_nCurrOption = 0;
-#endif
 	
 	/* Set up the video mode and set the apps window
 	* dimensions to match */
@@ -2065,17 +2061,12 @@ main(int argc, char *argv[])
 						
 						printf("Into TheGame!!!\n");
 #else				
-						LoadingScreen(nil, nil, "loadsc0");
+						LoadingScreen(NULL, version_name, "loadsc0");
 #endif
 						if ( !CGame::InitialiseOnceAfterRW() )
 							RsGlobal.quit = TRUE;
 						
-#ifdef PS2_MENU
 						gGameState = GS_INIT_PLAYING_GAME;
-#else
-						gGameState = GS_INIT_PLAYING_GAME;
-						TRACE("gGameState = GS_INIT_PLAYING_GAME;");
-#endif
 						break;
 					}
 					
@@ -2161,7 +2152,7 @@ main(int argc, char *argv[])
 						{
 							b_FoundRecentSavedGameWantToLoad = true;
 					
-							CGame::currLevel = m_LevelToLoad;
+							CGame::currLevel = (eLevelName)m_LevelToLoad;
 						}
 
 						FrontEndMenuManager.m_bGameNotLoaded = false;
