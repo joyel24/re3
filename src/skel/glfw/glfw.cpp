@@ -2051,9 +2051,8 @@ main(int argc, char *argv[])
 					case GS_INIT_ONCE:
 					{
 						//CoUninitialize();
-						
-#ifdef PS2_MENU
 						extern char version_name[64];
+#ifdef PS2_MENU
 						if ( CGame::frenchGame || CGame::germanGame )
 							LoadingScreen(NULL, version_name, "loadsc24");
 						else
