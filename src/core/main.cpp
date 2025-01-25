@@ -579,7 +579,7 @@ LoadSplash(const char *name)
 	if(splashTxdId == -1)
 		splashTxdId = CTxdStore::AddTxdSlot("splash");
 	
-	strcpy(cursplashname, name);
+	//strcpy(cursplashname, name);
 	txd = CTxdStore::GetSlot(splashTxdId)->texDict;
 	if(txd)
 		tex = RwTexDictionaryFindNamedTexture(txd, name);
