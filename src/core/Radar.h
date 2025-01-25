@@ -102,8 +102,8 @@ VALIDATE_SIZE(sRadarTrace, 0x30);
 		#define RADAR_WIDTH (82.0f)
 		#define RADAR_HEIGHT (82.0f)
 */
-#define RADAR_WIDTH ((CDraw::ms_bFixRadar)  ? (82.0f) : (94.0f))	
-#define RADAR_HEIGHT ((CDraw::ms_bFixRadar) ? (82.0f) : (76.0f))
+#define RADAR_WIDTH (94.0f)	
+#define RADAR_HEIGHT ((CDraw::ms_bFixRadar) ? (94.0f) : (76.0f))
 #else
 /*
 	broken since forever, someone tried to fix size for 640x512(PAL)
