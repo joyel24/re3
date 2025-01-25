@@ -2596,7 +2596,7 @@ CMenuManager::DrawFrontEndNormal()
 
 	if (!m_bGameNotLoaded) {
 		CSprite2d *bg = LoadSplash(nil);
-		bg->Draw(CRect(0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT), CRGBA(48, 48, 48, 255));
+		bg->Draw(CRect(0.0f, SCREEN_HEIGHT - (SCREEN_WIDTH * 3.0f/4.0f), SCREEN_WIDTH, SCREEN_HEIGHT), CRGBA(48, 48, 48, 255));
 	} else {
 		CSprite2d::DrawRect(CRect(0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT), CRGBA(0, 0, 0, 255));
 	}
