@@ -111,7 +111,7 @@ bool DoRWStuffStartOfFrame(int16 TopRed, int16 TopGreen, int16 TopBlue, int16 Bo
 void DoRWStuffEndOfFrame(void);
 void MessageScreen(char *msg)
 {
-	CRect rect(0.0f, 0.0f, SCREEN_HEIGHT * 16.0f/9.0f, SCREEN_HEIGHT);
+	CRect rect(0.0f, SCREEN_HEIGHT - (SCREEN_WIDTH * 3.0f/4.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
 	CRGBA color(255, 255, 255, 255);
 
 	DoRWStuffStartOfFrame(0, 0, 0, 0, 0, 0, 255);
@@ -863,7 +863,7 @@ void CGame::ShutDownForRestart(void)
 
 void CGame::InitialiseWhenRestarting(void)
 {
-	CRect rect(0.0f, 0.0f, SCREEN_HEIGHT * 16.0f/9.0f, SCREEN_HEIGHT);
+	CRect rect(0.0f, SCREEN_HEIGHT - (SCREEN_WIDTH * 3.0f/4.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
 	CRGBA color(255, 255, 255, 255);
 	
 	CTimer::Initialise();
