@@ -1393,7 +1393,7 @@ void CHud::DrawAfterFade()
 
 			CFont::SetColor(CRGBA(175, 175, 175, 255));
 			CFont::SetJustifyOff();			
-			CFont::SetWrapx(SCREEN_SCALE_X(200.0f) + SCREEN_SCALE_X(26.0f) - SCREEN_SCALE_X_FIX(4.0f));
+			CFont::SetWrapx(SCREEN_SCALE_X(200.0f) + SCREEN_SCALE_X(63.0f) - SCREEN_SCALE_X_FIX(4.0f));
 			CFont::SetFontStyle(FONT_LOCALE(FONT_BANK));
 			CFont::SetBackgroundOn();
 			CFont::SetBackGroundOnlyTextOff();
