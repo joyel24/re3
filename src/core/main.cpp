@@ -347,7 +347,7 @@ DoFade(void)
 			fadeColor.g = 255;
 			fadeColor.b = 255;
 			fadeColor.a = CDraw::FadeValue;
-			splash->Draw(CRect(0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT), fadeColor, fadeColor, fadeColor, fadeColor);
+			splash->Draw(CRect(0.0f, SCREEN_HEIGHT - (SCREEN_WIDTH * 3.0f/4.0f), SCREEN_WIDTH, SCREEN_HEIGHT), fadeColor, fadeColor, fadeColor, fadeColor);
 		}
 	}
 }
