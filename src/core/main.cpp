@@ -84,6 +84,8 @@ char gString2[512];
 wchar gUString[256];
 wchar gUString2[256];
 
+char cursplashname[140];
+
 float FramesPerSecond = 30.0f;
 
 bool gbPrintShite = false;
@@ -347,7 +349,14 @@ DoFade(void)
 			fadeColor.g = 255;
 			fadeColor.b = 255;
 			fadeColor.a = CDraw::FadeValue;
-			splash->Draw(CRect(0.0f, SCREEN_HEIGHT - (SCREEN_WIDTH * 3.0f/4.0f), SCREEN_WIDTH, SCREEN_HEIGHT), fadeColor, fadeColor, fadeColor, fadeColor);
+			if( strcmp(cursplashname, 'NEWS') == 0 )
+			{
+				splash->Draw(CRect(SCALE_AND_CENTER_X(0.0f), 0.0f, SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH), SCREEN_HEIGHT), fadeColor, fadeColor, fadeColor, fadeColor);
+			}
+			else
+			{
+				splash->Draw(CRect(0.0f, SCREEN_HEIGHT - (SCREEN_WIDTH * 3.0f/4.0f), SCREEN_WIDTH, SCREEN_HEIGHT), fadeColor, fadeColor, fadeColor, fadeColor);
+			}
 		}
 	}
 }
@@ -590,7 +599,7 @@ LoadSplash(const char *name)
 		CTxdStore::PopCurrentTxd();
 		CFileMgr::SetDir("");
 	}
-
+	strcpy(cursplashname, name);
 	return &splash;
 }
 
