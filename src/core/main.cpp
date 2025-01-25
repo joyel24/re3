@@ -84,8 +84,6 @@ char gString2[512];
 wchar gUString[256];
 wchar gUString2[256];
 
-bool isnews = false;
-
 float FramesPerSecond = 30.0f;
 
 bool gbPrintShite = false;
@@ -349,7 +347,7 @@ DoFade(void)
 			fadeColor.g = 255;
 			fadeColor.b = 255;
 			fadeColor.a = CDraw::FadeValue;
-			if( isnews )
+			if( RwTexDictionaryFindNamedTexture( CTxdStore::GetSlot(CTxdStore::FindTxdSlot("splash"))->texDict, "NEWS") != nil )
 			{
 				CSprite2d::DrawRect(CRect(0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT), CRGBA(0, 0, 0, CDraw::FadeValue));
 				splash->Draw(CRect(SCALE_AND_CENTER_X(0.0f), 0.0f, SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH), SCREEN_HEIGHT), fadeColor, fadeColor, fadeColor, fadeColor);
@@ -358,10 +356,6 @@ DoFade(void)
 			{
 				splash->Draw(CRect(0.0f, SCREEN_HEIGHT - (SCREEN_WIDTH * 3.0f/4.0f), SCREEN_WIDTH, SCREEN_HEIGHT), fadeColor, fadeColor, fadeColor, fadeColor);
 			}
-		}
-		else if ( CDraw::FadeValue == 0 && isnews )
-		{
-			isnews = false;
 		}
 	}
 }
@@ -583,9 +577,6 @@ LoadSplash(const char *name)
 		return &splash;
 	if(splashTxdId == -1)
 		splashTxdId = CTxdStore::AddTxdSlot("splash");
-
-	if( strstr(name, "NEWS") != NULL)
-		isnews = true;
 	
 	txd = CTxdStore::GetSlot(splashTxdId)->texDict;
 	if(txd)
