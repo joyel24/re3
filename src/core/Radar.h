@@ -89,7 +89,7 @@ struct sRadarTrace
 VALIDATE_SIZE(sRadarTrace, 0x30);
 
 // Values for screen space
-#define RADAR_LEFT (40.0f)
+#define RADAR_LEFT (64.0f)
 #ifdef PS2_HUD
 #define RADAR_BOTTOM (44.0f)
 #else
