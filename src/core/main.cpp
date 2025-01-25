@@ -84,7 +84,7 @@ char gString2[512];
 wchar gUString[256];
 wchar gUString2[256];
 
-char cursplashname[140];
+char cursplashname[140] = "NEWS";
 
 float FramesPerSecond = 30.0f;
 
@@ -579,7 +579,7 @@ LoadSplash(const char *name)
 	if(splashTxdId == -1)
 		splashTxdId = CTxdStore::AddTxdSlot("splash");
 	
-	sprintf(cursplashname, "%s", name);
+	strcpy(cursplashname, name);
 	txd = CTxdStore::GetSlot(splashTxdId)->texDict;
 	if(txd)
 		tex = RwTexDictionaryFindNamedTexture(txd, name);
