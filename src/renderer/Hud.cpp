@@ -1181,8 +1181,8 @@ void CHud::Draw()
 			CFont::SetFontStyle(FONT_LOCALE(FONT_BANK));
 
 #ifdef XBOX_SUBTITLES
-			float radarBulge = SCREEN_SCALE_X(45.0f) + SCREEN_SCALE_X(16.0f);
-			float rectWidth = SCREEN_WIDTH - SCREEN_SCALE_X(45.0f) - SCREEN_SCALE_X(16.0f) - radarBulge;
+			float radarBulge = SCREEN_SCALE_X(56.0f) + SCREEN_SCALE_X(16.0f);
+			float rectWidth = SCREEN_WIDTH - SCREEN_SCALE_X(56.0f) - SCREEN_SCALE_X(16.0f) - radarBulge;
 			CFont::SetCentreSize(rectWidth);
 			CFont::SetColor(CRGBA(180, 180, 180, 255));
 
