@@ -2362,7 +2362,7 @@ void CapturePad(RwInt32 padID)
 	ControlsManager.m_NewState.id = glfwPad;
 	ControlsManager.m_NewState.isGamepad = true;
 	if (ControlsManager.m_NewState.isGamepad) {
-		for (i = 0; i < 15; i++){
+		for (int i = 0; i < 15; i++){
 			ControlsManager.m_NewState.mappedButtons[i] = (ControlsManager.m_NewState.buttons[i] == 255)? 1:0;
 		}
 		float lt = float(SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT))/32768.0f, rt = float(SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT))/32768.0f;
