@@ -145,10 +145,9 @@ if(LIBRW_PLATFORM_GL3 AND LIBRW_GL3_GFXLIB STREQUAL "GLFW")
 		target_compile_definitions(${EXECUTABLE} PRIVATE GET_KEYBOARD_INPUT_FROM_X11)
 	endif (GLFW_HAS_X11)
 endif()
-find_file(SDL2_INCLUDE_DIR NAME SDL.h HINTS SDL2)
-find_library(SDL2_LIBRARY NAME SDL2)
-target_include_directories(${EXECUTABLE} PRIVATE ${SDL2_INCLUDE_DIR})
-target_link_libraries(${EXECUTABLE} PRIVATE ${SDL2_LIBRARY})  
+find_package(SDL2 REQUIRED)
+target_include_directories(${EXECUTABLE} PRIVATE ${SDL2_INCLUDE_DIRS})
+target_link_libraries(${EXECUTABLE} PRIVATE ${SDL2_LIBRARIES})  
 
 set_target_properties(${EXECUTABLE}
     PROPERTIES
