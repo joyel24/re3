@@ -74,6 +74,8 @@ long _dwOperatingSystemVersion;
 
 rw::EngineOpenParams openParams;
 
+SDL_GameController* game_controller;
+
 static RwBool		  ForegroundApp = TRUE;
 static RwBool		  WindowIconified = FALSE;
 static RwBool		  WindowFocused = TRUE;
@@ -1933,6 +1935,20 @@ main(int argc, char *argv[])
 #endif
 		{
 			glfwPollEvents();
+			while (SDL_PollEvent( &event ) != 0) {
+			    switch (event.type) {
+			    case SDL_CONTROLLERDEVICEADDED:
+				if (!game_controller) {
+				    game_controller = SDL_GameControllerOpen(event.cdevice.which);
+				}
+				break;
+			    case SDL_CONTROLLERDEVICEREMOVED:
+				if (controller && event.cdevice.which == getControllerInstanceID(controller)) {
+				    SDL_GameControllerClose(game_controller);
+				}
+				break;
+			    }
+			}
 #ifdef GET_KEYBOARD_INPUT_FROM_X11
 			checkKeyPresses();
 #endif
@@ -2286,8 +2302,6 @@ void CapturePad(RwInt32 padID)
 	
 	//if ( glfwPad == -1 )
 	//	return;
-	
-	SDL_GameController* game_controller;
 	
 	for (int i = 0; i < SDL_NumJoysticks(); i++) {
 		if (SDL_IsGameController(i)) {
