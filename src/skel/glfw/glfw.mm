@@ -1149,7 +1149,7 @@ CommandLineToArgv(RwChar *cmdLine, RwInt32 *argCount)
  *****************************************************************************
  */
 
-auto avPlayer; 
+AVPlayer avPlayer; 
 
 void CloseClip()
 {
@@ -1158,7 +1158,7 @@ void CloseClip()
     {
 	[child removeFromSuperview];
     }
-    [avPlayer replaceCurrentItemWithPlayerItem:nil]
+    [avPlayer replaceCurrentItemWithPlayerItem:nil];
     movieplaying = false;
     return;
 }
