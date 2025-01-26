@@ -656,6 +656,7 @@ ResetLoadingScreenBar()
 void
 LoadingScreen(const char *str1, const char *str2, const char *splashscreen)
 {
+	usleep(100000);     
 	CSprite2d *splash;
 
 #ifdef DISABLE_LOADING_SCREEN
@@ -733,8 +734,7 @@ LoadingScreen(const char *str1, const char *str2, const char *splashscreen)
 
 		CFont::DrawFonts();
  		DoRWStuffEndOfFrame();
-	}
-	usleep(250000);     
+	}  
 }
 
 void
