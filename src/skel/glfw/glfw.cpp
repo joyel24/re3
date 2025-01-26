@@ -955,6 +955,8 @@ void _InputInitialiseJoys()
 	PSGLOBAL(joy1id) = -1;
 	PSGLOBAL(joy2id) = -1;
 
+	SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS5_RUMBLE, "1");
+
 	SDL_Init(SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC | SDL_INIT_GAMECONTROLLER);
 
 	// Load our gamepad mappings.
@@ -2286,7 +2288,7 @@ void CapturePad(RwInt32 padID)
 	SDL_GameController* game_controller = SDL_GameControllerOpen(glfwPad);
 	
 	int numButtons = 17;
-	const uint8 buttons[numButtons];
+	uint8 buttons[numButtons];
 	for (int i = 0; i < numButtons - 2; i++)
 		buttons[i] = SDL_GameControllerGetButton(game_controller, (SDL_GameControllerButton)i)?255:0;
 	
