@@ -1936,6 +1936,7 @@ main(int argc, char *argv[])
 #endif
 		{
 			glfwPollEvents();
+			SDL_Event event;
 			while (SDL_PollEvent( &event ) != 0) {
 			    switch (event.type) {
 			    case SDL_CONTROLLERDEVICEADDED:
