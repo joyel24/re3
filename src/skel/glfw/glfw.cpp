@@ -404,7 +404,17 @@ static void _psHandleVibration()
 }
 #else
 static void _psInitializeVibration() {}
-static void _psHandleVibration() {}
+
+static void _psHandleVibration()
+{
+	CPad* pad = CPad::GetPad(0);
+	if (pad->ShakeDur < CTimer::GetTimeStepInMilliseconds())
+		pad->ShakeDur = 0;
+	else
+		pad->ShakeDur -= CTimer::GetTimeStepInMilliseconds();
+	if (pad->ShakeDur == 0) pad->ShakeFreq = 0;
+	SDL_GameControllerRumble(pController, ((float)pad->ShakeFreq / 255.0f) * 0xFFFF, ((float)pad->ShakeFreq / 255.0f) * 0xFFFF, 0xFFFF);
+}
 #endif
 
 /*
