@@ -979,6 +979,7 @@ void _InputInitialiseJoys()
 	PSGLOBAL(joy2id) = -1;
 
 	SDL_GameController* game_controller = findController();
+	SDL_GameControllerSetLED(game_controller, 0, 0, 255);
 }
 
 long _InputInitialiseMouse()
@@ -1946,6 +1947,7 @@ main(int argc, char *argv[])
 			    case SDL_CONTROLLERDEVICEADDED:
 				if (!game_controller) {
 				    game_controller = SDL_GameControllerOpen(event.cdevice.which);
+				    SDL_GameControllerSetLED(game_controller, 0, 0, 255);
 				}
 				break;
 			    case SDL_CONTROLLERDEVICEREMOVED:
