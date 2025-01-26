@@ -20,6 +20,7 @@ long _dwOperatingSystemVersion;
 #include <mach-o/dyld.h> 
 #include <sys/sysctl.h>
 #include <CoreServices/CoreServices.h>
+#include <CoreFoundation/CoreFoundation.h>
 #include <AVKit/AVKit.h>
 #endif
 #endif
@@ -1149,7 +1150,29 @@ CommandLineToArgv(RwChar *cmdLine, RwInt32 *argCount)
 
 void PlayMovieInWindow(const char* szFile)
 {
-    [Moviestuff startPlayback:szFile];
+    NSView* view = ((NSWindow *)glfwGetCocoaWindow(PSGLOBAL(window))).contentView;
+    auto avPlayer = [[AVPlayer alloc] initWithURL:[NSURL fileURLWithPath:[NSString stringWithCString:szFile encoding:[NSString defaultCStringEncoding]]]];
+    AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer: avPlayer];
+    int left, top, right, bottom;
+    glfwGetWindowFrameSize(PSGLOBAL(window), &left, &top, &right, &bottom);
+    auto containerView = [[NSView alloc] initWithFrame: NSMakeRect(left, top, right, bottom)];
+    [containerView setWantsLayer:YES];
+    playerLayer.frame = view.frame;
+    [containerView.layer addSublayer: playerLayer];
+    [playerLayer setVideoGravity: AVLayerVideoGravityResizeAspect];
+    [playerLayer setNeedsDisplay];
+    [containerView needsDisplay];
+    [view addSubview:containerView];
+    [avPlayer play];
+    CFNotificationCenterAddObserver
+    (
+        CFNotificationCenterGetLocalCenter(),
+        this,
+        &notificationHandler,
+        CFSTR("notify"),
+        NULL,
+        CFNotificationSuspensionBehaviorDeliverImmediately
+    );
     return;
 }
 
@@ -1166,37 +1189,10 @@ void CloseClip()
     return;
 }
 
-@implementation Moviestuff
-
-- (void)startPlayback:(const char*)szFile
+static void notificationHandler(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
 {
-    NSView* view = ((NSWindow *)glfwGetCocoaWindow(PSGLOBAL(window))).contentView;
-    auto avPlayer = [[AVPlayer alloc] initWithURL:[NSURL fileURLWithPath:[NSString stringWithCString:szFile encoding:[NSString defaultCStringEncoding]]]];
-    AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer: avPlayer];
-    int left, top, right, bottom;
-    glfwGetWindowFrameSize(PSGLOBAL(window), &left, &top, &right, &bottom);
-    auto containerView = [[NSView alloc] initWithFrame: NSMakeRect(left, top, right, bottom)];
-    [containerView setWantsLayer:YES];
-    playerLayer.frame = view.frame;
-    [containerView.layer addSublayer: playerLayer];
-    [playerLayer setVideoGravity: AVLayerVideoGravityResizeAspect];
-    [playerLayer setNeedsDisplay];
-    [containerView needsDisplay];
-    [view addSubview:containerView];
-    [avPlayer play];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(onPlaybackFinished:)
-                                               name:AVPlayerItemDidPlayToEndTimeNotification
-                                             object:nil];
-    return;
+	CloseClip();
 }
-
-- (void)onPlaybackFinished:(NSNotification *)notification
-{
-  // Execute on main thread
-  CloseClip();
-}
-@end
 
 void HandleExit()
 {
