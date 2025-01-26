@@ -50,7 +50,7 @@ class Re3Conan(ConanFile):
     def requirements(self):
         self.requires("librw/{}".format(self.version))
         self.requires("mpg123/1.26.4")
-        self.requires("sdl2/2.30.11")
+        self.requires("sdl2/2.30.9")
         if self.options.audio == "openal":
             self.requires("openal/1.21.0")
         elif self.options.audio == "miles":
