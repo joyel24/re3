@@ -1997,7 +1997,7 @@ main(int argc, char *argv[])
 
 				    case GS_INIT_LOGO_MPEG:
 					{
-					    PlayMovieInWindow(cmdShow, "movies/Logo.mpg");
+					    PlayMovieInWindow("movies/Logo.mpg");
 					    gGameState = GS_LOGO_MPEG;
 					    TRACE("gGameState = GS_LOGO_MPEG;");
 					    break;
@@ -2015,7 +2015,7 @@ main(int argc, char *argv[])
 				    case GS_INIT_INTRO_MPEG:
 					{
 					    //CloseClip();
-					    PlayMovieInWindow(cmdShow, "movies/GTAtitles.mpg");
+					    PlayMovieInWindow("movies/GTAtitles.mpg");
 
 					    gGameState = GS_INTRO_MPEG;
 					    TRACE("gGameState = GS_INTRO_MPEG;");
