@@ -28,6 +28,8 @@ long _dwOperatingSystemVersion;
 #include <stddef.h>
 #endif
 #include <SDL.h>
+#include <SDL_gamecontroller.h>
+#include <SDL_haptic.h>
 #include "common.h"
 #if (defined(_MSC_VER))
 #include <tchar.h>
