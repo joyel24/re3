@@ -1149,24 +1149,7 @@ CommandLineToArgv(RwChar *cmdLine, RwInt32 *argCount)
 
 void PlayMovieInWindow(const char* szFile)
 {
-    NSView* view = ((NSWindow *)glfwGetCocoaWindow(PSGLOBAL(window))).contentView;
-    auto avPlayer = [[AVPlayer alloc] initWithURL:[NSURL fileURLWithPath:[NSString stringWithCString:szFile encoding:[NSString defaultCStringEncoding]]]];
-    AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer: avPlayer];
-    int left, top, right, bottom;
-    glfwGetWindowFrameSize(PSGLOBAL(window), &left, &top, &right, &bottom);
-    auto containerView = [[NSView alloc] initWithFrame: NSMakeRect(left, top, right, bottom)];
-    [containerView setWantsLayer:YES];
-    playerLayer.frame = view.frame;
-    [containerView.layer addSublayer: playerLayer];
-    [playerLayer setVideoGravity: AVLayerVideoGravityResizeAspect];
-    [playerLayer setNeedsDisplay];
-    [containerView needsDisplay];
-    [view addSubview:containerView];
-    [avPlayer play];
-    [[NSNotificationCenter defaultCenter] addObserver:super
-                                           selector:@selector(onPlaybackFinished:)
-                                               name:AVPlayerItemDidPlayToEndTimeNotification
-                                             object:nil];
+    [Moviestuff startPlayback:szFile];
     return;
 }
 
@@ -1183,7 +1166,31 @@ void CloseClip()
     return;
 }
 
-@implementation Callback
+@implementation Moviestuff
+
+- (void)startPlayback:(const char*)szFile
+{
+    NSView* view = ((NSWindow *)glfwGetCocoaWindow(PSGLOBAL(window))).contentView;
+    auto avPlayer = [[AVPlayer alloc] initWithURL:[NSURL fileURLWithPath:[NSString stringWithCString:szFile encoding:[NSString defaultCStringEncoding]]]];
+    AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer: avPlayer];
+    int left, top, right, bottom;
+    glfwGetWindowFrameSize(PSGLOBAL(window), &left, &top, &right, &bottom);
+    auto containerView = [[NSView alloc] initWithFrame: NSMakeRect(left, top, right, bottom)];
+    [containerView setWantsLayer:YES];
+    playerLayer.frame = view.frame;
+    [containerView.layer addSublayer: playerLayer];
+    [playerLayer setVideoGravity: AVLayerVideoGravityResizeAspect];
+    [playerLayer setNeedsDisplay];
+    [containerView needsDisplay];
+    [view addSubview:containerView];
+    [avPlayer play];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(onPlaybackFinished:)
+                                               name:AVPlayerItemDidPlayToEndTimeNotification
+                                             object:nil];
+    return;
+}
+
 - (void)onPlaybackFinished:(NSNotification *)notification
 {
   // Execute on main thread
