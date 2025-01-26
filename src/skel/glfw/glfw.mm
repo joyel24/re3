@@ -1149,16 +1149,16 @@ CommandLineToArgv(RwChar *cmdLine, RwInt32 *argCount)
  *****************************************************************************
  */
 
+auto avPlayer; 
+
 void CloseClip()
 {
     NSView* view = ((NSWindow *)glfwGetCocoaWindow(PSGLOBAL(window))).contentView;
     for (id child in [view subviews])
     {
-	if ([child isMemberOfClass:[NSView class]])
-	{
-	    [child removeFromSuperview];
-	}
+	[child removeFromSuperview];
     }
+    [avPlayer replaceCurrentItemWithPlayerItem:nil]
     movieplaying = false;
     return;
 }
@@ -1171,7 +1171,7 @@ static void notificationHandler(CFNotificationCenterRef center, void *observer, 
 void PlayMovieInWindow(const char* szFile)
 {
     NSView* view = ((NSWindow *)glfwGetCocoaWindow(PSGLOBAL(window))).contentView;
-    auto avPlayer = [[AVPlayer alloc] initWithURL:[NSURL fileURLWithPath:[NSString stringWithCString:szFile encoding:[NSString defaultCStringEncoding]]]];
+    avPlayer = [[AVPlayer alloc] initWithURL:[NSURL fileURLWithPath:[NSString stringWithCString:szFile encoding:[NSString defaultCStringEncoding]]]];
     AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer: avPlayer];
     int left, top, right, bottom;
     glfwGetWindowFrameSize(PSGLOBAL(window), &left, &top, &right, &bottom);
@@ -1191,7 +1191,7 @@ void PlayMovieInWindow(const char* szFile)
         NULL,
         &notificationHandler,
         CFSTR("AVPlayerItemDidPlayToEndTimeNotification"),
-        avPlayer,
+        NULL,
         CFNotificationSuspensionBehaviorDeliverImmediately
     );
     return;
