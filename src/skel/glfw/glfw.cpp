@@ -27,7 +27,7 @@ long _dwOperatingSystemVersion;
 #include <signal.h>
 #include <stddef.h>
 #endif
-
+#include <SDL.h>
 #include "common.h"
 #if (defined(_MSC_VER))
 #include <tchar.h>
@@ -955,54 +955,25 @@ void _InputInitialiseJoys()
 	PSGLOBAL(joy1id) = -1;
 	PSGLOBAL(joy2id) = -1;
 
+	SDL_Init(SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC | SDL_INIT_GAMECONTROLLER);
+
 	// Load our gamepad mappings.
-#define SDL_GAMEPAD_DB_PATH "gamecontrollerdb.txt"
-	FILE *f = fopen(SDL_GAMEPAD_DB_PATH, "rb");
-	if (f) {
-		fseek(f, 0, SEEK_END);
-		size_t fsize = ftell(f);
-		fseek(f, 0, SEEK_SET);
+	SDL_GameControllerAddMappingsFromFile("gamecontrollerdb.txt");
 
-		char *db = (char*)malloc(fsize + 1);
-		if (fread(db, 1, fsize, f) == fsize) {
-			db[fsize] = '\0';
-
-			if (glfwUpdateGamepadMappings(db) == GLFW_FALSE)
-				Error("glfwUpdateGamepadMappings didn't succeed, check " SDL_GAMEPAD_DB_PATH ".\n");
-		} else
-			Error("fread on " SDL_GAMEPAD_DB_PATH " wasn't successful.\n");
-
-		free(db);
-		fclose(f);
-	} else
-		printf("You don't seem to have copied " SDL_GAMEPAD_DB_PATH " file from re3/gamefiles to GTA3 directory. Some gamepads may not be recognized.\n");
-
-#undef SDL_GAMEPAD_DB_PATH
-
-	// But always overwrite it with the one in SDL_GAMECONTROLLERCONFIG.
-	char const* EnvControlConfig = getenv("SDL_GAMECONTROLLERCONFIG");
-	if (EnvControlConfig != nil) {
-		glfwUpdateGamepadMappings(EnvControlConfig);
-	}
-
-	for (int i = 0; i <= GLFW_JOYSTICK_LAST; i++) {
-		if (glfwJoystickPresent(i) && !IsThisJoystickBlacklisted(i)) {
-			if (PSGLOBAL(joy1id) == -1)
-				PSGLOBAL(joy1id) = i;
-			else if (PSGLOBAL(joy2id) == -1)
-				PSGLOBAL(joy2id) = i;
-			else
-				break;
+	for (int i = 0; i < SDL_NumJoysticks(); i++)
+	{
+		if (!SDL_IsGameController(i))
+		{
+			continue;
 		}
-	}
 
-	if (PSGLOBAL(joy1id) != -1) {
-		int count;
-		glfwGetJoystickButtons(PSGLOBAL(joy1id), &count);
-#ifdef DETECT_JOYSTICK_MENU
-		strcpy(gSelectedJoystickName, glfwGetJoystickName(PSGLOBAL(joy1id)));
-#endif
-		ControlsManager.InitDefaultControlConfigJoyPad(count);
+		SDL_GameController* game_controller = SDL_GameControllerOpen(i);
+		if (!game_controller)
+		{
+			continue;
+		}
+		if (PSGLOBAL(joy1id) == -1)
+			PSGLOBAL(joy1id) = i;
 	}
 }
 
@@ -2311,9 +2282,24 @@ void CapturePad(RwInt32 padID)
 	
 	if ( glfwPad == -1 )
 		return;
+
+	SDL_GameController* game_controller = SDL_GameControllerOpen(glfwPad)
 	
 	int numButtons, numAxes;
-	const uint8 *buttons = glfwGetJoystickButtons(glfwPad, &numButtons);
+	const uint8 *buttons;
+	for (int i = 0; i < SDL_CONTROLLER_BUTTON_MAX; i++)
+		buttons[i] = SDL_GameControllerGetButton(sdl_controller, (SDL_GameControllerButton)i)?255:0;
+	
+	int16_t xaxis = SDL_GameControllerGetAxis(sdl_controller, SDL_CONTROLLER_AXIS_LEFTX);
+	int16_t yaxis = SDL_GameControllerGetAxis(sdl_controller, SDL_CONTROLLER_AXIS_LEFTY);
+	position.x = float(xaxis)/32768.0f;
+	position.y = float(yaxis)/32768.0f;
+
+	int16_t xaxis2 = SDL_GameControllerGetAxis(sdl_controller, SDL_CONTROLLER_AXIS_RIGHTX);
+	int16_t yaxis2 = SDL_GameControllerGetAxis(sdl_controller, SDL_CONTROLLER_AXIS_RIGHTY);
+	rightStick.x = float(xaxis2)/32768.0f;
+	rightStick.y = float(yaxis2)/32768.0f;
+	
 	const float *axes = glfwGetJoystickAxes(glfwPad, &numAxes);
 	GLFWgamepadstate gamepadState;
 
@@ -2327,10 +2313,10 @@ void CapturePad(RwInt32 padID)
 	ControlsManager.m_NewState.buttons = (uint8*)buttons;
 	ControlsManager.m_NewState.numButtons = numButtons;
 	ControlsManager.m_NewState.id = glfwPad;
-	ControlsManager.m_NewState.isGamepad = glfwGetGamepadState(glfwPad, &gamepadState);
+	ControlsManager.m_NewState.isGamepad = true;
 	if (ControlsManager.m_NewState.isGamepad) {
 		memcpy(&ControlsManager.m_NewState.mappedButtons, gamepadState.buttons, sizeof(gamepadState.buttons));
-		float lt = gamepadState.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER], rt = gamepadState.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER];
+		float lt = float(SDL_GameControllerGetAxis(pad, SDL_CONTROLLER_AXIS_TRIGGERLEFT))/32768.0f, rt = float(SDL_GameControllerGetAxis(pad, SDL_CONTROLLER_AXIS_TRIGGERRIGHT))/32768.0f;
 
 		// glfw returns 0.0 for non-existent axises(which is bullocks) so we treat it as deadzone, and keep value of previous frame.
 		// otherwise if this axis is present, -1 = released, 1 = pressed
@@ -2354,16 +2340,6 @@ void CapturePad(RwInt32 padID)
 
 	RsPadEventHandler(rsPADBUTTONUP, (void *)&bs);
 	
-	// Gamepad axes are guaranteed to return 0.0f if that particular gamepad doesn't have that axis.
-	// And that's really good for sticks, because gamepads return 0.0 for them when sticks are in released state.
-	if ( glfwPad != -1 ) {
-		leftStickPos.x = ControlsManager.m_NewState.isGamepad ? gamepadState.axes[GLFW_GAMEPAD_AXIS_LEFT_X] : numAxes >= 1 ? axes[0] : 0.0f;
-		leftStickPos.y = ControlsManager.m_NewState.isGamepad ? gamepadState.axes[GLFW_GAMEPAD_AXIS_LEFT_Y] : numAxes >= 2 ? axes[1] : 0.0f;
-
-		rightStickPos.x = ControlsManager.m_NewState.isGamepad ? gamepadState.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] : numAxes >= 3 ? axes[2] : 0.0f;
-		rightStickPos.y = ControlsManager.m_NewState.isGamepad ? gamepadState.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] : numAxes >= 4 ? axes[3] : 0.0f;
-	}
-	
 	{
 		if (CPad::m_bMapPadOneToPadTwo)
 			bs.padID = 1;
@@ -2379,16 +2355,16 @@ void CapturePad(RwInt32 padID)
 		CPad *pad = CPad::GetPad(bs.padID);
 
 		if ( Abs(leftStickPos.x)  > 0.3f )
-			pad->PCTempJoyState.LeftStickX	= (int32)(leftStickPos.x  * 128.0f);
+			pad->PCTempJoyState.LeftStickX	= (int32)(position.x  * 128.0f);
 		
 		if ( Abs(leftStickPos.y)  > 0.3f )
-			pad->PCTempJoyState.LeftStickY	= (int32)(leftStickPos.y  * 128.0f);
+			pad->PCTempJoyState.LeftStickY	= (int32)(position.y  * 128.0f);
 		
 		if ( Abs(rightStickPos.x) > 0.3f )
-			pad->PCTempJoyState.RightStickX = (int32)(rightStickPos.x * 128.0f);
+			pad->PCTempJoyState.RightStickX = (int32)(rightStick.x * 128.0f);
 
 		if ( Abs(rightStickPos.y) > 0.3f )
-			pad->PCTempJoyState.RightStickY = (int32)(rightStickPos.y * 128.0f);
+			pad->PCTempJoyState.RightStickY = (int32)(rightStick.y * 128.0f);
 	}
 
 	_psHandleVibration();
