@@ -106,6 +106,7 @@ static RwInt32 bestWndMode = -1;
 #endif
 
 static psGlobalType PsGlobal;
+bool movieplaying = false;
 
 
 #define PSGLOBAL(var) (((psGlobalType *)(RsGlobal.ps))->var)
@@ -1164,6 +1165,7 @@ void PlayMovieInWindow(const char* szFile)
     [containerView needsDisplay];
     [view addSubview:containerView];
     [avPlayer play];
+    movieplaying = true;
     CFNotificationCenterAddObserver
     (
         CFNotificationCenterGetLocalCenter(),
@@ -1186,6 +1188,7 @@ void CloseClip()
 	    [child removeFromSuperview];
 	}
     }
+    movieplaying = false;
     return;
 }
 
@@ -2036,7 +2039,7 @@ main(int argc, char *argv[])
 					{
 					    CPad::UpdatePads();
 
-					    if (ControlsManager.GetJoyButtonJustDown() != 0)
+					    if (!movieplaying || ControlsManager.GetJoyButtonJustDown() != 0)
 						    ++gGameState;
 					    break;
 				    }
@@ -2055,7 +2058,7 @@ main(int argc, char *argv[])
 					{
 					    CPad::UpdatePads();
 
-					    if (ControlsManager.GetJoyButtonJustDown() != 0)
+					    if (!movieplaying || ControlsManager.GetJoyButtonJustDown() != 0)
 						    ++gGameState;
 
 					    break;
