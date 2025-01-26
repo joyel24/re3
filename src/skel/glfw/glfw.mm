@@ -2029,7 +2029,12 @@ main(int argc, char *argv[])
 
 				    case GS_INIT_LOGO_MPEG:
 					{
-					    PlayMovieInWindow("movies/Logo.mp4");
+					    int32 movie = CFileMgr::OpenFile("movies/Logo.mp4", "r");
+					    if ( movie )
+					    {
+					        CFileMgr::CloseFile(movie);
+					    	PlayMovieInWindow("movies/Logo.mp4");
+					    }
 					    gGameState = GS_LOGO_MPEG;
 					    TRACE("gGameState = GS_LOGO_MPEG;");
 					    break;
@@ -2047,8 +2052,12 @@ main(int argc, char *argv[])
 				    case GS_INIT_INTRO_MPEG:
 					{
 					    CloseClip();
-					    PlayMovieInWindow("movies/GTAtitles.mp4");
-
+					    int32 movie = CFileMgr::OpenFile("movies/GTATitles.mp4", "r");
+					    if ( movie )
+					    {
+					        CFileMgr::CloseFile(movie);
+					    	PlayMovieInWindow("movies/GTATitles.mp4");
+					    }
 					    gGameState = GS_INTRO_MPEG;
 					    TRACE("gGameState = GS_INTRO_MPEG;");
 					    break;
@@ -2068,16 +2077,10 @@ main(int argc, char *argv[])
 					{
 						CloseClip();
 						extern char version_name[64];
-#ifdef PS2_MENU
-						if ( CGame::frenchGame || CGame::germanGame )
-							LoadingScreen(NULL, version_name, "loadsc24");
-						else
-							LoadingScreen(NULL, version_name, "loadsc0");
+						LoadingScreen(NULL, version_name, "loadsc0");
 						
 						printf("Into TheGame!!!\n");
-#else				
-						LoadingScreen(NULL, version_name, "loadsc0");
-#endif
+						
 						if ( !CGame::InitialiseOnceAfterRW() )
 							RsGlobal.quit = TRUE;
 						
