@@ -2283,25 +2283,22 @@ void CapturePad(RwInt32 padID)
 	if ( glfwPad == -1 )
 		return;
 
-	SDL_GameController* game_controller = SDL_GameControllerOpen(glfwPad)
+	SDL_GameController* game_controller = SDL_GameControllerOpen(glfwPad);
 	
-	int numButtons, numAxes;
+	int numButtons = SDL_CONTROLLER_BUTTON_MAX;
 	const uint8 *buttons;
 	for (int i = 0; i < SDL_CONTROLLER_BUTTON_MAX; i++)
-		buttons[i] = SDL_GameControllerGetButton(sdl_controller, (SDL_GameControllerButton)i)?255:0;
+		buttons[i] = SDL_GameControllerGetButton(game_controller, (SDL_GameControllerButton)i)?255:0;
 	
-	int16_t xaxis = SDL_GameControllerGetAxis(sdl_controller, SDL_CONTROLLER_AXIS_LEFTX);
-	int16_t yaxis = SDL_GameControllerGetAxis(sdl_controller, SDL_CONTROLLER_AXIS_LEFTY);
-	position.x = float(xaxis)/32768.0f;
-	position.y = float(yaxis)/32768.0f;
+	int16_t xaxis = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_LEFTX);
+	int16_t yaxis = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_LEFTY);
+	float positionx = float(xaxis)/32768.0f;
+	float positiony = float(yaxis)/32768.0f;
 
 	int16_t xaxis2 = SDL_GameControllerGetAxis(sdl_controller, SDL_CONTROLLER_AXIS_RIGHTX);
 	int16_t yaxis2 = SDL_GameControllerGetAxis(sdl_controller, SDL_CONTROLLER_AXIS_RIGHTY);
-	rightStick.x = float(xaxis2)/32768.0f;
-	rightStick.y = float(yaxis2)/32768.0f;
-	
-	const float *axes = glfwGetJoystickAxes(glfwPad, &numAxes);
-	GLFWgamepadstate gamepadState;
+	float rightStickx = float(xaxis2)/32768.0f;
+	float rightSticky = float(yaxis2)/32768.0f;
 
 	if (ControlsManager.m_bFirstCapture == false) {
 		memcpy(&ControlsManager.m_OldState, &ControlsManager.m_NewState, sizeof(ControlsManager.m_NewState));
@@ -2315,7 +2312,7 @@ void CapturePad(RwInt32 padID)
 	ControlsManager.m_NewState.id = glfwPad;
 	ControlsManager.m_NewState.isGamepad = true;
 	if (ControlsManager.m_NewState.isGamepad) {
-		memcpy(&ControlsManager.m_NewState.mappedButtons, gamepadState.buttons, sizeof(gamepadState.buttons));
+		memcpy(&ControlsManager.m_NewState.mappedButtons, ControlsManager.m_NewState.buttons, sizeof(ControlsManager.m_NewState.buttons));
 		float lt = float(SDL_GameControllerGetAxis(pad, SDL_CONTROLLER_AXIS_TRIGGERLEFT))/32768.0f, rt = float(SDL_GameControllerGetAxis(pad, SDL_CONTROLLER_AXIS_TRIGGERRIGHT))/32768.0f;
 
 		// glfw returns 0.0 for non-existent axises(which is bullocks) so we treat it as deadzone, and keep value of previous frame.
@@ -2354,17 +2351,17 @@ void CapturePad(RwInt32 padID)
 		
 		CPad *pad = CPad::GetPad(bs.padID);
 
-		if ( Abs(leftStickPos.x)  > 0.3f )
-			pad->PCTempJoyState.LeftStickX	= (int32)(position.x  * 128.0f);
+		if ( Abs(positionx)  > 0.3f )
+			pad->PCTempJoyState.LeftStickX	= (int32)(positionx  * 128.0f);
 		
-		if ( Abs(leftStickPos.y)  > 0.3f )
-			pad->PCTempJoyState.LeftStickY	= (int32)(position.y  * 128.0f);
+		if ( Abs(positiony)  > 0.3f )
+			pad->PCTempJoyState.LeftStickY	= (int32)(positiony  * 128.0f);
 		
-		if ( Abs(rightStickPos.x) > 0.3f )
-			pad->PCTempJoyState.RightStickX = (int32)(rightStick.x * 128.0f);
+		if ( Abs(rightStickx) > 0.3f )
+			pad->PCTempJoyState.RightStickX = (int32)(rightStickx * 128.0f);
 
-		if ( Abs(rightStickPos.y) > 0.3f )
-			pad->PCTempJoyState.RightStickY = (int32)(rightStick.y * 128.0f);
+		if ( Abs(rightSticky) > 0.3f )
+			pad->PCTempJoyState.RightStickY = (int32)(rightSticky * 128.0f);
 	}
 
 	_psHandleVibration();
