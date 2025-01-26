@@ -2357,7 +2357,7 @@ void CapturePad(RwInt32 padID)
 		ControlsManager.m_NewState.mappedButtons[15] = ControlsManager.m_NewState.mappedButtons[16] = 0;
 	}
 
-	ControlsManager.m_NewState.buttons = buttons;
+	ControlsManager.m_NewState.buttons = (uint8*)buttons;
 	ControlsManager.m_NewState.numButtons = numButtons;
 	ControlsManager.m_NewState.id = glfwPad;
 	ControlsManager.m_NewState.isGamepad = true;
