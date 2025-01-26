@@ -2321,24 +2321,6 @@ void CapturePad(RwInt32 padID)
 		}
 	}
 	
-	int numButtons = 17;
-	uint8 buttons[15];
-	buttons[0] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_A)?1:0;
-	buttons[1] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_B)?1:0;
-	buttons[2] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_X)?1:0;
-	buttons[3] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_Y)?1:0;
-	buttons[4] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_LEFTSHOULDER)?1:0;
-	buttons[5] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)?1:0;
-	buttons[6] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_BACK)?1:0;
-	buttons[7] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_START)?1:0;
-	buttons[8] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_GUIDE)?1:0;
-	buttons[9] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_LEFTSTICK)?1:0;
-	buttons[10] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_RIGHTSTICK)?1:0;
-	buttons[11] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_UP)?1:0;
-	buttons[12] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)?1:0;
-	buttons[13] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN)?1:0;
-	buttons[14] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT)?1:0;
-	
 	int16_t xaxis = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_LEFTX);
 	int16_t yaxis = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_LEFTY);
 	float positionx = float(xaxis)/32768.0f;
@@ -2356,23 +2338,34 @@ void CapturePad(RwInt32 padID)
 		ControlsManager.m_NewState.mappedButtons[15] = ControlsManager.m_NewState.mappedButtons[16] = 0;
 	}
 
-	ControlsManager.m_NewState.buttons = buttons;
-	ControlsManager.m_NewState.numButtons = numButtons;
+	ControlsManager.m_NewState.numButtons = 17;
 	ControlsManager.m_NewState.id = glfwPad;
 	ControlsManager.m_NewState.isGamepad = true;
-	if (ControlsManager.m_NewState.isGamepad) {
-		memcpy(&ControlsManager.m_NewState.mappedButtons, ControlsManager.m_NewState.buttons, sizeof(ControlsManager.m_NewState.buttons));
-		float lt = float(SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT))/32768.0f, rt = float(SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT))/32768.0f;
+	ControlsManager.m_NewState.mappedButtons[0] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_A)?1:0;
+	ControlsManager.m_NewState.mappedButtons[1] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_B)?1:0;
+	ControlsManager.m_NewState.mappedButtons[2] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_X)?1:0;
+	ControlsManager.m_NewState.mappedButtons[3] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_Y)?1:0;
+	ControlsManager.m_NewState.mappedButtons[4] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_LEFTSHOULDER)?1:0;
+	ControlsManager.m_NewState.mappedButtons[5] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)?1:0;
+	ControlsManager.m_NewState.mappedButtons[6] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_BACK)?1:0;
+	ControlsManager.m_NewState.mappedButtons[7] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_START)?1:0;
+	ControlsManager.m_NewState.mappedButtons[8] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_GUIDE)?1:0;
+	ControlsManager.m_NewState.mappedButtons[9] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_LEFTSTICK)?1:0;
+	ControlsManager.m_NewState.mappedButtons[10] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_RIGHTSTICK)?1:0;
+	ControlsManager.m_NewState.mappedButtons[11] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_UP)?1:0;
+	ControlsManager.m_NewState.mappedButtons[12] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)?1:0;
+	ControlsManager.m_NewState.mappedButtons[13] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN)?1:0;
+	ControlsManager.m_NewState.mappedButtons[14] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT)?1:0;
+	float lt = float(SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT))/32768.0f, rt = float(SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT))/32768.0f;
 
-		// glfw returns 0.0 for non-existent axises(which is bullocks) so we treat it as deadzone, and keep value of previous frame.
-		// otherwise if this axis is present, -1 = released, 1 = pressed
-		if (lt != 0.0f)
-			ControlsManager.m_NewState.mappedButtons[15] = lt > -0.8f;
-			ControlsManager.m_NewState.lt = (uint8)((lt) * 255.0f);
-		if (rt != 0.0f)
-			ControlsManager.m_NewState.mappedButtons[16] = rt > -0.8f;
-			ControlsManager.m_NewState.rt = (uint8)((rt) * 255.0f);
-	}
+	// glfw returns 0.0 for non-existent axises(which is bullocks) so we treat it as deadzone, and keep value of previous frame.
+	// otherwise if this axis is present, -1 = released, 1 = pressed
+	if (lt != 0.0f)
+		ControlsManager.m_NewState.mappedButtons[15] = lt > -0.8f;
+		ControlsManager.m_NewState.lt = (uint8)((lt) * 255.0f);
+	if (rt != 0.0f)
+		ControlsManager.m_NewState.mappedButtons[16] = rt > -0.8f;
+		ControlsManager.m_NewState.rt = (uint8)((rt) * 255.0f);
 	// TODO? L2-R2 axes(not buttons-that's fine) on joysticks that don't have SDL gamepad mapping AREN'T handled, and I think it's impossible to do without mapping.
 
 	if (ControlsManager.m_bFirstCapture == true) {
