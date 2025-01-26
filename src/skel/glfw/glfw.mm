@@ -1997,8 +1997,7 @@ main(int argc, char *argv[])
 
 				    case GS_INIT_LOGO_MPEG:
 					{
-					    if (!startupDeactivate)
-						    PlayMovieInWindow(cmdShow, "movies/Logo.mpg");
+					    PlayMovieInWindow(cmdShow, "movies/Logo.mpg");
 					    gGameState = GS_LOGO_MPEG;
 					    TRACE("gGameState = GS_LOGO_MPEG;");
 					    break;
@@ -2008,14 +2007,14 @@ main(int argc, char *argv[])
 					{
 					    CPad::UpdatePads();
 
-					    if (startupDeactivate || ControlsManager.GetJoyButtonJustDown() != 0)
+					    if (ControlsManager.GetJoyButtonJustDown() != 0)
 						    ++gGameState;
 					    break;
 				    }
 
 				    case GS_INIT_INTRO_MPEG:
 					{
-					    CloseClip();
+					    //CloseClip();
 					    PlayMovieInWindow(cmdShow, "movies/GTAtitles.mpg");
 
 					    gGameState = GS_INTRO_MPEG;
@@ -2027,7 +2026,7 @@ main(int argc, char *argv[])
 					{
 					    CPad::UpdatePads();
 
-					    if (startupDeactivate || ControlsManager.GetJoyButtonJustDown() != 0)
+					    if (ControlsManager.GetJoyButtonJustDown() != 0)
 						    ++gGameState;
 
 					    break;
