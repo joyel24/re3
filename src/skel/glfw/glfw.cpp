@@ -2323,22 +2323,21 @@ void CapturePad(RwInt32 padID)
 	
 	int numButtons = 17;
 	uint8* buttons;
-	buttons[0] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_A)?255:0;
-	buttons[1] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_B)?255:0;
-	buttons[2] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_X)?255:0;
-	buttons[3] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_Y)?255:0;
-	buttons[4] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_LEFTSHOULDER)?255:0;
-	buttons[5] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)?255:0;
-	buttons[6] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_BACK)?255:0;
-	buttons[7] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_START)?255:0;
-	buttons[8] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_GUIDE)?255:0;
-	buttons[9] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_LEFTSTICK)?255:0;
-	buttons[10] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_RIGHTSTICK)?255:0;
-	buttons[11] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_UP)?255:0;
-	buttons[12] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)?255:0;
-	buttons[13] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN)?255:0;
-	buttons[14] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT)?255:0;
-	
+	buttons[0] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_A)?1:0;
+	buttons[1] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_B)?1:0;
+	buttons[2] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_X)?1:0;
+	buttons[3] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_Y)?1:0;
+	buttons[4] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_LEFTSHOULDER)?1:0;
+	buttons[5] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)?1:0;
+	buttons[6] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_BACK)?1:0;
+	buttons[7] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_START)?1:0;
+	buttons[8] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_GUIDE)?1:0;
+	buttons[9] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_LEFTSTICK)?1:0;
+	buttons[10] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_RIGHTSTICK)?1:0;
+	buttons[11] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_UP)?1:0;
+	buttons[12] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)?1:0;
+	buttons[13] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN)?1:0;
+	buttons[14] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT)?1:0;
 	
 	int16_t xaxis = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_LEFTX);
 	int16_t yaxis = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_LEFTY);
@@ -2357,17 +2356,12 @@ void CapturePad(RwInt32 padID)
 		ControlsManager.m_NewState.mappedButtons[15] = ControlsManager.m_NewState.mappedButtons[16] = 0;
 	}
 
-	ControlsManager.m_NewState.buttons = (uint8*)buttons;
+	ControlsManager.m_NewState.buttons = buttons;
 	ControlsManager.m_NewState.numButtons = numButtons;
 	ControlsManager.m_NewState.id = glfwPad;
 	ControlsManager.m_NewState.isGamepad = true;
 	if (ControlsManager.m_NewState.isGamepad) {
-		bool buttonsstate[17];
-		memset(buttonsstate, 0, sizeof(buttonsstate)); 
-		for (int i = 0; i < 15; i++){
-			buttonsstate[i] = (ControlsManager.m_NewState.buttons[i] == 255)? 1 : 0;
-		}
-		memcpy(&ControlsManager.m_NewState.mappedButtons, buttonsstate, sizeof(buttonsstate));
+		memcpy(&ControlsManager.m_NewState.mappedButtons, ControlsManager.m_NewState.buttons, sizeof(ControlsManager.m_NewState.buttons));
 		float lt = float(SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT))/32768.0f, rt = float(SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT))/32768.0f;
 
 		// glfw returns 0.0 for non-existent axises(which is bullocks) so we treat it as deadzone, and keep value of previous frame.
@@ -2419,7 +2413,7 @@ void CapturePad(RwInt32 padID)
 			pad->PCTempJoyState.RightStickY = (int32)(rightSticky * 128.0f);
 	}
 
-	//_psHandleVibration();
+	_psHandleVibration();
 	
 	return;
 }
