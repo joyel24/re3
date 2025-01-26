@@ -1163,6 +1163,30 @@ void PlayMovieInWindow(const char* szFile)
     [containerView needsDisplay];
     [view addSubview:containerView];
     [avPlayer play];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(onPlaybackFinished:)
+                                               name:AVPlayerItemDidPlayToEndTimeNotification
+                                             object:nil];
+    return;
+}
+
+void CloseClip()
+{
+    NSView* view = ((NSWindow *)glfwGetCocoaWindow(PSGLOBAL(window))).contentView;
+    for (id child in [view subviews])
+    {
+	if ([child isMemberOfClass:[UIView class]])
+	{
+	    [child removeFromSuperview];
+	}
+    }
+    return;
+}
+
+- (void)onPlaybackFinished:(NSNotification *)notification
+{
+  // Execute on main thread
+  CloseClip();
 }
 
 void HandleExit()
@@ -2014,7 +2038,7 @@ main(int argc, char *argv[])
 
 				    case GS_INIT_INTRO_MPEG:
 					{
-					    //CloseClip();
+					    CloseClip();
 					    PlayMovieInWindow("movies/GTAtitles.mpg");
 
 					    gGameState = GS_INTRO_MPEG;
@@ -2034,6 +2058,7 @@ main(int argc, char *argv[])
 
 					case GS_INIT_ONCE:
 					{
+						CloseClip();
 						extern char version_name[64];
 #ifdef PS2_MENU
 						if ( CGame::frenchGame || CGame::germanGame )
