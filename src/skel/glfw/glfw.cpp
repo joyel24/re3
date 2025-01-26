@@ -2419,7 +2419,7 @@ void CapturePad(RwInt32 padID)
 			pad->PCTempJoyState.RightStickY = (int32)(rightSticky * 128.0f);
 	}
 
-	_psHandleVibration();
+	//_psHandleVibration();
 	
 	return;
 }
