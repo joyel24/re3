@@ -1149,7 +1149,7 @@ CommandLineToArgv(RwChar *cmdLine, RwInt32 *argCount)
  *****************************************************************************
  */
 
-AVPlayer avPlayer; 
+AVPlayer *avPlayer; 
 
 void CloseClip()
 {
