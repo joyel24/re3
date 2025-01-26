@@ -962,7 +962,7 @@ void _InputInitialiseJoys()
 	// Load our gamepad mappings.
 	SDL_GameControllerAddMappingsFromFile("gamecontrollerdb.txt");
 
-	for (int i = 0; i < SDL_NumJoysticks(); i++)
+	/*for (int i = 0; i < SDL_NumJoysticks(); i++)
 	{
 		if (!SDL_IsGameController(i))
 		{
@@ -976,7 +976,7 @@ void _InputInitialiseJoys()
 		}
 		if (PSGLOBAL(joy1id) == -1)
 			PSGLOBAL(joy1id) = i;
-	}
+	}*/
 }
 
 long _InputInitialiseMouse()
@@ -2275,17 +2275,17 @@ void CapturePad(RwInt32 padID)
 {
 	int8 glfwPad = -1;
 
-	if( padID == 0 )
-		glfwPad = PSGLOBAL(joy1id);
-	else if( padID == 1)
-		glfwPad = PSGLOBAL(joy2id);
-	else
-		assert("invalid padID");
+	//if( padID == 0 )
+	//	glfwPad = PSGLOBAL(joy1id);
+	//else if( padID == 1)
+	//	glfwPad = PSGLOBAL(joy2id);
+	//else
+	//	assert("invalid padID");
 	
-	if ( glfwPad == -1 )
-		return;
+	//if ( glfwPad == -1 )
+	//	return;
 
-	SDL_GameController* game_controller = SDL_GameControllerOpen(glfwPad);
+	SDL_GameController* game_controller = SDL_GameControllerOpen(0);
 	
 	int numButtons = 17;
 	uint8 buttons[numButtons];
