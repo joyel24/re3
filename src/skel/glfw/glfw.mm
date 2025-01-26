@@ -2044,14 +2044,16 @@ main(int argc, char *argv[])
 					{
 					    CPad::UpdatePads();
 
-					    if (!movieplaying || ControlsManager.GetJoyButtonJustDown() != 0)
+					    if(ControlsManager.GetJoyButtonJustDown() != 0)
+						    CloseClip();
+
+					    if (!movieplaying)
 						    ++gGameState;
 					    break;
 				    }
 
 				    case GS_INIT_INTRO_MPEG:
 					{
-					    CloseClip();
 					    int32 movie = CFileMgr::OpenFile("movies/GTATitles.mp4", "r");
 					    if ( movie )
 					    {
@@ -2067,7 +2069,10 @@ main(int argc, char *argv[])
 					{
 					    CPad::UpdatePads();
 
-					    if (!movieplaying || ControlsManager.GetJoyButtonJustDown() != 0)
+					    if(ControlsManager.GetJoyButtonJustDown() != 0)
+						    CloseClip();
+
+					    if (!movieplaying)
 						    ++gGameState;
 
 					    break;
@@ -2075,7 +2080,6 @@ main(int argc, char *argv[])
 
 					case GS_INIT_ONCE:
 					{
-						CloseClip();
 						extern char version_name[64];
 						LoadingScreen(NULL, version_name, "loadsc0");
 						
