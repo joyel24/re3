@@ -66,10 +66,8 @@ long _dwOperatingSystemVersion;
 #include <GLFW/glfw3native.h>
 #endif
 
-#ifdef _WIN32
-#define GLFW_EXPOSE_NATIVE_WIN32
+#define GLFW_EXPOSE_NATIVE_COCOA
 #include <GLFW/glfw3native.h>
-#endif
 
 #define MAX_SUBSYSTEMS		(16)
 
