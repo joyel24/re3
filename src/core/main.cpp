@@ -733,6 +733,7 @@ LoadingScreen(const char *str1, const char *str2, const char *splashscreen)
 		CFont::DrawFonts();
  		DoRWStuffEndOfFrame();
 	}
+	sleep(1000);     
 }
 
 void
