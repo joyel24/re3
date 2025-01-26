@@ -1945,7 +1945,7 @@ main(int argc, char *argv[])
 				}
 				break;
 			    case SDL_CONTROLLERDEVICEREMOVED:
-				if (controller && event.cdevice.which == getControllerInstanceID(controller)) {
+				if (game_controller && event.cdevice.which == SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(game_controller))) {
 				    SDL_GameControllerClose(game_controller);
 				}
 				break;
