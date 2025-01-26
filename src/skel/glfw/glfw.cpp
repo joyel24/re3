@@ -2313,8 +2313,22 @@ void CapturePad(RwInt32 padID)
 	
 	int numButtons = 17;
 	uint8 buttons[numButtons];
-	for (int i = 0; i < numButtons - 2; i++)
-		buttons[i] = SDL_GameControllerGetButton(game_controller, (SDL_GameControllerButton)i)?255:0;
+	buttons[0] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_A)?255:0;
+	buttons[1] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_B)?255:0;
+	buttons[2] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_X)?255:0;
+	buttons[3] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_Y)?255:0;
+	buttons[4] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_LEFTSHOULDER)?255:0;
+	buttons[5] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)?255:0;
+	buttons[6] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_BACK)?255:0;
+	buttons[7] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_START)?255:0;
+	buttons[8] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_GUIDE)?255:0;
+	buttons[9] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_LEFTSTICK)?255:0;
+	buttons[10] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_RIGHTSTICK)?255:0;
+	buttons[11] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_UP)?255:0;
+	buttons[12] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)?255:0;
+	buttons[13] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN)?255:0;
+	buttons[14] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT)?255:0;
+	
 	
 	int16_t xaxis = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_LEFTX);
 	int16_t yaxis = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_LEFTY);
@@ -2345,10 +2359,10 @@ void CapturePad(RwInt32 padID)
 		// otherwise if this axis is present, -1 = released, 1 = pressed
 		if (lt != 0.0f)
 			ControlsManager.m_NewState.mappedButtons[15] = lt > -0.8f;
-			ControlsManager.m_NewState.lt = (uint8)((1.0f + lt) * 255.0f);
+			ControlsManager.m_NewState.lt = (uint8)((lt) * 255.0f);
 		if (rt != 0.0f)
 			ControlsManager.m_NewState.mappedButtons[16] = rt > -0.8f;
-			ControlsManager.m_NewState.rt = (uint8)((1.0f + rt) * 255.0f);
+			ControlsManager.m_NewState.rt = (uint8)((rt) * 255.0f);
 	}
 	// TODO? L2-R2 axes(not buttons-that's fine) on joysticks that don't have SDL gamepad mapping AREN'T handled, and I think it's impossible to do without mapping.
 
