@@ -20,6 +20,8 @@ header_directories(${PROJECT}_INCLUDES)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/extras/GitSHA1.cpp.in" "${CMAKE_CURRENT_BINARY_DIR}/extras/GitSHA1.cpp" @ONLY)
 list(APPEND ${PROJECT}_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/extras/GitSHA1.cpp")
 
+find_package(SDL2 REQUIRED)
+
 add_executable(${EXECUTABLE} WIN32
     ${${PROJECT}_SOURCES}
 )
@@ -145,9 +147,7 @@ if(LIBRW_PLATFORM_GL3 AND LIBRW_GL3_GFXLIB STREQUAL "GLFW")
 		target_compile_definitions(${EXECUTABLE} PRIVATE GET_KEYBOARD_INPUT_FROM_X11)
 	endif (GLFW_HAS_X11)
 endif()
-find_package(SDL2 REQUIRED)
-target_include_directories(${EXECUTABLE} PRIVATE ${SDL2_INCLUDE_DIRS})
-target_link_libraries(${EXECUTABLE} PRIVATE ${SDL2_LIBRARIES})  
+target_link_libraries(${EXECUTABLE} PRIVATE SDL2::SDL2)  
 
 set_target_properties(${EXECUTABLE}
     PROPERTIES
