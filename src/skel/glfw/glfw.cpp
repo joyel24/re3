@@ -2285,9 +2285,9 @@ void CapturePad(RwInt32 padID)
 
 	SDL_GameController* game_controller = SDL_GameControllerOpen(glfwPad);
 	
-	int numButtons = SDL_CONTROLLER_BUTTON_MAX;
-	const uint8 *buttons;
-	for (int i = 0; i < SDL_CONTROLLER_BUTTON_MAX; i++)
+	int numButtons = 17;
+	const uint8 buttons[numButtons];
+	for (int i = 0; i < numButtons - 2; i++)
 		buttons[i] = SDL_GameControllerGetButton(game_controller, (SDL_GameControllerButton)i)?255:0;
 	
 	int16_t xaxis = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_LEFTX);
@@ -2295,8 +2295,8 @@ void CapturePad(RwInt32 padID)
 	float positionx = float(xaxis)/32768.0f;
 	float positiony = float(yaxis)/32768.0f;
 
-	int16_t xaxis2 = SDL_GameControllerGetAxis(sdl_controller, SDL_CONTROLLER_AXIS_RIGHTX);
-	int16_t yaxis2 = SDL_GameControllerGetAxis(sdl_controller, SDL_CONTROLLER_AXIS_RIGHTY);
+	int16_t xaxis2 = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_RIGHTX);
+	int16_t yaxis2 = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_RIGHTY);
 	float rightStickx = float(xaxis2)/32768.0f;
 	float rightSticky = float(yaxis2)/32768.0f;
 
@@ -2313,7 +2313,7 @@ void CapturePad(RwInt32 padID)
 	ControlsManager.m_NewState.isGamepad = true;
 	if (ControlsManager.m_NewState.isGamepad) {
 		memcpy(&ControlsManager.m_NewState.mappedButtons, ControlsManager.m_NewState.buttons, sizeof(ControlsManager.m_NewState.buttons));
-		float lt = float(SDL_GameControllerGetAxis(pad, SDL_CONTROLLER_AXIS_TRIGGERLEFT))/32768.0f, rt = float(SDL_GameControllerGetAxis(pad, SDL_CONTROLLER_AXIS_TRIGGERRIGHT))/32768.0f;
+		float lt = float(SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT))/32768.0f, rt = float(SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT))/32768.0f;
 
 		// glfw returns 0.0 for non-existent axises(which is bullocks) so we treat it as deadzone, and keep value of previous frame.
 		// otherwise if this axis is present, -1 = released, 1 = pressed
