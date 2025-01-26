@@ -2362,9 +2362,12 @@ void CapturePad(RwInt32 padID)
 	ControlsManager.m_NewState.id = glfwPad;
 	ControlsManager.m_NewState.isGamepad = true;
 	if (ControlsManager.m_NewState.isGamepad) {
+		bool buttonsstate[17];
+		memset(buttonsstate, 0, sizeof(buttonsstate)); 
 		for (int i = 0; i < 15; i++){
-			ControlsManager.m_NewState.mappedButtons[i] = (ControlsManager.m_NewState.buttons[i] == 255)? 1:0;
+			buttonsstate[i] = (ControlsManager.m_NewState.buttons[i] == 255)? 1 : 0;
 		}
+		memcpy(&ControlsManager.m_NewState.mappedButtons, buttonsstate, sizeof(buttonsstate));
 		float lt = float(SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT))/32768.0f, rt = float(SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT))/32768.0f;
 
 		// glfw returns 0.0 for non-existent axises(which is bullocks) so we treat it as deadzone, and keep value of previous frame.
