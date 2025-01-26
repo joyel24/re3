@@ -76,6 +76,15 @@ rw::EngineOpenParams openParams;
 
 SDL_GameController* game_controller;
 
+SDL_GameController *findController() {
+    for (int i = 0; i < SDL_NumJoysticks(); i++) {
+        if (SDL_IsGameController(i)) {
+            return SDL_GameControllerOpen(i);
+        }
+    }
+    return nullptr;
+}
+
 static RwBool		  ForegroundApp = TRUE;
 static RwBool		  WindowIconified = FALSE;
 static RwBool		  WindowFocused = TRUE;
@@ -969,19 +978,7 @@ void _InputInitialiseJoys()
 	PSGLOBAL(joy1id) = -1;
 	PSGLOBAL(joy2id) = -1;
 
-	for (int i = 0; i < SDL_NumJoysticks(); i++)
-	{
-		if (!SDL_IsGameController(i))
-		{
-			continue;
-		}
-
-		SDL_GameController* game_controller = SDL_GameControllerOpen(i);
-		if (!game_controller)
-		{
-			continue;
-		}
-	}
+	SDL_GameController* game_controller = findController();
 }
 
 long _InputInitialiseMouse()
@@ -1954,6 +1951,7 @@ main(int argc, char *argv[])
 			    case SDL_CONTROLLERDEVICEREMOVED:
 				if (game_controller && event.cdevice.which == SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(game_controller))) {
 				    SDL_GameControllerClose(game_controller);
+				    game_controller = findController();
 				}
 				break;
 			    }
