@@ -2322,7 +2322,7 @@ void CapturePad(RwInt32 padID)
 	}
 	
 	int numButtons = 17;
-	uint8* buttons[15];
+	uint8 buttons[15];
 	buttons[0] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_A)?1:0;
 	buttons[1] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_B)?1:0;
 	buttons[2] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_X)?1:0;
