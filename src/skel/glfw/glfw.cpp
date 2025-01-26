@@ -959,14 +959,7 @@ void _InputInitialiseJoys()
 	PSGLOBAL(joy1id) = -1;
 	PSGLOBAL(joy2id) = -1;
 
-	SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS5_RUMBLE, "1");
-
-	SDL_Init(SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC | SDL_INIT_GAMECONTROLLER);
-
-	// Load our gamepad mappings.
-	SDL_GameControllerAddMappingsFromFile("gamecontrollerdb.txt");
-
-	/*for (int i = 0; i < SDL_NumJoysticks(); i++)
+	for (int i = 0; i < SDL_NumJoysticks(); i++)
 	{
 		if (!SDL_IsGameController(i))
 		{
@@ -980,7 +973,8 @@ void _InputInitialiseJoys()
 		}
 		if (PSGLOBAL(joy1id) == -1)
 			PSGLOBAL(joy1id) = i;
-	}*/
+		return;
+	}
 }
 
 long _InputInitialiseMouse()
@@ -1726,6 +1720,13 @@ main(int argc, char *argv[])
 	sigaction(SIGUSR1, &sa, NULL);
 #endif
 #endif
+	
+	SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS5_RUMBLE, "1");
+
+	SDL_Init(SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC | SDL_INIT_GAMECONTROLLER);
+
+	// Load our gamepad mappings.
+	SDL_GameControllerAddMappingsFromFile("gamecontrollerdb.txt");
 
 	/* 
 	 * Initialize the platform independent data.
