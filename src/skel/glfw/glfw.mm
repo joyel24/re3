@@ -1149,6 +1149,25 @@ CommandLineToArgv(RwChar *cmdLine, RwInt32 *argCount)
  *****************************************************************************
  */
 
+void CloseClip()
+{
+    NSView* view = ((NSWindow *)glfwGetCocoaWindow(PSGLOBAL(window))).contentView;
+    for (id child in [view subviews])
+    {
+	if ([child isMemberOfClass:[NSView class]])
+	{
+	    [child removeFromSuperview];
+	}
+    }
+    movieplaying = false;
+    return;
+}
+
+static void notificationHandler(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
+{
+    CloseClip();
+}
+
 void PlayMovieInWindow(const char* szFile)
 {
     NSView* view = ((NSWindow *)glfwGetCocoaWindow(PSGLOBAL(window))).contentView;
@@ -1169,32 +1188,13 @@ void PlayMovieInWindow(const char* szFile)
     CFNotificationCenterAddObserver
     (
         CFNotificationCenterGetLocalCenter(),
-        this,
+        NULL,
         &notificationHandler,
-        CFSTR("notify"),
+        CFSTR("AVPlayerItemDidPlayToEndTimeNotification"),
         NULL,
         CFNotificationSuspensionBehaviorDeliverImmediately
     );
     return;
-}
-
-void CloseClip()
-{
-    NSView* view = ((NSWindow *)glfwGetCocoaWindow(PSGLOBAL(window))).contentView;
-    for (id child in [view subviews])
-    {
-	if ([child isMemberOfClass:[NSView class]])
-	{
-	    [child removeFromSuperview];
-	}
-    }
-    movieplaying = false;
-    return;
-}
-
-static void notificationHandler(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
-{
-	CloseClip();
 }
 
 void HandleExit()
