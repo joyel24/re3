@@ -2284,8 +2284,14 @@ void CapturePad(RwInt32 padID)
 	
 	//if ( glfwPad == -1 )
 	//	return;
-
-	SDL_GameController* game_controller = SDL_GameControllerOpen(0);
+	
+	SDL_GameController* game_controller;
+	
+	for (int i = 0; i < SDL_NumJoysticks(); i++) {
+		if (SDL_IsGameController(i)) {
+	        	game_controller = SDL_GameControllerOpen(i);
+		}
+	}
 	
 	int numButtons = 17;
 	uint8 buttons[numButtons];
