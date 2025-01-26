@@ -1163,7 +1163,7 @@ void PlayMovieInWindow(const char* szFile)
     [containerView needsDisplay];
     [view addSubview:containerView];
     [avPlayer play];
-    [[NSNotificationCenter defaultCenter] addObserver:self
+    [[NSNotificationCenter defaultCenter] addObserver:super
                                            selector:@selector(onPlaybackFinished:)
                                                name:AVPlayerItemDidPlayToEndTimeNotification
                                              object:nil];
@@ -1175,7 +1175,7 @@ void CloseClip()
     NSView* view = ((NSWindow *)glfwGetCocoaWindow(PSGLOBAL(window))).contentView;
     for (id child in [view subviews])
     {
-	if ([child isMemberOfClass:[UIView class]])
+	if ([child isMemberOfClass:[NSView class]])
 	{
 	    [child removeFromSuperview];
 	}
@@ -1183,11 +1183,13 @@ void CloseClip()
     return;
 }
 
+@implementation Callback
 - (void)onPlaybackFinished:(NSNotification *)notification
 {
   // Execute on main thread
   CloseClip();
 }
+@end
 
 void HandleExit()
 {
