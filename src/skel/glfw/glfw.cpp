@@ -981,9 +981,6 @@ void _InputInitialiseJoys()
 		{
 			continue;
 		}
-		if (PSGLOBAL(joy1id) == -1)
-			PSGLOBAL(joy1id) = i;
-		return;
 	}
 }
 
@@ -1731,9 +1728,9 @@ main(int argc, char *argv[])
 #endif
 #endif
 	
-	SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS5_RUMBLE, "1");
+	SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI, "0");
 
-	SDL_Init(SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC | SDL_INIT_GAMECONTROLLER);
+	SDL_Init(SDL_INIT_GAMECONTROLLER);
 
 	// Load our gamepad mappings.
 	SDL_GameControllerAddMappingsFromFile("gamecontrollerdb.txt");
@@ -2268,6 +2265,8 @@ main(int argc, char *argv[])
 	
 	_psFreeVideoModeList();
 
+	SDL_Quit();
+
 
 	/*
 	 * Tidy up the 3D (RenderWare) components of the application...
@@ -2303,24 +2302,7 @@ RwV2d rightStickPos;
 
 void CapturePad(RwInt32 padID)
 {
-	int8 glfwPad = -1;
-
-	//if( padID == 0 )
-	//	glfwPad = PSGLOBAL(joy1id);
-	//else if( padID == 1)
-	//	glfwPad = PSGLOBAL(joy2id);
-	//else
-	//	assert("invalid padID");
-	
-	//if ( glfwPad == -1 )
-	//	return;
-	
-	for (int i = 0; i < SDL_NumJoysticks(); i++) {
-		if (SDL_IsGameController(i)) {
-	        	game_controller = SDL_GameControllerOpen(i);
-		}
-	}
-	
+	int8 glfwPad = -1;	
 	int16_t xaxis = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_LEFTX);
 	int16_t yaxis = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_LEFTY);
 	float positionx = float(xaxis)/32768.0f;
