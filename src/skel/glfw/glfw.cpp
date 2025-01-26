@@ -20,6 +20,7 @@ long _dwOperatingSystemVersion;
 #include <mach-o/dyld.h> 
 #include <sys/sysctl.h>
 #include <CoreServices/CoreServices.h>
+#include <AVKit/AVKit.h>
 #endif
 #endif
 #include <errno.h>
@@ -1148,6 +1149,24 @@ CommandLineToArgv(RwChar *cmdLine, RwInt32 *argCount)
  *****************************************************************************
  */
 
+void PlayMovieInWindow(const char* szFile)
+{
+    NSView* view = ((NSWindow *)glfwGetCocoaWindow(PSGLOBAL(window))).contentView;
+    auto avPlayer = [[AVPlayer alloc] initWithURL:[NSURL fileURLWithPath:[NSString stringWithCString:szFile encoding:[NSString defaultCStringEncoding]]]];
+    AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer: avPlayer];
+    int left, top, right, bottom;
+    glfwGetWindowFrameSize(PSGLOBAL(window), &left, &top, &right, &bottom);
+    auto containerView = [[NSView alloc] initWithFrame: NSMakeRect(left, top, right, bottom)];
+    [containerView setWantsLayer:YES];
+    playerLayer.frame = view.frame;
+    [containerView.layer addSublayer: playerLayer];
+    [playerLayer setVideoGravity: AVLayerVideoGravityResizeAspect];
+    [playerLayer setNeedsDisplay];
+    [containerView needsDisplay];
+    [view addSubview:containerView];
+    [avPlayer play];
+}
+
 void HandleExit()
 {
 #ifdef _WIN32
@@ -1973,19 +1992,15 @@ main(int argc, char *argv[])
 				{
 					case GS_START_UP:
 					{
-#ifdef NO_MOVIES
-						gGameState = GS_INIT_ONCE;
-#else
 						gGameState = GS_INIT_LOGO_MPEG;
-#endif
 						TRACE("gGameState = GS_INIT_ONCE");
 						break;
 					}
 
 				    case GS_INIT_LOGO_MPEG:
 					{
-					    //if (!startupDeactivate)
-						//    PlayMovieInWindow(cmdShow, "movies\\Logo.mpg");
+					    if (!startupDeactivate)
+						    PlayMovieInWindow(cmdShow, "movies/Logo.mpg");
 					    gGameState = GS_LOGO_MPEG;
 					    TRACE("gGameState = GS_LOGO_MPEG;");
 					    break;
@@ -1993,35 +2008,17 @@ main(int argc, char *argv[])
 
 				    case GS_LOGO_MPEG:
 					{
-//					    CPad::UpdatePads();
+					    CPad::UpdatePads();
 
-//					    if (startupDeactivate || ControlsManager.GetJoyButtonJustDown() != 0)
+					    if (startupDeactivate || ControlsManager.GetJoyButtonJustDown() != 0)
 						    ++gGameState;
-//					    else if (CPad::GetPad(0)->GetLeftMouseJustDown())
-//						    ++gGameState;
-//					    else if (CPad::GetPad(0)->GetEnterJustDown())
-//						    ++gGameState;
-//					    else if (CPad::GetPad(0)->GetCharJustDown(' '))
-//						    ++gGameState;
-//					    else if (CPad::GetPad(0)->GetAltJustDown())
-//						    ++gGameState;
-//					    else if (CPad::GetPad(0)->GetTabJustDown())
-//						    ++gGameState;
-
 					    break;
 				    }
 
 				    case GS_INIT_INTRO_MPEG:
 					{
-//#ifndef NO_MOVIES
-//					    CloseClip();
-//					    CoUninitialize();
-//#endif
-//
-//					    if (CMenuManager::OS_Language == LANG_FRENCH || CMenuManager::OS_Language == LANG_GERMAN)
-//						    PlayMovieInWindow(cmdShow, "movies\\GTAtitlesGER.mpg");
-//					    else
-//						    PlayMovieInWindow(cmdShow, "movies\\GTAtitles.mpg");
+					    CloseClip();
+					    PlayMovieInWindow(cmdShow, "movies/GTAtitles.mpg");
 
 					    gGameState = GS_INTRO_MPEG;
 					    TRACE("gGameState = GS_INTRO_MPEG;");
@@ -2030,27 +2027,16 @@ main(int argc, char *argv[])
 
 				    case GS_INTRO_MPEG:
 					{
-//					    CPad::UpdatePads();
-//
-//					    if (startupDeactivate || ControlsManager.GetJoyButtonJustDown() != 0)
+					    CPad::UpdatePads();
+
+					    if (startupDeactivate || ControlsManager.GetJoyButtonJustDown() != 0)
 						    ++gGameState;
-//					    else if (CPad::GetPad(0)->GetLeftMouseJustDown())
-//						    ++gGameState;
-//					    else if (CPad::GetPad(0)->GetEnterJustDown())
-//						    ++gGameState;
-//					    else if (CPad::GetPad(0)->GetCharJustDown(' '))
-//						    ++gGameState;
-//					    else if (CPad::GetPad(0)->GetAltJustDown())
-//						    ++gGameState;
-//					    else if (CPad::GetPad(0)->GetTabJustDown())
-//						    ++gGameState;
 
 					    break;
 				    }
 
 					case GS_INIT_ONCE:
 					{
-						//CoUninitialize();
 						extern char version_name[64];
 #ifdef PS2_MENU
 						if ( CGame::frenchGame || CGame::germanGame )
