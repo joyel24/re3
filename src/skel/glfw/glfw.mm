@@ -1191,7 +1191,7 @@ void PlayMovieInWindow(const char* szFile)
         NULL,
         &notificationHandler,
         CFSTR("AVPlayerItemDidPlayToEndTimeNotification"),
-        NULL,
+        avPlayer,
         CFNotificationSuspensionBehaviorDeliverImmediately
     );
     return;
