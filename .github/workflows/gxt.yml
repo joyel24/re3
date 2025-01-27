@@ -12,7 +12,8 @@ jobs:
     - name: make
       run: |
         del ./gamefiles/TEXT/
-        ./utils/gxt/build.bat
+        cd ./utils/gxt
+        build.bat
       shell: cmd
     - name: upload
       uses: actions/upload-artifact@v4.6.0
