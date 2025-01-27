@@ -656,7 +656,7 @@ ResetLoadingScreenBar()
 void
 LoadingScreen(const char *str1, const char *str2, const char *splashscreen)
 {
-	usleep(100000);     
+	usleep(50000);     
 	CSprite2d *splash;
 
 #ifdef DISABLE_LOADING_SCREEN
