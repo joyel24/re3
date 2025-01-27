@@ -1183,7 +1183,7 @@ void PlayMovieInWindow(const char* szFile)
     [playerLayer setNeedsDisplay];
     [containerView needsDisplay];
     [view addSubview:containerView];
-    [[avPlayer currentItem] setAllowedAudioSpatializationFormats:AVAudioSpatializationFormatNone];	
+    [[avPlayer currentItem] audioSpatializationAllowed:false];	
     [avPlayer play];
     movieplaying = true;
     CFNotificationCenterAddObserver
