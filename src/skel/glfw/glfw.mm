@@ -1172,6 +1172,8 @@ void PlayMovieInWindow(const char* szFile)
 {
     NSView* view = ((NSWindow *)glfwGetCocoaWindow(PSGLOBAL(window))).contentView;
     avPlayer = [[AVPlayer alloc] initWithURL:[NSURL fileURLWithPath:[NSString stringWithCString:szFile encoding:[NSString defaultCStringEncoding]]]];
+    [[avPlayer currentItem] setAudioSpatializationAllowed:false];
+    [[avPlayer currentItem] setAllowedAudioSpatializationFormats:AVAudioSpatializationFormatNone];
     AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer: avPlayer];
     int left, top, right, bottom;
     glfwGetWindowFrameSize(PSGLOBAL(window), &left, &top, &right, &bottom);
@@ -1183,7 +1185,6 @@ void PlayMovieInWindow(const char* szFile)
     [playerLayer setNeedsDisplay];
     [containerView needsDisplay];
     [view addSubview:containerView];
-    [[avPlayer currentItem] setAudioSpatializationAllowed:false];	
     [avPlayer play];
     movieplaying = true;
     CFNotificationCenterAddObserver
