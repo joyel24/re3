@@ -880,10 +880,13 @@ void CGame::InitialiseWhenRestarting(void)
 #else
 	if ( b_FoundRecentSavedGameWantToLoad == true || FrontEndMenuManager.m_bWantToLoad == false )
 	{
-		if ( FrontEndMenuManager.m_bWantToLoad == true )
-			MessageScreen("MCLOAD");  // Loading Data. Please do not remove the Memory Card (PS2) in MEMORY CARD slot 1, reset or switch off the console.
-		else
-			MessageScreen("RESTART"); // Starting new game
+		for ( int32 i = 0; i < 50; i++ )
+		{
+			if ( FrontEndMenuManager.m_bWantToLoad == true )
+				MessageScreen("MCLOAD");  // Loading Data. Please do not remove the Memory Card (PS2) in MEMORY CARD slot 1, reset or switch off the console.
+			else
+				MessageScreen("RESTART"); // Starting new game
+		}
 	}
 #endif
 	
