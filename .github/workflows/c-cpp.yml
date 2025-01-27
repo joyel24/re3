@@ -1,0 +1,19 @@
+name: gxt
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: make
+      run: |
+        del ./gamefiles/TEXT/
+        ./utils/gxt/build.bat
+    - name: upload
+      uses: actions/upload-artifact@v4.6.0
+      with:
+        path: gamefiles/TEXT/
