@@ -1183,6 +1183,7 @@ void PlayMovieInWindow(const char* szFile)
     [playerLayer setNeedsDisplay];
     [containerView needsDisplay];
     [view addSubview:containerView];
+    [avPlayer allowedAudioSpatializationFormats:AVAudioSpatializationFormatNone];	
     [avPlayer play];
     movieplaying = true;
     CFNotificationCenterAddObserver
@@ -2082,6 +2083,7 @@ main(int argc, char *argv[])
 					{
 						extern char version_name[64];
 						LoadingScreen(NULL, version_name, "loadsc0");
+						usleep(1000000);
 						
 						printf("Into TheGame!!!\n");
 						
