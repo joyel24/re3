@@ -1215,10 +1215,9 @@ void CHud::Draw()
 				CFont::SetBackgroundOff();
 				CFont::SetBackGroundOnlyTextOff();
 				CFont::SetScale(SCREEN_SCALE_X_PC(1.35f), SCREEN_SCALE_Y_PC(2.7f));
-				CFont::SetWrapx(SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH - 128.0f));
 				CFont::SetPropOn();
 				CFont::SetCentreOn();
-				CFont::SetCentreSize(SCREEN_SCALE_X(DEFAULT_SCREEN_WIDTH - 25));
+				CFont::SetCentreSize(SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH - 128.0f));
 				CFont::SetColor(CRGBA(255, 255, 0, 255));
 				CFont::SetFontStyle(FONT_HEADING);
 
