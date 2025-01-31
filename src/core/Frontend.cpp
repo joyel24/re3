@@ -39,6 +39,16 @@ uint32 m_nStartPauseTimer;
 uint32 m_nEndPauseTimer;
 float xpos = 0.0f;
 float ypos = 0.0f;
+
+enum
+{
+	SLIDE_TO_BOTTOM = 0,
+	SLIDE_TO_RIGHT,
+	SLIDE_TO_TOP,
+	SLIDE_TO_LEFT,
+	SLIDE_MAX
+};
+
 int m_nSlidingDir = SLIDE_TO_BOTTOM;
 
 // Game has colors inlined in code.
@@ -2593,15 +2603,6 @@ CMenuManager::DrawFrontEndSaveZone()
 #endif
 
 #ifdef PS2_LIKE_MENU
-enum
-{
-	SLIDE_TO_BOTTOM = 0,
-	SLIDE_TO_RIGHT,
-	SLIDE_TO_TOP,
-	SLIDE_TO_LEFT,
-	SLIDE_MAX
-};
-
 void
 CMenuManager::DrawFrontEndNormal()
 {
