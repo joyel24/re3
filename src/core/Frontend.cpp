@@ -2610,11 +2610,14 @@ CMenuManager::DrawFrontEndNormal()
 	CFont::InitPerFrame();
 	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
 	
-	if ( m_nStartPauseTimer != 0 && m_nStartPauseTimer >= CTimer::GetTimeInMillisecondsPauseMode() )
+	if ( m_nStartPauseTimer != 0 )
 	{
 		float startslide = float(m_nStartPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f;
 		if (startslide < 0.0f)
+		{
 			startslide = 0.0f;
+			m_nStartPauseTimer = 0;
+		}
 		switch ( m_nSlidingDir )
 		{
 			case SLIDE_TO_RIGHT:  xpos =   startslide * SCREEN_SCALE_X(700.0f);  break;
@@ -2625,11 +2628,14 @@ CMenuManager::DrawFrontEndNormal()
 		} 
 	}
 
-	if ( m_nEndPauseTimer != 0 && m_nEndPauseTimer >= CTimer::GetTimeInMillisecondsPauseMode() )
+	if ( m_nEndPauseTimer != 0 )
 	{
 		float endslide = float(m_nEndPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f;
 		if (endslide < 0.0f)
+		{
 			endslide = 0.0f;
+			m_nEndPauseTimer = 0.0f;
+		}
 		switch ( m_nSlidingDir )
 		{
 			case SLIDE_TO_TOP:    ypos =   (1.0f - endslide) * SCREEN_SCALE_Y(500.0f);  break;
