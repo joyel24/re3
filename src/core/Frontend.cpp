@@ -1860,26 +1860,6 @@ CMenuManager::Draw()
 	}
 #endif
 
-	switch (m_nCurrScreen) {
-	case MENUPAGE_CONTROLLER_SETTINGS:
-	case MENUPAGE_SOUND_SETTINGS:
-	case MENUPAGE_DISPLAY_SETTINGS:
-	case MENUPAGE_SKIN_SELECT:
-	case MENUPAGE_CONTROLLER_PC:
-	case MENUPAGE_MOUSE_CONTROLS:
-		DisplayHelperText();
-		break;
-#ifdef CUSTOM_FRONTEND_OPTIONS
-	default:
-		if (aScreens[m_nCurrScreen].layout) {
-			if (aScreens[m_nCurrScreen].layout->showLeftRightHelper) {
-				DisplayHelperText();
-			}
-		}
-		break;
-#endif
-	}
-
 	if (m_nCurrScreen == MENUPAGE_CONTROLLER_SETTINGS)
 		PrintController();
 	else if (m_nCurrScreen == MENUPAGE_SKIN_SELECT_OLD) {
@@ -3883,7 +3863,7 @@ CMenuManager::PrintBriefs()
 			newColor.a = FadeIn(255);
 			CFont::SetColor(newColor);
 #endif
-			CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(BRIEFS_LINE_X), ypos + nextY + 93.0f, gUString);
+			CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(BRIEFS_LINE_X), ypos + nextY + 120.0f, gUString);
 			nextY += MENU_Y(BRIEFS_LINE_HEIGHT);
 		}
 	}
