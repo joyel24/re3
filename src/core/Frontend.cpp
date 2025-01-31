@@ -2610,7 +2610,7 @@ CMenuManager::DrawFrontEndNormal()
 	CFont::InitPerFrame();
 	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
 
-	float startslide = fmax(0, float(m_nStartPauseTimer - CTimer::GetTimeInMillisecondsPauseMode())) / 800.0f;
+	float startslide = fmax(0, float(m_nStartPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f);
 	switch ( m_nSlidingDir )
 	{
 		case SLIDE_TO_RIGHT:  xpos =   startslide * SCREEN_SCALE_X(700.0f);  break;
@@ -2620,7 +2620,7 @@ CMenuManager::DrawFrontEndNormal()
 		default:              ypos =   startslide * SCREEN_SCALE_Y(500.0f);  break;
 	} 
 
-	float endslide = fmax(0, float(m_nEndPauseTimer - CTimer::GetTimeInMillisecondsPauseMode())) / 800.0f;
+	float endslide = fmax(0, float(m_nEndPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f);
 	switch ( m_nSlidingDir )
 	{
 		case SLIDE_TO_TOP:    ypos =   (1.0f - endslide) * SCREEN_SCALE_Y(500.0f);  break;
@@ -3994,6 +3994,8 @@ CMenuManager::Process(void)
 		RequestFrontEndStartUp();
 	if ( m_nStartPauseTimer == 0 && m_nEndPauseTimer == 0 )
 		SwitchMenuOnAndOff();
+	else
+		return;
 
 	// Be able to re-open menu correctly.
 	if (m_bMenuActive) {
@@ -5568,7 +5570,10 @@ CMenuManager::SwitchMenuOnAndOff()
 	m_bStartUpFrontEndRequested = false;
 	m_bShutDownFrontEndRequested = false;
 	if ( m_nStartPauseTimer != 0 && CTimer::GetTimeInMillisecondsPauseMode() >= m_nStartPauseTimer )
+	{
+		xpos = ypos = 0.0f;
 		m_nStartPauseTimer = 0;
+	}
 
 	if ( m_nEndPauseTimer != 0 && CTimer::GetTimeInMillisecondsPauseMode() >= m_nEndPauseTimer )
 	{
