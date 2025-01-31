@@ -2649,9 +2649,9 @@ CMenuManager::DrawFrontEndNormal()
 	RwRenderStateSet(rwRENDERSTATEVERTEXALPHAENABLE, (void*)TRUE);
 	int left = (int)(0.5f * ((int)SCREEN_WIDTH - ((int)SCREEN_HEIGHT * 4.0f/3.0f)));
 	m_aFrontEndSprites[FE2_MAINPANEL_UL].Draw(CRect(xpos + left, ypos, xpos + ((SCREEN_WIDTH + 1.0f) / 2), ypos + ((SCREEN_HEIGHT + 1.0f) / 2)), CRGBA(255, 255, 255, 255));
-	m_aFrontEndSprites[FE2_MAINPANEL_UR].Draw(CRect(xpos + (SCREEN_WIDTH - 1.0f / 2), ypos, xpos + SCREEN_WIDTH - left, ypos + ((SCREEN_HEIGHT + 1.0f) / 2)) , CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_UR].Draw(CRect(xpos + ((SCREEN_WIDTH - 1.0f) / 2), ypos, xpos + SCREEN_WIDTH - left, ypos + ((SCREEN_HEIGHT + 1.0f) / 2)) , CRGBA(255, 255, 255, 255));
 	m_aFrontEndSprites[FE2_MAINPANEL_DL].Draw(CRect(xpos + left, ypos + (SCREEN_HEIGHT / 2), xpos + ((SCREEN_WIDTH + 1.0f) / 2), ypos + SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
-	m_aFrontEndSprites[FE2_MAINPANEL_DR].Draw(CRect(xpos + (SCREEN_WIDTH - 1.0f / 2), ypos + (SCREEN_HEIGHT / 2), xpos + SCREEN_WIDTH - left, ypos + SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_DR].Draw(CRect(xpos + ((SCREEN_WIDTH - 1.0f) / 2), ypos + (SCREEN_HEIGHT / 2), xpos + SCREEN_WIDTH - left, ypos + SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
 
 	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
 	eFrontendSprites currentSprite;
