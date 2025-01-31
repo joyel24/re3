@@ -5518,13 +5518,12 @@ CMenuManager::SwitchMenuOnAndOff()
 #ifdef PS2_LIKE_MENU
 			bottomBarActive = false;
 #endif
-			if (m_nCurrScreen == MENUPAGE_CHOOSE_SAVE_SLOT || m_nCurrScreen == MENUPAGE_SAVE || MENUPAGE_LOADING_IN_PROGRESS || m_bRenderGameInMenu) {
+			if (m_nCurrScreen == MENUPAGE_CHOOSE_SAVE_SLOT || m_nCurrScreen == MENUPAGE_SAVE || m_nCurrScreen == MENUPAGE_LOADING_IN_PROGRESS || m_bRenderGameInMenu) {
 				ShutdownJustMenu();
 			}
 			else
 			{
 				m_nEndPauseTimer = CTimer::GetTimeInMillisecondsPauseMode() + 800;
-				m_bMenuActive = true;
 				m_nSlidingDir = CGeneral::GetRandomNumber() & (SLIDE_MAX-1);
 			}
 #ifdef FIX_BUGS
