@@ -3883,7 +3883,7 @@ CMenuManager::PrintBriefs()
 			newColor.a = FadeIn(255);
 			CFont::SetColor(newColor);
 #endif
-			CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(BRIEFS_LINE_X), ypos + nextY, gUString);
+			CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(BRIEFS_LINE_X), ypos + nextY + 93.0f, gUString);
 			nextY += MENU_Y(BRIEFS_LINE_HEIGHT);
 		}
 	}
