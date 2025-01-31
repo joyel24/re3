@@ -48,7 +48,7 @@
 #endif
 
 #ifdef FIX_BUGS
-#define TIMER_RIGHT_OFFSET 71.0f // Taken from VC frenzy timer
+#define TIMER_RIGHT_OFFSET 70.0f // Taken from VC frenzy timer
 #define BIGMESSAGE_Y_OFFSET 18.0f
 #else
 #define TIMER_RIGHT_OFFSET 27.0f
@@ -1214,12 +1214,7 @@ void CHud::Draw()
 				CFont::SetJustifyOff();
 				CFont::SetBackgroundOff();
 				CFont::SetBackGroundOnlyTextOff();
-				
-				if (CGame::frenchGame || CGame::germanGame)
-					CFont::SetScale(SCREEN_SCALE_X_PC(1.8f), SCREEN_SCALE_Y_PC(1.8f));
-				else
-					CFont::SetScale(SCREEN_SCALE_X_PC(1.8f), SCREEN_SCALE_Y_PC(1.8f));
-				
+				CFont::SetScale(SCREEN_SCALE_X_PC(1.8f), SCREEN_SCALE_Y_PC(3.6f));
 				CFont::SetPropOn();
 				CFont::SetCentreOn();
 				CFont::SetCentreSize(SCREEN_SCALE_X(DEFAULT_SCREEN_WIDTH - 25));
