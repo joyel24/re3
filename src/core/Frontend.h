@@ -32,8 +32,8 @@
 #define BIGTEXT_Y_SCALE 0.9f
 #define MEDIUMTEXT_X_SCALE 0.55f // For FONT_HEADING
 #define MEDIUMTEXT_Y_SCALE 0.8f
-#define SMALLTEXT_X_SCALE 0.45f // used for FONT_HEADING and FONT_BANK, but looks off for HEADING 
-#define SMALLTEXT_Y_SCALE 0.7f
+#define SMALLTEXT_X_SCALE 0.644f // used for FONT_HEADING and FONT_BANK, but looks off for HEADING 
+#define SMALLTEXT_Y_SCALE 0.84f
 #define SMALLESTTEXT_X_SCALE 0.4f // used for both FONT_HEADING and FONT_BANK
 #define SMALLESTTEXT_Y_SCALE 0.6f
 
