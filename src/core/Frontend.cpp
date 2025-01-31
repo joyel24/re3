@@ -35,8 +35,6 @@
 #include "FileLoader.h"
 #include "frontendoption.h"
 
-uint32 m_nStartPauseTimer;
-uint32 m_nEndPauseTimer;
 float xpos = 0.0f;
 float ypos = 0.0f;
 
