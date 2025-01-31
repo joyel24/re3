@@ -2603,13 +2603,13 @@ CMenuManager::DrawFrontEndNormal()
 	if ( m_nStartPauseTimer != 0 && m_nStartPauseTimer >= CTimer::GetTimeInMillisecondsPauseMode() )
 	{
 		float slide = float(m_nStartPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f;
-		xpos = slide * X(700.0f);  
+		xpos = slide * SCREEN_SCALE_X(700.0f);  
 	}
 
 	if ( m_nEndPauseTimer != 0 && m_nEndPauseTimer >= CTimer::GetTimeInMillisecondsPauseMode() )
 	{
 		float slide = float(m_nEndPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f;
-		xpos = (1.0f - slide) * X(700.0f); 
+		xpos = (1.0f - slide) * SCREEN_SCALE_X(700.0f); 
 	}
 
 	if (!m_bGameNotLoaded) {
