@@ -1105,7 +1105,7 @@ CMenuManager::Draw()
 	if (aScreens[m_nCurrScreen].m_ScreenName[0] != '\0') {
 		
 		SET_FONT_FOR_MENU_HEADER
-		CFont::PrintString(xpos + PAGE_NAME_X(MENUHEADER_POS_X), SCREEN_SCALE_FROM_BOTTOM(MENUHEADER_POS_Y), TheText.Get(aScreens[m_nCurrScreen].m_ScreenName));
+		CFont::PrintString(xpos + PAGE_NAME_X(MENUHEADER_POS_X), ypos + SCREEN_SCALE_FROM_BOTTOM(MENUHEADER_POS_Y), TheText.Get(aScreens[m_nCurrScreen].m_ScreenName));
 
 		// Weird place to put that.
 		nextYToUse += 24.0f + 10.0f;
@@ -1686,8 +1686,8 @@ CMenuManager::Draw()
 #endif
 			if (i == m_nCurrOption && itemsAreSelectable) {
 #ifdef PS2_LIKE_MENU
-				CSprite2d::DrawRect(CRect(xpos + MENU_X_LEFT_ALIGNED(29.0f), MENU_Y(bitAboveNextItemY),
-											xpos + MENU_X_RIGHT_ALIGNED(29.0f), MENU_Y(usableLineHeight + nextItemY)),
+				CSprite2d::DrawRect(CRect(xpos + MENU_X_LEFT_ALIGNED(29.0f), ypos + MENU_Y(bitAboveNextItemY),
+											xpos + MENU_X_RIGHT_ALIGNED(29.0f), ypos + MENU_Y(usableLineHeight + nextItemY)),
 											CRGBA(SELECTION_HIGHLIGHTBG_COLOR.r, SELECTION_HIGHLIGHTBG_COLOR.g, SELECTION_HIGHLIGHTBG_COLOR.b, FadeIn(SELECTION_HIGHLIGHTBG_COLOR.a)));
 #else
 				// We keep stretching, because we also stretch background image and we want that bar to be aligned with borders of background
@@ -2650,7 +2650,7 @@ CMenuManager::DrawFrontEndNormal()
 	m_aFrontEndSprites[FE2_MAINPANEL_UL].Draw(CRect(xpos + MENU_X_LEFT_ALIGNED(0.0f) - 1.0f, ypos, xpos + (SCREEN_WIDTH / 2) + 2.0f, ypos + (SCREEN_HEIGHT / 2) + 1.0f), CRGBA(255, 255, 255, 255));
 	m_aFrontEndSprites[FE2_MAINPANEL_UR].Draw(CRect(xpos + (SCREEN_WIDTH / 2) - 1.5f, ypos, xpos + MENU_X_RIGHT_ALIGNED(0.0f), ypos + (SCREEN_HEIGHT / 2) + 1.0f) , CRGBA(255, 255, 255, 255));
 	m_aFrontEndSprites[FE2_MAINPANEL_DL].Draw(CRect(xpos + MENU_X_LEFT_ALIGNED(0.0f) - 1.0f, ypos + (SCREEN_HEIGHT / 2) - 1.0f, xpos + (SCREEN_WIDTH / 2) + 2.0f, ypos + SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
-	m_aFrontEndSprites[FE2_MAINPANEL_DR].Draw(CRect(xpos + (SCREEN_WIDTH / 2) - 1.5f, ypos + (SCREEN_HEIGHT / 2) - 1.0f, xpos + MENU_X_RIGHT_ALIGNED(0.0f), ypos+ SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_DR].Draw(CRect(xpos + (SCREEN_WIDTH / 2) - 1.5f, ypos + (SCREEN_HEIGHT / 2) - 1.0f, xpos + MENU_X_RIGHT_ALIGNED(0.0f), ypos + SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
 
 	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
 	eFrontendSprites currentSprite;
@@ -5502,7 +5502,6 @@ CMenuManager::SwitchMenuOnAndOff()
 
 		if (m_bMenuActive) {
 			CTimer::StartUserPause();
-			xpos = ypos = 0.0f;
 			m_nStartPauseTimer = CTimer::GetTimeInMillisecondsPauseMode() + 800;
 			m_nSlidingDir = CGeneral::GetRandomNumber() & (SLIDE_MAX-1);
 		} else {
@@ -5510,6 +5509,7 @@ CMenuManager::SwitchMenuOnAndOff()
 			bottomBarActive = false;
 #endif
 			m_nEndPauseTimer = CTimer::GetTimeInMillisecondsPauseMode() + 800;
+			m_bMenuActive = true;
 			m_nSlidingDir = CGeneral::GetRandomNumber() & (SLIDE_MAX-1);
 #ifdef FIX_BUGS
 			ThingsToDoBeforeGoingBack();
@@ -5572,7 +5572,7 @@ CMenuManager::SwitchMenuOnAndOff()
 
 	m_bStartUpFrontEndRequested = false;
 	m_bShutDownFrontEndRequested = false;
-	if ( m_nEndPauseTimer != 0 && CTimer::GetTimeInMillisecondsPauseMode() <= m_nEndPauseTimer )
+	if ( m_nEndPauseTimer != 0 && CTimer::GetTimeInMillisecondsPauseMode() >= m_nEndPauseTimer )
 	{
 		m_nEndPauseTimer = 0;
 		m_bMenuActive = false;
