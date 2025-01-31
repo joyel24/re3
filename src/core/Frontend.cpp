@@ -1686,9 +1686,9 @@ CMenuManager::Draw()
 #endif
 			if (i == m_nCurrOption && itemsAreSelectable) {
 #ifdef PS2_LIKE_MENU
-				CSprite2d::DrawRect(CRect(xpos + MENU_X_LEFT_ALIGNED(29.0f), ypos + MENU_Y(bitAboveNextItemY),
-											xpos + MENU_X_RIGHT_ALIGNED(29.0f), ypos + MENU_Y(usableLineHeight + nextItemY)),
-											CRGBA(SELECTION_HIGHLIGHTBG_COLOR.r, SELECTION_HIGHLIGHTBG_COLOR.g, SELECTION_HIGHLIGHTBG_COLOR.b, FadeIn(SELECTION_HIGHLIGHTBG_COLOR.a)));
+				//CSprite2d::DrawRect(CRect(xpos + MENU_X_LEFT_ALIGNED(29.0f), ypos + MENU_Y(bitAboveNextItemY),
+				//							xpos + MENU_X_RIGHT_ALIGNED(29.0f), ypos + MENU_Y(usableLineHeight + nextItemY)),
+				//							CRGBA(SELECTION_HIGHLIGHTBG_COLOR.r, SELECTION_HIGHLIGHTBG_COLOR.g, SELECTION_HIGHLIGHTBG_COLOR.b, FadeIn(SELECTION_HIGHLIGHTBG_COLOR.a)));
 #else
 				// We keep stretching, because we also stretch background image and we want that bar to be aligned with borders of background
 				CSprite2d::DrawRect(CRect(StretchX(10.0f), MENU_Y(bitAboveNextItemY),
