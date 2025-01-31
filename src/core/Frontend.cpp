@@ -2608,18 +2608,31 @@ CMenuManager::DrawFrontEndNormal()
 	CSprite2d::InitPerFrame();
 	CFont::InitPerFrame();
 	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
-	m_nSlidingDir = CGeneral::GetRandomNumber() & (SLIDE_MAX-1);
 
 	if ( m_nStartPauseTimer != 0 && m_nStartPauseTimer >= CTimer::GetTimeInMillisecondsPauseMode() )
 	{
 		float slide = float(m_nStartPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f;
-		xpos = slide * SCREEN_SCALE_X(700.0f);  
+		switch ( m_nSlidingDir )
+		{
+			case SLIDE_TO_RIGHT:  xpos =   slide * SCREEN_SCALE_X(700.0f);  break;
+			case SLIDE_TO_TOP:    ypos = -(slide * SCREEN_SCALE_Y(500.0f)); break;
+			case SLIDE_TO_LEFT:   xpos = -(slide * SCREEN_SCALE_X(700.0f)); break;
+			case SLIDE_TO_BOTTOM: ypos =   slide * SCREEN_SCALE_Y(500.0f);  break;
+			default:              ypos =   slide * SCREEN_SCALE_Y(500.0f);  break;
+		} 
 	}
 
 	if ( m_nEndPauseTimer != 0 && m_nEndPauseTimer >= CTimer::GetTimeInMillisecondsPauseMode() )
 	{
 		float slide = float(m_nEndPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f;
-		xpos = (1.0f - slide) * SCREEN_SCALE_X(700.0f); 
+		switch ( m_nSlidingDir )
+		{
+			case SLIDE_TO_TOP:    ypos =   (1.0f - slide) * SCREEN_SCALE_Y(500.0f);  break;
+			case SLIDE_TO_RIGHT:  xpos =   (1.0f - slide) * SCREEN_SCALE_X(700.0f);  break;
+			case SLIDE_TO_LEFT:   xpos =   (1.0f - slide) * SCREEN_SCALE_X(700.0f);  break;
+			case SLIDE_TO_BOTTOM: ypos = -((1.0f - slide) * SCREEN_SCALE_Y(500.0f)); break;
+			default:              ypos = -((1.0f - slide) * SCREEN_SCALE_Y(500.0f)); break;
+		}
 	}
 
 	if (!m_bGameNotLoaded) {
@@ -2633,10 +2646,10 @@ CMenuManager::DrawFrontEndNormal()
 	RwRenderStateSet(rwRENDERSTATEZTESTENABLE, (void*)FALSE);
 	RwRenderStateSet(rwRENDERSTATEZWRITEENABLE, (void*)FALSE);
 	RwRenderStateSet(rwRENDERSTATEVERTEXALPHAENABLE, (void*)TRUE);
-	m_aFrontEndSprites[FE2_MAINPANEL_UL].Draw(CRect(xpos + MENU_X_LEFT_ALIGNED(0.0f) - 1.0f, 0.0f, xpos + (SCREEN_WIDTH / 2) + 2.0f, (SCREEN_HEIGHT / 2) + 1.0f), CRGBA(255, 255, 255, 255));
-	m_aFrontEndSprites[FE2_MAINPANEL_UR].Draw(CRect(xpos + (SCREEN_WIDTH / 2) - 1.5f, 0.0f, xpos + MENU_X_RIGHT_ALIGNED(0.0f), (SCREEN_HEIGHT / 2) + 1.0f) , CRGBA(255, 255, 255, 255));
-	m_aFrontEndSprites[FE2_MAINPANEL_DL].Draw(CRect(xpos + MENU_X_LEFT_ALIGNED(0.0f) - 1.0f, (SCREEN_HEIGHT / 2) - 1.0f, xpos + (SCREEN_WIDTH / 2) + 2.0f, SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
-	m_aFrontEndSprites[FE2_MAINPANEL_DR].Draw(CRect(xpos + (SCREEN_WIDTH / 2) - 1.5f, (SCREEN_HEIGHT / 2) - 1.0f, xpos + MENU_X_RIGHT_ALIGNED(0.0f), SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_UL].Draw(CRect(xpos + MENU_X_LEFT_ALIGNED(0.0f) - 1.0f, ypos, xpos + (SCREEN_WIDTH / 2) + 2.0f, ypos + (SCREEN_HEIGHT / 2) + 1.0f), CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_UR].Draw(CRect(xpos + (SCREEN_WIDTH / 2) - 1.5f, ypos, xpos + MENU_X_RIGHT_ALIGNED(0.0f), ypos + (SCREEN_HEIGHT / 2) + 1.0f) , CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_DL].Draw(CRect(xpos + MENU_X_LEFT_ALIGNED(0.0f) - 1.0f, ypos + (SCREEN_HEIGHT / 2) - 1.0f, xpos + (SCREEN_WIDTH / 2) + 2.0f, ypos + SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_DR].Draw(CRect(xpos + (SCREEN_WIDTH / 2) - 1.5f, ypos + (SCREEN_HEIGHT / 2) - 1.0f, xpos + MENU_X_RIGHT_ALIGNED(0.0f), ypos+ SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
 
 	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
 	eFrontendSprites currentSprite;
@@ -2690,7 +2703,7 @@ CMenuManager::DrawFrontEndNormal()
 		}
 	}
 
-	m_aFrontEndSprites[currentSprite].Draw(CRect(xpos + MENU_X_LEFT_ALIGNED(50.0f), MENU_Y(50.0f), xpos + MENU_X_RIGHT_ALIGNED(50.0f), SCREEN_SCALE_FROM_BOTTOM(95.0f)), CRGBA(255, 255, 255, m_nMenuFadeAlpha > 255 ? 255 : m_nMenuFadeAlpha));
+	m_aFrontEndSprites[currentSprite].Draw(CRect(xpos + MENU_X_LEFT_ALIGNED(50.0f), ypos + MENU_Y(50.0f), xpos + MENU_X_RIGHT_ALIGNED(50.0f), ypos + SCREEN_SCALE_FROM_BOTTOM(95.0f)), CRGBA(255, 255, 255, m_nMenuFadeAlpha > 255 ? 255 : m_nMenuFadeAlpha));
 
 	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
 	RwRenderStateSet(rwRENDERSTATETEXTUREADDRESS, (void*)rwTEXTUREADDRESSCLAMP);
@@ -2728,19 +2741,19 @@ CMenuManager::DrawFrontEndNormal()
 
 		default:
 		{
-			CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(52.0f), MENU_Y(360.0f), TheText.Get("FEDS_SE"));
-			CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(52.0f), MENU_Y(372.0f), TheText.Get("FEDS_BA"));
+			CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(52.0f), ypos + MENU_Y(360.0f), TheText.Get("FEDS_SE"));
+			CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(52.0f), ypos + MENU_Y(372.0f), TheText.Get("FEDS_BA"));
 			if (!m_bGameNotLoaded)
-				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(52.0f), MENU_Y(384.0f), TheText.Get("FEDS_ST"));
+				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(52.0f), ypos + MENU_Y(384.0f), TheText.Get("FEDS_ST"));
 
 			if (bottomBarActive)
-				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(242.0f), MENU_Y(372.0f), TheText.Get("FEDS_AM")); // <>-CHANGE MENU
+				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(242.0f), ypos + MENU_Y(372.0f), TheText.Get("FEDS_AM")); // <>-CHANGE MENU
 			else if (m_nCurrScreen != MENUPAGE_STATS && m_nCurrScreen != MENUPAGE_BRIEFS) {
-				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(242.0f), MENU_Y(360.0f + 3.5f), TheText.Get("FEA_UP")); // ;
-				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(242.0f), MENU_Y(384.0f - 3.5f), TheText.Get("FEA_DO")); // =
-				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(242.0f - 10.0f), MENU_Y(372.0f), TheText.Get("FEA_LE")); // <
-				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(242.0f + 11.0f), MENU_Y(372.0f), TheText.Get("FEA_RI")); // >
-				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(242.0f + 20.0f), MENU_Y(372.0f), TheText.Get("FEDSAS3")); // - CHANGE SELECTION
+				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(242.0f), ypos + MENU_Y(360.0f + 3.5f), TheText.Get("FEA_UP")); // ;
+				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(242.0f), ypos + MENU_Y(384.0f - 3.5f), TheText.Get("FEA_DO")); // =
+				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(242.0f - 10.0f), ypos + MENU_Y(372.0f), TheText.Get("FEA_LE")); // <
+				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(242.0f + 11.0f), ypos + MENU_Y(372.0f), TheText.Get("FEA_RI")); // >
+				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(242.0f + 20.0f), ypos + MENU_Y(372.0f), TheText.Get("FEDSAS3")); // - CHANGE SELECTION
 			}
 
 			break;
@@ -2757,8 +2770,8 @@ CMenuManager::DrawFrontEndNormal()
 	if (curBottomBarOption != -1) {
 
 		// This active tab sprite is needlessly big
-		m_aFrontEndSprites[FE2_TABACTIVE].Draw(CRect(xpos + leftPadding - MENU_X(2.0f) + (optionWidth) * curBottomBarOption, optionTop,
-			xpos + leftPadding - MENU_X(5.0f) + optionWidth * (curBottomBarOption + 2), optionBottom + MENU_Y(rawOptionHeight - 9.0f)),
+		m_aFrontEndSprites[FE2_TABACTIVE].Draw(CRect(xpos + leftPadding - MENU_X(2.0f) + (optionWidth) * curBottomBarOption, ypos + optionTop,
+			xpos + leftPadding - MENU_X(5.0f) + optionWidth * (curBottomBarOption + 2), ypos + optionBottom + MENU_Y(rawOptionHeight - 9.0f)),
 			CRGBA(CRGBA(255, 255, 255, 255)));
 
 		for (int i = 0; i < bbTabCount; i++) {
@@ -2780,7 +2793,7 @@ CMenuManager::DrawFrontEndNormal()
 
 			str = TheText.Get(bbNames[i].name);
 			
-			CFont::PrintString(xpos + xStart + MENU_X(4.0f), SCREEN_SCALE_FROM_BOTTOM(39.0f), str);
+			CFont::PrintString(xpos + xStart + MENU_X(4.0f), ypos + SCREEN_SCALE_FROM_BOTTOM(39.0f), str);
 			
 		}
 	}
@@ -3856,7 +3869,7 @@ CMenuManager::PrintBriefs()
 			newColor.a = FadeIn(255);
 			CFont::SetColor(newColor);
 #endif
-			CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(BRIEFS_LINE_X), nextY, gUString);
+			CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(BRIEFS_LINE_X), ypos + nextY, gUString);
 			nextY += MENU_Y(BRIEFS_LINE_HEIGHT);
 		}
 	}
@@ -3883,7 +3896,7 @@ CMenuManager::PrintErrorMessage()
 	CFont::SetBackGroundOnlyTextOn();
 	CFont::SetWrapx(SCREEN_SCALE_FROM_RIGHT(MENU_X_MARGIN));
 #ifdef FIX_BUGS
-	CFont::PrintString(xpos + SCREEN_SCALE_X(50.0f), SCREEN_SCALE_Y(180.0f), TheText.Get(CPad::bDisplayNoControllerMessage ? "NOCONT" : "WRCONT"));
+	CFont::PrintString(xpos + SCREEN_SCALE_X(50.0f), ypos + SCREEN_SCALE_Y(180.0f), TheText.Get(CPad::bDisplayNoControllerMessage ? "NOCONT" : "WRCONT"));
 #else
 	CFont::PrintString(SCREEN_SCALE_X(50.0f), SCREEN_SCALE_Y(40.0f), TheText.Get(CPad::bDisplayNoControllerMessage ? "NOCONT" : "WRCONT"));
 #endif
@@ -3944,9 +3957,9 @@ CMenuManager::PrintStats()
 
 			CFont::SetColor(CRGBA(LABEL_COLOR.r, LABEL_COLOR.g, LABEL_COLOR.b, FadeIn(255.0f * alphaMult)));
 			CFont::SetRightJustifyOff();
-			CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(STATS_ROW_X_MARGIN), y - MENU_Y(STATS_BOTTOM_MARGIN - STATS_TOP_MARGIN), gUString);
+			CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(STATS_ROW_X_MARGIN), ypos + y - MENU_Y(STATS_BOTTOM_MARGIN - STATS_TOP_MARGIN), gUString);
 			CFont::SetRightJustifyOn();
-			CFont::PrintString(xpos + MENU_X_RIGHT_ALIGNED(STATS_ROW_X_MARGIN), y - MENU_Y(STATS_BOTTOM_MARGIN - STATS_TOP_MARGIN), gUString2);
+			CFont::PrintString(xpos + MENU_X_RIGHT_ALIGNED(STATS_ROW_X_MARGIN), ypos + y - MENU_Y(STATS_BOTTOM_MARGIN - STATS_TOP_MARGIN), gUString2);
 		}
 	}
 	// Game doesn't do that, but it's better
@@ -3954,14 +3967,14 @@ CMenuManager::PrintStats()
 
 	CFont::SetColor(CRGBA(LABEL_COLOR.r, LABEL_COLOR.g, LABEL_COLOR.b, FadeIn(255)));
 	CFont::SetRightJustifyOff();
-	CFont::PrintString(xpos + nextX, MENU_Y(STATS_RATING_Y), TheText.Get("CRIMRA"));
+	CFont::PrintString(xpos + nextX, ypos + MENU_Y(STATS_RATING_Y), TheText.Get("CRIMRA"));
 	nextX += MENU_X(10.0f) + CFont::GetStringWidth(TheText.Get("CRIMRA"), true);
 	UnicodeStrcpy(gUString, CStats::FindCriminalRatingString());
-	CFont::PrintString(xpos + nextX, MENU_Y(STATS_RATING_Y), gUString);
+	CFont::PrintString(xpos + nextX, ypos + MENU_Y(STATS_RATING_Y), gUString);
 	nextX += MENU_X(6.0f) + CFont::GetStringWidth(gUString, true);
 	sprintf(gString, "%d", CStats::FindCriminalRatingNumber());
 	AsciiToUnicode(gString, gUString);
-	CFont::PrintString(xpos + nextX, MENU_Y(STATS_RATING_Y), gUString);
+	CFont::PrintString(xpos + nextX, ypos + MENU_Y(STATS_RATING_Y), gUString);
 
 	// ::Draw already does that.
 	/*
