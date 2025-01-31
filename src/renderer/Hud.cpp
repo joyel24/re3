@@ -49,7 +49,7 @@
 
 #ifdef FIX_BUGS
 #define TIMER_RIGHT_OFFSET 70.0f // Taken from VC frenzy timer
-#define BIGMESSAGE_Y_OFFSET 18.0f
+#define BIGMESSAGE_Y_OFFSET 40.0f
 #else
 #define TIMER_RIGHT_OFFSET 27.0f
 #define BIGMESSAGE_Y_OFFSET 20.0f
@@ -1215,6 +1215,7 @@ void CHud::Draw()
 				CFont::SetBackgroundOff();
 				CFont::SetBackGroundOnlyTextOff();
 				CFont::SetScale(SCREEN_SCALE_X_PC(1.35f), SCREEN_SCALE_Y_PC(2.7f));
+				CFont::SetWrapx(SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH - 128.0f));
 				CFont::SetPropOn();
 				CFont::SetCentreOn();
 				CFont::SetCentreSize(SCREEN_SCALE_X(DEFAULT_SCREEN_WIDTH - 25));
@@ -1252,13 +1253,13 @@ void CHud::Draw()
 #if defined(PS2_HUD) && !defined(FIX_BUGS) // yeah, that's right. ps2 uses y=ScaleX(a)
 				CFont::PrintString(SCREEN_WIDTH / 2 + SCREEN_SCALE_X_FIX(2.0f), (SCREEN_WIDTH / 2) - SCREEN_SCALE_X(120.0f) + SCREEN_SCALE_Y_FIX(2.0f), m_BigMessage[0]);
 #else
-				CFont::PrintString(SCREEN_WIDTH / 2 + SCREEN_SCALE_X_FIX(2.0f), (SCREEN_HEIGHT / 2) + SCREEN_SCALE_Y_FIX(2.0f), m_BigMessage[0]);
+				CFont::PrintString(SCREEN_WIDTH / 2 + SCREEN_SCALE_X_FIX(2.0f), (SCREEN_HEIGHT / 2) - SCREEN_SCALE_Y(BIGMESSAGE_Y_OFFSET) + SCREEN_SCALE_Y_FIX(2.0f), m_BigMessage[0]);
 #endif
 				CFont::SetColor(CRGBA(BIGMESSAGE_COLOR.r, BIGMESSAGE_COLOR.g, BIGMESSAGE_COLOR.b, BigMessageAlpha[0]));
 #if defined(PS2_HUD) && !defined(FIX_BUGS) // same
 				CFont::PrintString(SCREEN_WIDTH / 2, (SCREEN_WIDTH  / 2) - SCREEN_SCALE_X(120.0f), m_BigMessage[0]);
 #else
-				CFont::PrintString(SCREEN_WIDTH / 2, (SCREEN_HEIGHT / 2), m_BigMessage[0]);
+				CFont::PrintString(SCREEN_WIDTH / 2, (SCREEN_HEIGHT / 2) - SCREEN_SCALE_Y(40.0f), m_BigMessage[0]);
 #endif
 			}
 			else {
