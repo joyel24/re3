@@ -4132,7 +4132,7 @@ CMenuManager::Process(void)
 		UnloadTextures();
 		m_bRenderGameInMenu = false;
 		// byte_5F33E4 = 1;	// unused
-		// ChangeScreen(MENUPAGE_NONE, 0, false, false);
+		ChangeScreen(MENUPAGE_NONE, 0, false, false);
 		pEditString = nil;
 		m_bWaitingForNewKeyBind = false;
 	}
@@ -4152,6 +4152,7 @@ CMenuManager::Process(void)
 	{
 		m_nEndPauseTimer = 0;
 		m_bMenuActive = false;
+		ChangeScreen(MENUPAGE_NONE, 0, false, false);
 		xpos = ypos = 0.0f;
 		CTimer::EndUserPause();
 	}
