@@ -48,7 +48,7 @@
 #endif
 
 #ifdef FIX_BUGS
-#define TIMER_RIGHT_OFFSET 70.0f // Taken from VC frenzy timer
+#define TIMER_RIGHT_OFFSET 71.0f // Taken from VC frenzy timer
 #define BIGMESSAGE_Y_OFFSET 40.0f
 #else
 #define TIMER_RIGHT_OFFSET 27.0f
