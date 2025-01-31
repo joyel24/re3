@@ -598,6 +598,8 @@ public:
 	char m_aSkinName[256];
 	int32 m_nHelperTextMsgId;
 	bool m_bMenuActive;
+	uint32 m_nStartPauseTimer;
+	uint32 m_nEndPauseTimer;
 	bool m_bMenuStateChanged;
 	bool m_bWaitingForNewKeyBind;
 	bool m_bWantToRestart;
