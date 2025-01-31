@@ -2609,27 +2609,37 @@ CMenuManager::DrawFrontEndNormal()
 	CSprite2d::InitPerFrame();
 	CFont::InitPerFrame();
 	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
-
-	float startslide = fmax(0, float(m_nStartPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f);
-	switch ( m_nSlidingDir )
+	
+	if ( m_nStartPauseTimer != 0 && m_nStartPauseTimer >= CTimer::GetTimeInMillisecondsPauseMode() )
 	{
-		case SLIDE_TO_RIGHT:  xpos =   startslide * SCREEN_SCALE_X(700.0f);  break;
-		case SLIDE_TO_TOP:    ypos = -(startslide * SCREEN_SCALE_Y(500.0f)); break;
-		case SLIDE_TO_LEFT:   xpos = -(startslide * SCREEN_SCALE_X(700.0f)); break;
-		case SLIDE_TO_BOTTOM: ypos =   startslide * SCREEN_SCALE_Y(500.0f);  break;
-		default:              ypos =   startslide * SCREEN_SCALE_Y(500.0f);  break;
-	} 
-
-	float endslide = fmax(0, float(m_nEndPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f);
-	switch ( m_nSlidingDir )
-	{
-		case SLIDE_TO_TOP:    ypos =   (1.0f - endslide) * SCREEN_SCALE_Y(500.0f);  break;
-		case SLIDE_TO_RIGHT:  xpos =   (1.0f - endslide) * SCREEN_SCALE_X(700.0f);  break;
-		case SLIDE_TO_LEFT:   xpos =   (1.0f - endslide) * SCREEN_SCALE_X(700.0f);  break;
-		case SLIDE_TO_BOTTOM: ypos = -((1.0f - endslide) * SCREEN_SCALE_Y(500.0f)); break;
-		default:              ypos = -((1.0f - endslide) * SCREEN_SCALE_Y(500.0f)); break;
+		float startslide = float(m_nStartPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f;
+		if (startslide < 0.0f)
+			startslide = 0.0f;
+		switch ( m_nSlidingDir )
+		{
+			case SLIDE_TO_RIGHT:  xpos =   startslide * SCREEN_SCALE_X(700.0f);  break;
+			case SLIDE_TO_TOP:    ypos = -(startslide * SCREEN_SCALE_Y(500.0f)); break;
+			case SLIDE_TO_LEFT:   xpos = -(startslide * SCREEN_SCALE_X(700.0f)); break;
+			case SLIDE_TO_BOTTOM: ypos =   startslide * SCREEN_SCALE_Y(500.0f);  break;
+			default:              ypos =   startslide * SCREEN_SCALE_Y(500.0f);  break;
+		} 
 	}
 
+	if ( m_nEndPauseTimer != 0 && m_nEndPauseTimer >= CTimer::GetTimeInMillisecondsPauseMode() )
+	{
+		float endslide = float(m_nEndPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f;
+		if (endslide < 0.0f)
+			endslide = 0.0f;
+		switch ( m_nSlidingDir )
+		{
+			case SLIDE_TO_TOP:    ypos =   (1.0f - endslide) * SCREEN_SCALE_Y(500.0f);  break;
+			case SLIDE_TO_RIGHT:  xpos =   (1.0f - endslide) * SCREEN_SCALE_X(700.0f);  break;
+			case SLIDE_TO_LEFT:   xpos =   (1.0f - endslide) * SCREEN_SCALE_X(700.0f);  break;
+			case SLIDE_TO_BOTTOM: ypos = -((1.0f - endslide) * SCREEN_SCALE_Y(500.0f)); break;
+			default:              ypos = -((1.0f - endslide) * SCREEN_SCALE_Y(500.0f)); break;
+		}
+	}
+		
 	if (!m_bGameNotLoaded) {
 		CSprite2d *bg = LoadSplash(nil);
 		bg->Draw(CRect(0.0f, SCREEN_HEIGHT - (SCREEN_WIDTH * 3.0f/4.0f), SCREEN_WIDTH, SCREEN_HEIGHT), CRGBA(48, 48, 48, 255));
