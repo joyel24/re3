@@ -1548,7 +1548,7 @@ Render2dStuff(void)
 void
 RenderMenus(void)
 {
-	if (FrontEndMenuManager.m_bMenuActive)
+	if (FrontEndMenuManager.m_bMenuActive || m_nStartPauseTimer != 0)
 	{
 		PUSH_RENDERGROUP("RenderMenus");
 		PUSH_MEMID(MEMID_FRONTEND);
