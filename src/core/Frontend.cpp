@@ -5518,7 +5518,7 @@ CMenuManager::SwitchMenuOnAndOff()
 #ifdef PS2_LIKE_MENU
 			bottomBarActive = false;
 #endif
-			if (m_nCurrScreen == MENUPAGE_CHOOSE_SAVE_SLOT || m_nCurrScreen == MENUPAGE_SAVE || m_bRenderGameInMenu) {
+			if (m_nCurrScreen == MENUPAGE_CHOOSE_SAVE_SLOT || m_nCurrScreen == MENUPAGE_SAVE || MENUPAGE_LOADING_IN_PROGRESS || m_bRenderGameInMenu) {
 				ShutdownJustMenu();
 			}
 			else
