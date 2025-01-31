@@ -2643,15 +2643,15 @@ CMenuManager::DrawFrontEndNormal()
 		CSprite2d::DrawRect(CRect(0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT), CRGBA(0, 0, 0, 255));
 	}
 
-	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
+	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERNEAREST);
 	RwRenderStateSet(rwRENDERSTATEZTESTENABLE, (void*)FALSE);
 	RwRenderStateSet(rwRENDERSTATEZWRITEENABLE, (void*)FALSE);
 	RwRenderStateSet(rwRENDERSTATEVERTEXALPHAENABLE, (void*)TRUE);
-	float left = 0.5f * SCREEN_WIDTH * (SCREEN_HEIGHT * 4.0f/3.0f);
-	m_aFrontEndSprites[FE2_MAINPANEL_UL].Draw(CRect(xpos + left, ypos, xpos + (SCREEN_WIDTH / 2), ypos + (SCREEN_HEIGHT / 2)), CRGBA(255, 255, 255, 255));
-	m_aFrontEndSprites[FE2_MAINPANEL_UR].Draw(CRect(xpos + (SCREEN_WIDTH / 2), ypos, xpos + SCREEN_WIDTH - left, ypos + (SCREEN_HEIGHT / 2)) , CRGBA(255, 255, 255, 255));
-	m_aFrontEndSprites[FE2_MAINPANEL_DL].Draw(CRect(xpos + left, ypos + (SCREEN_HEIGHT / 2), xpos + (SCREEN_WIDTH / 2), ypos + SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
-	m_aFrontEndSprites[FE2_MAINPANEL_DR].Draw(CRect(xpos + (SCREEN_WIDTH / 2), ypos + (SCREEN_HEIGHT / 2), xpos + SCREEN_WIDTH - left, ypos + SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
+	int left = (int)(0.5f * ((int)SCREEN_WIDTH - ((int)SCREEN_HEIGHT * 4.0f/3.0f)));
+	m_aFrontEndSprites[FE2_MAINPANEL_UL].Draw(CRect(xpos + left, ypos, xpos + ((int)SCREEN_WIDTH / 2), ypos + ((int)SCREEN_HEIGHT / 2)), CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_UR].Draw(CRect(xpos + ((int)SCREEN_WIDTH / 2), ypos, xpos + (int)SCREEN_WIDTH - left, ypos + ((int)SCREEN_HEIGHT / 2)) , CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_DL].Draw(CRect(xpos + left, ypos + ((int)SCREEN_HEIGHT / 2), xpos + ((int)SCREEN_WIDTH / 2), ypos + (int)SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_DR].Draw(CRect(xpos + ((int)SCREEN_WIDTH / 2), ypos + ((int)SCREEN_HEIGHT / 2), xpos + (int)SCREEN_WIDTH - left, ypos + (int)SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
 
 	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
 	eFrontendSprites currentSprite;
@@ -2667,7 +2667,7 @@ CMenuManager::DrawFrontEndNormal()
 		case MENUPAGE_NEW_GAME_RELOAD:
 		case MENUPAGE_LOAD_SLOT_CONFIRM:
 		case MENUPAGE_DELETE_SLOT_CONFIRM:
-			currentSprite = FE_ICONSAVE;
+			currentSprite = FE_ICONSTATS;
 			break;
 		case MENUPAGE_DISPLAY_SETTINGS:
 			currentSprite = FE_ICONDISPLAY;
@@ -2680,7 +2680,7 @@ CMenuManager::DrawFrontEndNormal()
 		case MENUPAGE_CONTROLLER_SETTINGS:
 		case MENUPAGE_KEYBOARD_CONTROLS:
 		case MENUPAGE_MOUSE_CONTROLS:
-			currentSprite = FE_ICONCONTROLS;
+			currentSprite = FE_ICONSTATS;
 			break;
 		default:
 			/*case MENUPAGE_NEW_GAME: */
