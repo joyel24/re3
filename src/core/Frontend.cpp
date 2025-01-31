@@ -2610,39 +2610,29 @@ CMenuManager::DrawFrontEndNormal()
 	CFont::InitPerFrame();
 	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
 	
-	if ( m_nStartPauseTimer != 0 )
+	if ( m_nStartPauseTimer != 0 && m_nStartPauseTimer >= CTimer::GetTimeInMillisecondsPauseMode() )
 	{
-		float startslide = float(m_nStartPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f;
-		if (startslide < 0.0f)
-		{
-			startslide = 0.0f;
-			m_nStartPauseTimer = 0;
-		}
+		float slide = float(m_nStartPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f;
 		switch ( m_nSlidingDir )
 		{
-			case SLIDE_TO_RIGHT:  xpos =   startslide * SCREEN_SCALE_X(700.0f);  break;
-			case SLIDE_TO_TOP:    ypos = -(startslide * SCREEN_SCALE_Y(500.0f)); break;
-			case SLIDE_TO_LEFT:   xpos = -(startslide * SCREEN_SCALE_X(700.0f)); break;
-			case SLIDE_TO_BOTTOM: ypos =   startslide * SCREEN_SCALE_Y(500.0f);  break;
-			default:              ypos =   startslide * SCREEN_SCALE_Y(500.0f);  break;
+			case SLIDE_TO_RIGHT:  xpos =   slide * SCREEN_SCALE_X(700.0f);  break;
+			case SLIDE_TO_TOP:    ypos = -(slide * SCREEN_SCALE_Y(500.0f)); break;
+			case SLIDE_TO_LEFT:   xpos = -(slide * SCREEN_SCALE_X(700.0f)); break;
+			case SLIDE_TO_BOTTOM: ypos =   slide * SCREEN_SCALE_Y(500.0f);  break;
+			default:              ypos =   slide * SCREEN_SCALE_Y(500.0f);  break;
 		} 
 	}
 
-	if ( m_nEndPauseTimer != 0 )
+	if ( m_nEndPauseTimer != 0 && m_nEndPauseTimer >= CTimer::GetTimeInMillisecondsPauseMode() )
 	{
-		float endslide = float(m_nEndPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f;
-		if (endslide < 0.0f)
-		{
-			endslide = 0.0f;
-			m_nEndPauseTimer = 0.0f;
-		}
+		float slide = float(m_nEndPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f;
 		switch ( m_nSlidingDir )
 		{
-			case SLIDE_TO_TOP:    ypos =   (1.0f - endslide) * SCREEN_SCALE_Y(500.0f);  break;
-			case SLIDE_TO_RIGHT:  xpos =   (1.0f - endslide) * SCREEN_SCALE_X(700.0f);  break;
-			case SLIDE_TO_LEFT:   xpos =   (1.0f - endslide) * SCREEN_SCALE_X(700.0f);  break;
-			case SLIDE_TO_BOTTOM: ypos = -((1.0f - endslide) * SCREEN_SCALE_Y(500.0f)); break;
-			default:              ypos = -((1.0f - endslide) * SCREEN_SCALE_Y(500.0f)); break;
+			case SLIDE_TO_TOP:    ypos =   (1.0f - slide) * SCREEN_SCALE_Y(500.0f);  break;
+			case SLIDE_TO_RIGHT:  xpos =   (1.0f - slide) * SCREEN_SCALE_X(700.0f);  break;
+			case SLIDE_TO_LEFT:   xpos =   (1.0f - slide) * SCREEN_SCALE_X(700.0f);  break;
+			case SLIDE_TO_BOTTOM: ypos = -((1.0f - slide) * SCREEN_SCALE_Y(500.0f)); break;
+			default:              ypos = -((1.0f - slide) * SCREEN_SCALE_Y(500.0f)); break;
 		}
 	}
 		
@@ -4008,10 +3998,8 @@ CMenuManager::Process(void)
 	// Just a hack by R* to not make game continuously resume/pause. But we it seems we can live with it.
 	if (CPad::GetPad(0)->GetEscapeJustDown())
 		RequestFrontEndStartUp();
-	if ( m_nStartPauseTimer == 0 && m_nEndPauseTimer == 0 )
-		SwitchMenuOnAndOff();
-	else
-		return;
+	
+	SwitchMenuOnAndOff();
 
 	// Be able to re-open menu correctly.
 	if (m_bMenuActive) {
@@ -4161,6 +4149,20 @@ CMenuManager::Process(void)
 	if (!m_bWantToRestart) {
 		if (m_bGameNotLoaded)
 			DMAudio.Service();
+	}
+
+	if ( m_nStartPauseTimer != 0 && CTimer::GetTimeInMillisecondsPauseMode() >= m_nStartPauseTimer )
+	{
+		xpos = ypos = 0.0f;
+		m_nStartPauseTimer = 0;
+	}
+
+	if ( m_nEndPauseTimer != 0 && CTimer::GetTimeInMillisecondsPauseMode() >= m_nEndPauseTimer )
+	{
+		m_nEndPauseTimer = 0;
+		m_bMenuActive = false;
+		xpos = ypos = 0.0f;
+		CTimer::EndUserPause();
 	}
 }
 
@@ -5064,7 +5066,7 @@ CMenuManager::ProcessButtonPresses(void)
 		ProcessOnOffMenuOptions();
 	}
 
-	if (goBack) {
+	if (goBack && m_nStartPauseTimer == 0 && m_nEndPauseTimer == 0) {
 		ResetHelperText();
 		DMAudio.PlayFrontEndSound(SOUND_FRONTEND_MENU_BACK, 0);
 #ifdef PS2_LIKE_MENU
@@ -5496,7 +5498,7 @@ CMenuManager::SwitchMenuOnAndOff()
 	bool menuWasActive = GetIsMenuActive();
 
 	// Reminder: You need REGISTER_START_BUTTON defined to make it work.
-	if (CPad::GetPad(0)->GetStartJustDown() 
+	if ((CPad::GetPad(0)->GetStartJustDown() && m_nStartPauseTimer == 0 && m_nEndPauseTimer == 0)
 #ifdef FIX_BUGS
 		&& !m_bGameNotLoaded
 #endif
@@ -5585,19 +5587,6 @@ CMenuManager::SwitchMenuOnAndOff()
 
 	m_bStartUpFrontEndRequested = false;
 	m_bShutDownFrontEndRequested = false;
-	if ( m_nStartPauseTimer != 0 && CTimer::GetTimeInMillisecondsPauseMode() >= m_nStartPauseTimer )
-	{
-		xpos = ypos = 0.0f;
-		m_nStartPauseTimer = 0;
-	}
-
-	if ( m_nEndPauseTimer != 0 && CTimer::GetTimeInMillisecondsPauseMode() >= m_nEndPauseTimer )
-	{
-		m_nEndPauseTimer = 0;
-		m_bMenuActive = false;
-		xpos = ypos = 0.0f;
-		CTimer::EndUserPause();
-	}
 }
 
 void
