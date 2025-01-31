@@ -2647,10 +2647,11 @@ CMenuManager::DrawFrontEndNormal()
 	RwRenderStateSet(rwRENDERSTATEZTESTENABLE, (void*)FALSE);
 	RwRenderStateSet(rwRENDERSTATEZWRITEENABLE, (void*)FALSE);
 	RwRenderStateSet(rwRENDERSTATEVERTEXALPHAENABLE, (void*)TRUE);
-	m_aFrontEndSprites[FE2_MAINPANEL_UL].Draw(CRect(xpos + MENU_X_LEFT_ALIGNED(0.0f) - 1.0f, ypos, xpos + (SCREEN_WIDTH / 2) + 2.0f, ypos + (SCREEN_HEIGHT / 2) + 1.0f), CRGBA(255, 255, 255, 255));
-	m_aFrontEndSprites[FE2_MAINPANEL_UR].Draw(CRect(xpos + (SCREEN_WIDTH / 2) - 1.5f, ypos, xpos + MENU_X_RIGHT_ALIGNED(0.0f), ypos + (SCREEN_HEIGHT / 2) + 1.0f) , CRGBA(255, 255, 255, 255));
-	m_aFrontEndSprites[FE2_MAINPANEL_DL].Draw(CRect(xpos + MENU_X_LEFT_ALIGNED(0.0f) - 1.0f, ypos + (SCREEN_HEIGHT / 2) - 1.0f, xpos + (SCREEN_WIDTH / 2) + 2.0f, ypos + SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
-	m_aFrontEndSprites[FE2_MAINPANEL_DR].Draw(CRect(xpos + (SCREEN_WIDTH / 2) - 1.5f, ypos + (SCREEN_HEIGHT / 2) - 1.0f, xpos + MENU_X_RIGHT_ALIGNED(0.0f), ypos + SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
+	float left = 0.5f * SCREEN_WIDTH * (SCREEN_HEIGHT * 4.0f/3.0f);
+	m_aFrontEndSprites[FE2_MAINPANEL_UL].Draw(CRect(xpos + left, ypos, xpos + (SCREEN_WIDTH / 2), ypos + (SCREEN_HEIGHT / 2)), CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_UR].Draw(CRect(xpos + (SCREEN_WIDTH / 2), ypos, xpos + SCREEN_WIDTH - left, ypos + (SCREEN_HEIGHT / 2)) , CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_DL].Draw(CRect(xpos + left, ypos + (SCREEN_HEIGHT / 2), xpos + (SCREEN_WIDTH / 2), ypos + SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_DR].Draw(CRect(xpos + (SCREEN_WIDTH / 2), ypos + (SCREEN_HEIGHT / 2), xpos + SCREEN_WIDTH - left, ypos + SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
 
 	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
 	eFrontendSprites currentSprite;
