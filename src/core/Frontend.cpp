@@ -2508,8 +2508,8 @@ CMenuManager::DrawFrontEnd()
 				bbTabCount = 7;
 			}
 		}
-		m_nCurrScreen = bbNames[0].screenId;
-		bottomBarActive = true;
+		m_nCurrScreen = m_bRenderGameInMenu ? MENUPAGE_SAVE: bbNames[0].screenId;
+		bottomBarActive = !m_bRenderGameInMenu;
 		curBottomBarOption = 0;
 	}
 	#undef setBbItem
@@ -4151,8 +4151,6 @@ CMenuManager::Process(void)
 	if ( m_nEndPauseTimer != 0 && CTimer::GetTimeInMillisecondsPauseMode() >= m_nEndPauseTimer )
 	{
 		m_nEndPauseTimer = 0;
-		m_bMenuActive = false;
-		ChangeScreen(MENUPAGE_NONE, 0, false, false);
 		xpos = ypos = 0.0f;
 		CTimer::EndUserPause();
 	}
@@ -5517,7 +5515,7 @@ CMenuManager::SwitchMenuOnAndOff()
 #ifdef PS2_LIKE_MENU
 			bottomBarActive = false;
 #endif
-			if (m_nCurrScreen == MENUPAGE_CHOOSE_SAVE_SLOT || m_nCurrScreen == MENUPAGE_SAVE || m_nCurrScreen == MENUPAGE_LOADING_IN_PROGRESS || m_bRenderGameInMenu) {
+			if (m_nCurrScreen == MENUPAGE_LOADING_IN_PROGRESS || m_bRenderGameInMenu) {
 				ShutdownJustMenu();
 			}
 			else
