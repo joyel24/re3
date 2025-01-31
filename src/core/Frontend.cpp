@@ -37,6 +37,7 @@
 
 float xpos = 0.0f;
 float ypos = 0.0f;
+int m_someAlpha = 255;	
 
 enum
 {
@@ -2595,8 +2596,6 @@ CMenuManager::DrawFrontEndNormal()
 	CFont::InitPerFrame();
 	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
 
-	int m_someAlpha = 255;
-	
 	if ( m_nStartPauseTimer != 0 && m_nStartPauseTimer >= CTimer::GetTimeInMillisecondsPauseMode() )
 	{
 		float slide = float(m_nStartPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f;
