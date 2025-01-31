@@ -2610,30 +2610,24 @@ CMenuManager::DrawFrontEndNormal()
 	CFont::InitPerFrame();
 	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
 
-	if ( m_nStartPauseTimer != 0 && m_nStartPauseTimer >= CTimer::GetTimeInMillisecondsPauseMode() )
+	float slide = max(0, float(m_nStartPauseTimer - CTimer::GetTimeInMillisecondsPauseMode())) / 800.0f;
+	switch ( m_nSlidingDir )
 	{
-		float slide = float(m_nStartPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f;
-		switch ( m_nSlidingDir )
-		{
-			case SLIDE_TO_RIGHT:  xpos =   slide * SCREEN_SCALE_X(700.0f);  break;
-			case SLIDE_TO_TOP:    ypos = -(slide * SCREEN_SCALE_Y(500.0f)); break;
-			case SLIDE_TO_LEFT:   xpos = -(slide * SCREEN_SCALE_X(700.0f)); break;
-			case SLIDE_TO_BOTTOM: ypos =   slide * SCREEN_SCALE_Y(500.0f);  break;
-			default:              ypos =   slide * SCREEN_SCALE_Y(500.0f);  break;
-		} 
-	}
+		case SLIDE_TO_RIGHT:  xpos =   slide * SCREEN_SCALE_X(700.0f);  break;
+		case SLIDE_TO_TOP:    ypos = -(slide * SCREEN_SCALE_Y(500.0f)); break;
+		case SLIDE_TO_LEFT:   xpos = -(slide * SCREEN_SCALE_X(700.0f)); break;
+		case SLIDE_TO_BOTTOM: ypos =   slide * SCREEN_SCALE_Y(500.0f);  break;
+		default:              ypos =   slide * SCREEN_SCALE_Y(500.0f);  break;
+	} 
 
-	if ( m_nEndPauseTimer != 0 && m_nEndPauseTimer >= CTimer::GetTimeInMillisecondsPauseMode() )
+	float slide = max(0, float(m_nEndPauseTimer - CTimer::GetTimeInMillisecondsPauseMode())) / 800.0f;
+	switch ( m_nSlidingDir )
 	{
-		float slide = float(m_nEndPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f;
-		switch ( m_nSlidingDir )
-		{
-			case SLIDE_TO_TOP:    ypos =   (1.0f - slide) * SCREEN_SCALE_Y(500.0f);  break;
-			case SLIDE_TO_RIGHT:  xpos =   (1.0f - slide) * SCREEN_SCALE_X(700.0f);  break;
-			case SLIDE_TO_LEFT:   xpos =   (1.0f - slide) * SCREEN_SCALE_X(700.0f);  break;
-			case SLIDE_TO_BOTTOM: ypos = -((1.0f - slide) * SCREEN_SCALE_Y(500.0f)); break;
-			default:              ypos = -((1.0f - slide) * SCREEN_SCALE_Y(500.0f)); break;
-		}
+		case SLIDE_TO_TOP:    ypos =   (1.0f - slide) * SCREEN_SCALE_Y(500.0f);  break;
+		case SLIDE_TO_RIGHT:  xpos =   (1.0f - slide) * SCREEN_SCALE_X(700.0f);  break;
+		case SLIDE_TO_LEFT:   xpos =   (1.0f - slide) * SCREEN_SCALE_X(700.0f);  break;
+		case SLIDE_TO_BOTTOM: ypos = -((1.0f - slide) * SCREEN_SCALE_Y(500.0f)); break;
+		default:              ypos = -((1.0f - slide) * SCREEN_SCALE_Y(500.0f)); break;
 	}
 
 	if (!m_bGameNotLoaded) {
@@ -5573,6 +5567,9 @@ CMenuManager::SwitchMenuOnAndOff()
 
 	m_bStartUpFrontEndRequested = false;
 	m_bShutDownFrontEndRequested = false;
+	if ( m_nStartPauseTimer != 0 && CTimer::GetTimeInMillisecondsPauseMode() >= m_nStartPauseTimer )
+		m_nStartPauseTimer = 0;
+
 	if ( m_nEndPauseTimer != 0 && CTimer::GetTimeInMillisecondsPauseMode() >= m_nEndPauseTimer )
 	{
 		m_nEndPauseTimer = 0;
