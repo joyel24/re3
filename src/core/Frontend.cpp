@@ -2528,7 +2528,7 @@ CMenuManager::DrawFrontEnd()
 
 #ifdef PS2_SAVE_DIALOG
 	if(m_bRenderGameInMenu) {
-		if (m_nCurrScreen = MENUPAGE_STATS || m_nCurrScreen = MENUPAGE_NONE)
+		if (m_nCurrScreen == MENUPAGE_STATS || m_nCurrScreen == MENUPAGE_NONE)
 			m_nCurrScreen = MENUPAGE_SAVE;
 		m_nCurrOption == 0;
 		bottomBarActive = false;
