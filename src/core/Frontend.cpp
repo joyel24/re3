@@ -3904,7 +3904,7 @@ CMenuManager::PrintStats()
 #if GTA_VERSION >= GTA3_PC_11
 	CFont::SetFontStyle(FONT_LOCALE(FONT_BANK));
 #endif
-	CFont::SetScale(MENU_X(MENU_TEXT_SIZE_X * 0.7), MENU_Y(MENU_TEXT_SIZE_Y * 0.9)); // second mulipliers are double, idk why
+	CFont::SetScale(MENU_X(MENU_TEXT_SIZE_X), MENU_Y(MENU_TEXT_SIZE_Y)); // second mulipliers are double, idk why
 	float nextYChange, y, alphaMult;
 
 	// Scroll stats with mouse
