@@ -2610,24 +2610,24 @@ CMenuManager::DrawFrontEndNormal()
 	CFont::InitPerFrame();
 	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
 
-	float slide = max(0, float(m_nStartPauseTimer - CTimer::GetTimeInMillisecondsPauseMode())) / 800.0f;
+	float startslide = fmax(0, float(m_nStartPauseTimer - CTimer::GetTimeInMillisecondsPauseMode())) / 800.0f;
 	switch ( m_nSlidingDir )
 	{
-		case SLIDE_TO_RIGHT:  xpos =   slide * SCREEN_SCALE_X(700.0f);  break;
-		case SLIDE_TO_TOP:    ypos = -(slide * SCREEN_SCALE_Y(500.0f)); break;
-		case SLIDE_TO_LEFT:   xpos = -(slide * SCREEN_SCALE_X(700.0f)); break;
-		case SLIDE_TO_BOTTOM: ypos =   slide * SCREEN_SCALE_Y(500.0f);  break;
-		default:              ypos =   slide * SCREEN_SCALE_Y(500.0f);  break;
+		case SLIDE_TO_RIGHT:  xpos =   startslide * SCREEN_SCALE_X(700.0f);  break;
+		case SLIDE_TO_TOP:    ypos = -(startslide * SCREEN_SCALE_Y(500.0f)); break;
+		case SLIDE_TO_LEFT:   xpos = -(startslide * SCREEN_SCALE_X(700.0f)); break;
+		case SLIDE_TO_BOTTOM: ypos =   startslide * SCREEN_SCALE_Y(500.0f);  break;
+		default:              ypos =   startslide * SCREEN_SCALE_Y(500.0f);  break;
 	} 
 
-	float slide = max(0, float(m_nEndPauseTimer - CTimer::GetTimeInMillisecondsPauseMode())) / 800.0f;
+	float endslide = fmax(0, float(m_nEndPauseTimer - CTimer::GetTimeInMillisecondsPauseMode())) / 800.0f;
 	switch ( m_nSlidingDir )
 	{
-		case SLIDE_TO_TOP:    ypos =   (1.0f - slide) * SCREEN_SCALE_Y(500.0f);  break;
-		case SLIDE_TO_RIGHT:  xpos =   (1.0f - slide) * SCREEN_SCALE_X(700.0f);  break;
-		case SLIDE_TO_LEFT:   xpos =   (1.0f - slide) * SCREEN_SCALE_X(700.0f);  break;
-		case SLIDE_TO_BOTTOM: ypos = -((1.0f - slide) * SCREEN_SCALE_Y(500.0f)); break;
-		default:              ypos = -((1.0f - slide) * SCREEN_SCALE_Y(500.0f)); break;
+		case SLIDE_TO_TOP:    ypos =   (1.0f - endslide) * SCREEN_SCALE_Y(500.0f);  break;
+		case SLIDE_TO_RIGHT:  xpos =   (1.0f - endslide) * SCREEN_SCALE_X(700.0f);  break;
+		case SLIDE_TO_LEFT:   xpos =   (1.0f - endslide) * SCREEN_SCALE_X(700.0f);  break;
+		case SLIDE_TO_BOTTOM: ypos = -((1.0f - endslide) * SCREEN_SCALE_Y(500.0f)); break;
+		default:              ypos = -((1.0f - endslide) * SCREEN_SCALE_Y(500.0f)); break;
 	}
 
 	if (!m_bGameNotLoaded) {
