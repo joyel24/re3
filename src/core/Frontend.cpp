@@ -2769,6 +2769,18 @@ CMenuManager::DrawFrontEndNormal()
 	wchar *str;
 	hoveredBottomBarOption = -1;
 	if (curBottomBarOption != -1) {
+		
+		if( !bottomBarActive )
+		{
+			CRGBA shadow(41, 101, 102, 255);
+			CRGBA green(40, 48, 57, 255);
+			CSprite2d::DrawRect(
+				CRect(xpos+MENU_X_LEFT_ALIGNED(82.0f), ypos+SCREEN_SCALE_Y(408.0f), MENU_X_LEFT_ALIGNED(476.0f), SCREEN_SCALE_Y(18.0f)),
+				shadow);
+			CSprite2d::DrawRect(
+				CRect(xpos+MENU_X_LEFT_ALIGNED(82.0f), ypos+SCREEN_SCALE_Y(408.0f),MENU_X_LEFT_ALIGNEDX(476.0f), SCREEN_SCALE_Y(5.0f)),
+				green);
+		}
 
 		// This active tab sprite is needlessly big
 		m_aFrontEndSprites[FE2_TABACTIVE].Draw(CRect(xpos + leftPadding - MENU_X(2.0f) + (optionWidth) * curBottomBarOption, ypos + optionTop,
@@ -2789,7 +2801,7 @@ CMenuManager::DrawFrontEndNormal()
 				if(bottomBarActive || curBottomBarOption == i)
 					CFont::SetColor(CRGBA(HEADER_COLOR.r, HEADER_COLOR.g, HEADER_COLOR.b, 255));
 				else
-					CFont::SetColor(CRGBA(HEADER_COLOR.r, HEADER_COLOR.g, HEADER_COLOR.b, 110));
+					CFont::SetColor(CRGBA(HEADER_COLOR.r, HEADER_COLOR.g, HEADER_COLOR.b, 0));
 			}
 
 			str = TheText.Get(bbNames[i].name);
