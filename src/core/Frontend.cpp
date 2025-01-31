@@ -2648,9 +2648,9 @@ CMenuManager::DrawFrontEndNormal()
 	RwRenderStateSet(rwRENDERSTATEZWRITEENABLE, (void*)FALSE);
 	RwRenderStateSet(rwRENDERSTATEVERTEXALPHAENABLE, (void*)TRUE);
 	int left = (int)(0.5f * ((int)SCREEN_WIDTH - ((int)SCREEN_HEIGHT * 4.0f/3.0f)));
-	m_aFrontEndSprites[FE2_MAINPANEL_UL].Draw(CRect(xpos + left, ypos, xpos + ((SCREEN_WIDTH + 0.5f) / 2), ypos + ((SCREEN_HEIGHT + 0.5f) / 2)), CRGBA(255, 255, 255, 255));
-	m_aFrontEndSprites[FE2_MAINPANEL_UR].Draw(CRect(xpos + (SCREEN_WIDTH / 2), ypos, xpos + SCREEN_WIDTH - left, ypos + ((SCREEN_HEIGHT + 0.5f) / 2)) , CRGBA(255, 255, 255, 255));
-	m_aFrontEndSprites[FE2_MAINPANEL_DL].Draw(CRect(xpos + left, ypos + (SCREEN_HEIGHT / 2), xpos + ((SCREEN_WIDTH + 0.5f) / 2), ypos + SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_UL].Draw(CRect(xpos + left, ypos, xpos + ((SCREEN_WIDTH + 1.0f) / 2), ypos + ((SCREEN_HEIGHT + 1.0f) / 2)), CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_UR].Draw(CRect(xpos + (SCREEN_WIDTH / 2), ypos, xpos + SCREEN_WIDTH - left, ypos + ((SCREEN_HEIGHT + 1.0f) / 2)) , CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_DL].Draw(CRect(xpos + left, ypos + (SCREEN_HEIGHT / 2), xpos + ((SCREEN_WIDTH + 1.0f) / 2), ypos + SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
 	m_aFrontEndSprites[FE2_MAINPANEL_DR].Draw(CRect(xpos + (SCREEN_WIDTH / 2), ypos + (SCREEN_HEIGHT / 2), xpos + SCREEN_WIDTH - left, ypos + SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
 
 	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
@@ -2776,10 +2776,10 @@ CMenuManager::DrawFrontEndNormal()
 			CRGBA shadow(41, 101, 102, 255);
 			CRGBA green(40, 48, 57, 255);
 			CSprite2d::DrawRect(
-				CRect(xpos+MENU_X_LEFT_ALIGNED(82.0f), ypos+SCREEN_SCALE_Y(408.0f), xpos+MENU_X_LEFT_ALIGNED(82.0f)+MENU_X_LEFT_ALIGNED(476.0f), ypos+SCREEN_SCALE_Y(408.0f)+SCREEN_SCALE_Y(18.0f)),
+				CRect(xpos+MENU_X_LEFT_ALIGNED(82.0f), ypos+SCREEN_SCALE_Y(407.0f), xpos+MENU_X_LEFT_ALIGNED(82.0f)+MENU_X_LEFT_ALIGNED(410.0f), ypos+SCREEN_SCALE_Y(407.0f)+SCREEN_SCALE_Y(18.0f)),
 				shadow);
 			CSprite2d::DrawRect(
-				CRect(xpos+MENU_X_LEFT_ALIGNED(82.0f), ypos+SCREEN_SCALE_Y(408.0f),xpos+MENU_X_LEFT_ALIGNED(82.0f)+MENU_X_LEFT_ALIGNED(476.0f), ypos+SCREEN_SCALE_Y(408.0f)+SCREEN_SCALE_Y(5.0f)),
+				CRect(xpos+MENU_X_LEFT_ALIGNED(82.0f), ypos+SCREEN_SCALE_Y(407.0f),xpos+MENU_X_LEFT_ALIGNED(82.0f)+MENU_X_LEFT_ALIGNED(410.0f), ypos+SCREEN_SCALE_Y(407.0f)+SCREEN_SCALE_Y(5.0f)),
 				green);
 		}
 
