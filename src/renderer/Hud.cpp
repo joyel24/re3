@@ -637,7 +637,7 @@ void CHud::Draw()
 				CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(219.0f), SCREEN_SCALE_Y(65.0f), sPrint);
 
 				if (!CWorld::Players[CWorld::PlayerInFocus].m_nTimeLastArmourLoss || CTimer::GetTimeInMilliseconds() > CWorld::Players[CWorld::PlayerInFocus].m_nTimeLastArmourLoss + 2000 || FRAMECOUNTER & 1) {					
-					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(219.0f) - SCREEN_SCALE_X(54.0f) + SCREEN_SCALE_X(2.0f), SCREEN_SCALE_Y(65.0f), sPrintIcon);
+					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(219.0f) - SCREEN_SCALE_X(54.0f) + SCREEN_SCALE_X(2.0f), SCREEN_SCALE_Y(85.0f), sPrintIcon);
 				}
 			}
 		}
