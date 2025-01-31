@@ -2778,7 +2778,7 @@ CMenuManager::DrawFrontEndNormal()
 				CRect(xpos+MENU_X_LEFT_ALIGNED(82.0f), ypos+SCREEN_SCALE_Y(408.0f), MENU_X_LEFT_ALIGNED(476.0f), SCREEN_SCALE_Y(18.0f)),
 				shadow);
 			CSprite2d::DrawRect(
-				CRect(xpos+MENU_X_LEFT_ALIGNED(82.0f), ypos+SCREEN_SCALE_Y(408.0f),MENU_X_LEFT_ALIGNEDX(476.0f), SCREEN_SCALE_Y(5.0f)),
+				CRect(xpos+MENU_X_LEFT_ALIGNED(82.0f), ypos+SCREEN_SCALE_Y(408.0f),MENU_X_LEFT_ALIGNED(476.0f), SCREEN_SCALE_Y(5.0f)),
 				green);
 		}
 
