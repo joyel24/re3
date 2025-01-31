@@ -5509,16 +5509,24 @@ CMenuManager::SwitchMenuOnAndOff()
 
 		if (m_bMenuActive) {
 			CTimer::StartUserPause();
-			xpos = ypos = 0.0f;
-			m_nStartPauseTimer = CTimer::GetTimeInMillisecondsPauseMode() + 800;
-			m_nSlidingDir = CGeneral::GetRandomNumber() & (SLIDE_MAX-1);
+			if (!m_bSaveMenuActive) {
+				xpos = ypos = 0.0f;
+				m_nStartPauseTimer = CTimer::GetTimeInMillisecondsPauseMode() + 800;
+				m_nSlidingDir = CGeneral::GetRandomNumber() & (SLIDE_MAX-1);
+			}
 		} else {
 #ifdef PS2_LIKE_MENU
 			bottomBarActive = false;
 #endif
-			m_nEndPauseTimer = CTimer::GetTimeInMillisecondsPauseMode() + 800;
-			m_bMenuActive = true;
-			m_nSlidingDir = CGeneral::GetRandomNumber() & (SLIDE_MAX-1);
+			if (m_nCurrScreen == MENUPAGE_CHOOSE_SAVE_SLOT || m_nCurrScreen == MENUPAGE_SAVE || m_bRenderGameInMenu) {
+				ShutdownJustMenu();
+			}
+			else
+			{
+				m_nEndPauseTimer = CTimer::GetTimeInMillisecondsPauseMode() + 800;
+				m_bMenuActive = true;
+				m_nSlidingDir = CGeneral::GetRandomNumber() & (SLIDE_MAX-1);
+			}
 #ifdef FIX_BUGS
 			ThingsToDoBeforeGoingBack();
 #endif
@@ -5555,6 +5563,7 @@ CMenuManager::SwitchMenuOnAndOff()
 #ifdef PS2_SAVE_DIALOG
 		m_nCurrScreen = MENUPAGE_SAVE;
 		m_bRenderGameInMenu = true;
+		m_nStartPauseTimer = m_nEndPauseTimer = 0;
 #else
 		m_nCurrScreen = MENUPAGE_CHOOSE_SAVE_SLOT;
 #endif
