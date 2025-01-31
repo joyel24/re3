@@ -2775,10 +2775,10 @@ CMenuManager::DrawFrontEndNormal()
 			CRGBA shadow(41, 101, 102, 255);
 			CRGBA green(40, 48, 57, 255);
 			CSprite2d::DrawRect(
-				CRect(xpos+MENU_X_LEFT_ALIGNED(82.0f), ypos+SCREEN_SCALE_Y(408.0f), MENU_X_LEFT_ALIGNED(476.0f), SCREEN_SCALE_Y(18.0f)),
+				CRect(xpos+MENU_X_LEFT_ALIGNED(82.0f), ypos+SCREEN_SCALE_Y(408.0f), xpos+MENU_X_LEFT_ALIGNED(82.0f)+MENU_X_LEFT_ALIGNED(476.0f), ypos+SCREEN_SCALE_Y(408.0f)+SCREEN_SCALE_Y(18.0f)),
 				shadow);
 			CSprite2d::DrawRect(
-				CRect(xpos+MENU_X_LEFT_ALIGNED(82.0f), ypos+SCREEN_SCALE_Y(408.0f),MENU_X_LEFT_ALIGNED(476.0f), SCREEN_SCALE_Y(5.0f)),
+				CRect(xpos+MENU_X_LEFT_ALIGNED(82.0f), ypos+SCREEN_SCALE_Y(408.0f),xpos+MENU_X_LEFT_ALIGNED(82.0f)+MENU_X_LEFT_ALIGNED(476.0f), ypos+SCREEN_SCALE_Y(408.0f)+SCREEN_SCALE_Y(5.0f)),
 				green);
 		}
 
