@@ -2787,7 +2787,7 @@ CMenuManager::DrawFrontEndNormal()
 		// This active tab sprite is needlessly big
 		m_aFrontEndSprites[FE2_TABACTIVE].Draw(CRect(xpos + leftPadding - MENU_X(2.0f) + (optionWidth) * curBottomBarOption, ypos + optionTop,
 			xpos + leftPadding - MENU_X(5.0f) + optionWidth * (curBottomBarOption + 2), ypos + optionBottom + MENU_Y(rawOptionHeight - 9.0f)),
-			CRGBA(CRGBA(255, 255, 255, 255)));
+			CRGBA(CRGBA(255, 255, 255, m_someAlpha)));
 
 		for (int i = 0; i < bbTabCount; i++) {
 			float xStart = leftPadding + optionWidth * i;
@@ -3970,7 +3970,7 @@ CMenuManager::PrintStats()
 			} else
 				alphaMult = 1.0f;
 
-			CFont::SetColor(CRGBA(LABEL_COLOR.r, LABEL_COLOR.g, LABEL_COLOR.b, FadeIn(m_nMenuFadeAlpha * alphaMult)));
+			CFont::SetColor(CRGBA(LABEL_COLOR.r, LABEL_COLOR.g, LABEL_COLOR.b, FadeIn(m_someAlpha * alphaMult)));
 			CFont::SetRightJustifyOff();
 			CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(STATS_ROW_X_MARGIN), ypos + y - MENU_Y(STATS_BOTTOM_MARGIN - STATS_TOP_MARGIN), gUString);
 			CFont::SetRightJustifyOn();
@@ -3980,7 +3980,7 @@ CMenuManager::PrintStats()
 	// Game doesn't do that, but it's better
 	float nextX = MENU_X_LEFT_ALIGNED(STATS_RATING_X);
 
-	CFont::SetColor(CRGBA(LABEL_COLOR.r, LABEL_COLOR.g, LABEL_COLOR.b, FadeIn(255)));
+	CFont::SetColor(CRGBA(LABEL_COLOR.r, LABEL_COLOR.g, LABEL_COLOR.b, FadeIn(m_someAlpha)));
 	CFont::SetRightJustifyOff();
 	CFont::PrintString(xpos + nextX, ypos + MENU_Y(STATS_RATING_Y), TheText.Get("CRIMRA"));
 	nextX += MENU_X(10.0f) + CFont::GetStringWidth(TheText.Get("CRIMRA"), true);
