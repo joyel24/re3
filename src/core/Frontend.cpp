@@ -2508,7 +2508,7 @@ CMenuManager::DrawFrontEnd()
 				bbTabCount = 7;
 			}
 		}
-		m_nCurrScreen = m_bRenderGameInMenu ? MENUPAGE_SAVE: bbNames[0].screenId;
+		m_nCurrScreen = bbNames[0].screenId;
 		bottomBarActive = !m_bRenderGameInMenu;
 		curBottomBarOption = 0;
 	}
@@ -2527,11 +2527,18 @@ CMenuManager::DrawFrontEnd()
 		m_nCurrOption = 1;
 
 #ifdef PS2_SAVE_DIALOG
-	if(m_bRenderGameInMenu)
+	if(m_bRenderGameInMenu) {
+		if (m_nCurrScreen = MENUPAGE_STATS || m_nCurrScreen = MENUPAGE_NONE)
+			m_nCurrScreen = MENUPAGE_SAVE;
+		m_nCurrOption == 0;
+		bottomBarActive = false;
 		DrawFrontEndSaveZone();
+	}
 	else
 #endif
+	{
 		DrawFrontEndNormal();
+	}
 
 	PrintErrorMessage();
 }
