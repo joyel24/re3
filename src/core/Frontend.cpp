@@ -2594,10 +2594,19 @@ CMenuManager::DrawFrontEndNormal()
 	CSprite2d::InitPerFrame();
 	CFont::InitPerFrame();
 	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
+
+	int m_someAlpha = 255;
 	
 	if ( m_nStartPauseTimer != 0 && m_nStartPauseTimer >= CTimer::GetTimeInMillisecondsPauseMode() )
 	{
 		float slide = float(m_nStartPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f;
+		float alpha = 1.0f;
+
+		if ((m_nStartPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) <= 1600)
+			alpha = float(m_nStartPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 400.0f;
+
+		m_someAlpha = 255 - Clamp(alpha, 0.0f, 1.0f) * 255.0f;
+
 		switch ( m_nSlidingDir )
 		{
 			case SLIDE_TO_RIGHT:  xpos =   slide * SCREEN_SCALE_X(700.0f);  break;
@@ -2611,6 +2620,10 @@ CMenuManager::DrawFrontEndNormal()
 	if ( m_nEndPauseTimer != 0 && m_nEndPauseTimer >= CTimer::GetTimeInMillisecondsPauseMode() )
 	{
 		float slide = float(m_nEndPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f;
+		float alpha = float((int32)(m_nEndPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) + -266) / 533.0f;
+
+		m_someAlpha = Clamp(alpha, 0.0f, 1.0f) * 255.0f;
+		
 		switch ( m_nSlidingDir )
 		{
 			case SLIDE_TO_TOP:    ypos =   (1.0f - slide) * SCREEN_SCALE_Y(500.0f);  break;
@@ -2633,10 +2646,10 @@ CMenuManager::DrawFrontEndNormal()
 	RwRenderStateSet(rwRENDERSTATEZWRITEENABLE, (void*)FALSE);
 	RwRenderStateSet(rwRENDERSTATEVERTEXALPHAENABLE, (void*)TRUE);
 	int left = (int)(0.5f * ((int)SCREEN_WIDTH - ((int)SCREEN_HEIGHT * 4.0f/3.0f)));
-	m_aFrontEndSprites[FE2_MAINPANEL_UL].Draw(CRect(xpos + left, ypos, xpos + ((SCREEN_WIDTH + 1.0f) / 2), ypos + ((SCREEN_HEIGHT + 1.0f) / 2)), CRGBA(255, 255, 255, 255));
-	m_aFrontEndSprites[FE2_MAINPANEL_UR].Draw(CRect(xpos + ((SCREEN_WIDTH - 1.0f) / 2), ypos, xpos + SCREEN_WIDTH - left, ypos + ((SCREEN_HEIGHT + 1.0f) / 2)) , CRGBA(255, 255, 255, 255));
-	m_aFrontEndSprites[FE2_MAINPANEL_DL].Draw(CRect(xpos + left, ypos + (SCREEN_HEIGHT / 2), xpos + ((SCREEN_WIDTH + 1.0f) / 2), ypos + SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
-	m_aFrontEndSprites[FE2_MAINPANEL_DR].Draw(CRect(xpos + ((SCREEN_WIDTH - 1.0f) / 2), ypos + (SCREEN_HEIGHT / 2), xpos + SCREEN_WIDTH - left, ypos + SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_UL].Draw(CRect(xpos + left, ypos, xpos + ((SCREEN_WIDTH + 1.0f) / 2), ypos + ((SCREEN_HEIGHT + 1.0f) / 2)), CRGBA(255, 255, 255, m_someAlpha));
+	m_aFrontEndSprites[FE2_MAINPANEL_UR].Draw(CRect(xpos + ((SCREEN_WIDTH - 1.0f) / 2), ypos, xpos + SCREEN_WIDTH - left, ypos + ((SCREEN_HEIGHT + 1.0f) / 2)) , CRGBA(255, 255, 255, m_someAlpha));
+	m_aFrontEndSprites[FE2_MAINPANEL_DL].Draw(CRect(xpos + left, ypos + (SCREEN_HEIGHT / 2), xpos + ((SCREEN_WIDTH + 1.0f) / 2), ypos + SCREEN_HEIGHT), CRGBA(255, 255, 255, m_someAlpha));
+	m_aFrontEndSprites[FE2_MAINPANEL_DR].Draw(CRect(xpos + ((SCREEN_WIDTH - 1.0f) / 2), ypos + (SCREEN_HEIGHT / 2), xpos + SCREEN_WIDTH - left, ypos + SCREEN_HEIGHT), CRGBA(255, 255, 255, m_someAlpha));
 
 	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
 	eFrontendSprites currentSprite;
@@ -2689,6 +2702,9 @@ CMenuManager::DrawFrontEndNormal()
 				field_518 = 1;
 		}
 	}
+	
+	if ( m_someAlpha < 255 )
+		m_nMenuFadeAlpha = m_someAlpha;
 
 	m_aFrontEndSprites[currentSprite].Draw(CRect(xpos + MENU_X_LEFT_ALIGNED(50.0f), ypos + MENU_Y(50.0f), xpos + MENU_X_RIGHT_ALIGNED(50.0f), ypos + SCREEN_SCALE_FROM_BOTTOM(95.0f)), CRGBA(255, 255, 255, m_nMenuFadeAlpha > 255 ? 255 : m_nMenuFadeAlpha));
 
@@ -3954,7 +3970,7 @@ CMenuManager::PrintStats()
 			} else
 				alphaMult = 1.0f;
 
-			CFont::SetColor(CRGBA(LABEL_COLOR.r, LABEL_COLOR.g, LABEL_COLOR.b, FadeIn(255.0f * alphaMult)));
+			CFont::SetColor(CRGBA(LABEL_COLOR.r, LABEL_COLOR.g, LABEL_COLOR.b, FadeIn(m_nMenuFadeAlpha * alphaMult)));
 			CFont::SetRightJustifyOff();
 			CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(STATS_ROW_X_MARGIN), ypos + y - MENU_Y(STATS_BOTTOM_MARGIN - STATS_TOP_MARGIN), gUString);
 			CFont::SetRightJustifyOn();
