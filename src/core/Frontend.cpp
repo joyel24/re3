@@ -37,6 +37,9 @@
 
 uint32 m_nStartPauseTimer;
 uint32 m_nEndPauseTimer;
+float xpos = 0.0f;
+float ypos = 0.0f;
+int m_nSlidingDir = SLIDE_TO_BOTTOM;
 
 // Game has colors inlined in code.
 // For easier modification we collect them here:
@@ -1092,7 +1095,7 @@ CMenuManager::Draw()
 	if (aScreens[m_nCurrScreen].m_ScreenName[0] != '\0') {
 		
 		SET_FONT_FOR_MENU_HEADER
-		CFont::PrintString(PAGE_NAME_X(MENUHEADER_POS_X), SCREEN_SCALE_FROM_BOTTOM(MENUHEADER_POS_Y), TheText.Get(aScreens[m_nCurrScreen].m_ScreenName));
+		CFont::PrintString(xpos + PAGE_NAME_X(MENUHEADER_POS_X), SCREEN_SCALE_FROM_BOTTOM(MENUHEADER_POS_Y), TheText.Get(aScreens[m_nCurrScreen].m_ScreenName));
 
 		// Weird place to put that.
 		nextYToUse += 24.0f + 10.0f;
@@ -1673,8 +1676,8 @@ CMenuManager::Draw()
 #endif
 			if (i == m_nCurrOption && itemsAreSelectable) {
 #ifdef PS2_LIKE_MENU
-				CSprite2d::DrawRect(CRect(MENU_X_LEFT_ALIGNED(29.0f), MENU_Y(bitAboveNextItemY),
-											MENU_X_RIGHT_ALIGNED(29.0f), MENU_Y(usableLineHeight + nextItemY)),
+				CSprite2d::DrawRect(CRect(xpos + MENU_X_LEFT_ALIGNED(29.0f), MENU_Y(bitAboveNextItemY),
+											xpos + MENU_X_RIGHT_ALIGNED(29.0f), MENU_Y(usableLineHeight + nextItemY)),
 											CRGBA(SELECTION_HIGHLIGHTBG_COLOR.r, SELECTION_HIGHLIGHTBG_COLOR.g, SELECTION_HIGHLIGHTBG_COLOR.b, FadeIn(SELECTION_HIGHLIGHTBG_COLOR.a)));
 #else
 				// We keep stretching, because we also stretch background image and we want that bar to be aligned with borders of background
@@ -2590,15 +2593,22 @@ CMenuManager::DrawFrontEndSaveZone()
 #endif
 
 #ifdef PS2_LIKE_MENU
+enum
+{
+	SLIDE_TO_BOTTOM = 0,
+	SLIDE_TO_RIGHT,
+	SLIDE_TO_TOP,
+	SLIDE_TO_LEFT,
+	SLIDE_MAX
+};
+
 void
 CMenuManager::DrawFrontEndNormal()
 {
 	CSprite2d::InitPerFrame();
 	CFont::InitPerFrame();
 	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
-
-	float xpos = 0.0f;
-	float ypos = 0.0f;
+	m_nSlidingDir = CGeneral::GetRandomNumber() & (SLIDE_MAX-1);
 
 	if ( m_nStartPauseTimer != 0 && m_nStartPauseTimer >= CTimer::GetTimeInMillisecondsPauseMode() )
 	{
@@ -3846,7 +3856,7 @@ CMenuManager::PrintBriefs()
 			newColor.a = FadeIn(255);
 			CFont::SetColor(newColor);
 #endif
-			CFont::PrintString(MENU_X_LEFT_ALIGNED(BRIEFS_LINE_X), nextY, gUString);
+			CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(BRIEFS_LINE_X), nextY, gUString);
 			nextY += MENU_Y(BRIEFS_LINE_HEIGHT);
 		}
 	}
@@ -3873,7 +3883,7 @@ CMenuManager::PrintErrorMessage()
 	CFont::SetBackGroundOnlyTextOn();
 	CFont::SetWrapx(SCREEN_SCALE_FROM_RIGHT(MENU_X_MARGIN));
 #ifdef FIX_BUGS
-	CFont::PrintString(SCREEN_SCALE_X(50.0f), SCREEN_SCALE_Y(180.0f), TheText.Get(CPad::bDisplayNoControllerMessage ? "NOCONT" : "WRCONT"));
+	CFont::PrintString(xpos + SCREEN_SCALE_X(50.0f), SCREEN_SCALE_Y(180.0f), TheText.Get(CPad::bDisplayNoControllerMessage ? "NOCONT" : "WRCONT"));
 #else
 	CFont::PrintString(SCREEN_SCALE_X(50.0f), SCREEN_SCALE_Y(40.0f), TheText.Get(CPad::bDisplayNoControllerMessage ? "NOCONT" : "WRCONT"));
 #endif
@@ -3934,9 +3944,9 @@ CMenuManager::PrintStats()
 
 			CFont::SetColor(CRGBA(LABEL_COLOR.r, LABEL_COLOR.g, LABEL_COLOR.b, FadeIn(255.0f * alphaMult)));
 			CFont::SetRightJustifyOff();
-			CFont::PrintString(MENU_X_LEFT_ALIGNED(STATS_ROW_X_MARGIN), y - MENU_Y(STATS_BOTTOM_MARGIN - STATS_TOP_MARGIN), gUString);
+			CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(STATS_ROW_X_MARGIN), y - MENU_Y(STATS_BOTTOM_MARGIN - STATS_TOP_MARGIN), gUString);
 			CFont::SetRightJustifyOn();
-			CFont::PrintString(MENU_X_RIGHT_ALIGNED(STATS_ROW_X_MARGIN), y - MENU_Y(STATS_BOTTOM_MARGIN - STATS_TOP_MARGIN), gUString2);
+			CFont::PrintString(xpos + MENU_X_RIGHT_ALIGNED(STATS_ROW_X_MARGIN), y - MENU_Y(STATS_BOTTOM_MARGIN - STATS_TOP_MARGIN), gUString2);
 		}
 	}
 	// Game doesn't do that, but it's better
@@ -3944,14 +3954,14 @@ CMenuManager::PrintStats()
 
 	CFont::SetColor(CRGBA(LABEL_COLOR.r, LABEL_COLOR.g, LABEL_COLOR.b, FadeIn(255)));
 	CFont::SetRightJustifyOff();
-	CFont::PrintString(nextX, MENU_Y(STATS_RATING_Y), TheText.Get("CRIMRA"));
+	CFont::PrintString(xpos + nextX, MENU_Y(STATS_RATING_Y), TheText.Get("CRIMRA"));
 	nextX += MENU_X(10.0f) + CFont::GetStringWidth(TheText.Get("CRIMRA"), true);
 	UnicodeStrcpy(gUString, CStats::FindCriminalRatingString());
-	CFont::PrintString(nextX, MENU_Y(STATS_RATING_Y), gUString);
+	CFont::PrintString(xpos + nextX, MENU_Y(STATS_RATING_Y), gUString);
 	nextX += MENU_X(6.0f) + CFont::GetStringWidth(gUString, true);
 	sprintf(gString, "%d", CStats::FindCriminalRatingNumber());
 	AsciiToUnicode(gString, gUString);
-	CFont::PrintString(nextX, MENU_Y(STATS_RATING_Y), gUString);
+	CFont::PrintString(xpos + nextX, MENU_Y(STATS_RATING_Y), gUString);
 
 	// ::Draw already does that.
 	/*
@@ -5479,15 +5489,16 @@ CMenuManager::SwitchMenuOnAndOff()
 		if (m_bMenuActive) {
 			CTimer::StartUserPause();
 			m_nStartPauseTimer = CTimer::GetTimeInMillisecondsPauseMode() + 800;
+			m_nSlidingDir = CGeneral::GetRandomNumber() & (SLIDE_MAX-1);
 		} else {
 #ifdef PS2_LIKE_MENU
 			bottomBarActive = false;
 #endif
 			m_nEndPauseTimer = CTimer::GetTimeInMillisecondsPauseMode() + 800;
+			m_nSlidingDir = CGeneral::GetRandomNumber() & (SLIDE_MAX-1);
 #ifdef FIX_BUGS
 			ThingsToDoBeforeGoingBack();
 #endif
-			ShutdownJustMenu();
 			SaveSettings();
 #ifdef LOAD_INI_SETTINGS
 			//SaveINIControllerSettings();
@@ -5546,6 +5557,12 @@ CMenuManager::SwitchMenuOnAndOff()
 
 	m_bStartUpFrontEndRequested = false;
 	m_bShutDownFrontEndRequested = false;
+	if ( m_nEndPauseTimer != 0 && CTimer::GetTimeInMillisecondsPauseMode() >= m_nEndPauseTimer )
+	{
+		m_nEndPauseTimer = 0;
+		m_bMenuActive = false;
+		CTimer::EndUserPause();
+	}
 }
 
 void
