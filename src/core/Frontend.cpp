@@ -35,6 +35,9 @@
 #include "FileLoader.h"
 #include "frontendoption.h"
 
+uint32 m_nStartPauseTimer;
+uint32 m_nEndPauseTimer;
+
 // Game has colors inlined in code.
 // For easier modification we collect them here:
 const CRGBA LABEL_COLOR(235, 170, 50, 255);
@@ -2594,6 +2597,21 @@ CMenuManager::DrawFrontEndNormal()
 	CFont::InitPerFrame();
 	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
 
+	float xpos = 0.0f;
+	float ypos = 0.0f;
+
+	if ( m_nStartPauseTimer != 0 && m_nStartPauseTimer >= CTimer::GetTimeInMillisecondsPauseMode() )
+	{
+		float slide = float(m_nStartPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f;
+		xpos = slide * X(700.0f);  
+	}
+
+	if ( m_nEndPauseTimer != 0 && m_nEndPauseTimer >= CTimer::GetTimeInMillisecondsPauseMode() )
+	{
+		float slide = float(m_nEndPauseTimer - CTimer::GetTimeInMillisecondsPauseMode()) / 800.0f;
+		xpos = (1.0f - slide) * X(700.0f); 
+	}
+
 	if (!m_bGameNotLoaded) {
 		CSprite2d *bg = LoadSplash(nil);
 		bg->Draw(CRect(0.0f, SCREEN_HEIGHT - (SCREEN_WIDTH * 3.0f/4.0f), SCREEN_WIDTH, SCREEN_HEIGHT), CRGBA(48, 48, 48, 255));
@@ -2605,10 +2623,10 @@ CMenuManager::DrawFrontEndNormal()
 	RwRenderStateSet(rwRENDERSTATEZTESTENABLE, (void*)FALSE);
 	RwRenderStateSet(rwRENDERSTATEZWRITEENABLE, (void*)FALSE);
 	RwRenderStateSet(rwRENDERSTATEVERTEXALPHAENABLE, (void*)TRUE);
-	m_aFrontEndSprites[FE2_MAINPANEL_UL].Draw(CRect(MENU_X_LEFT_ALIGNED(0.0f) - 1.0f, 0.0f, (SCREEN_WIDTH / 2) + 2.0f, (SCREEN_HEIGHT / 2) + 1.0f), CRGBA(255, 255, 255, 255));
-	m_aFrontEndSprites[FE2_MAINPANEL_UR].Draw(CRect((SCREEN_WIDTH / 2) - 1.5f, 0.0f, MENU_X_RIGHT_ALIGNED(0.0f), (SCREEN_HEIGHT / 2) + 1.0f) , CRGBA(255, 255, 255, 255));
-	m_aFrontEndSprites[FE2_MAINPANEL_DL].Draw(CRect(MENU_X_LEFT_ALIGNED(0.0f) - 1.0f, (SCREEN_HEIGHT / 2) - 1.0f, (SCREEN_WIDTH / 2) + 2.0f, SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
-	m_aFrontEndSprites[FE2_MAINPANEL_DR].Draw(CRect((SCREEN_WIDTH / 2) - 1.5f, (SCREEN_HEIGHT / 2) - 1.0f, MENU_X_RIGHT_ALIGNED(0.0f), SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_UL].Draw(CRect(MENU_X_LEFT_ALIGNED(xpos) - 1.0f, 0.0f, MENU_X_LEFT_ALIGNED(xpos) + (SCREEN_WIDTH / 2) + 2.0f, (SCREEN_HEIGHT / 2) + 1.0f), CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_UR].Draw(CRect(MENU_X_LEFT_ALIGNED(xpos) + (SCREEN_WIDTH / 2) - 1.5f, 0.0f, MENU_X_LEFT_ALIGNED(xpos) + MENU_X_RIGHT_ALIGNED(0.0f), (SCREEN_HEIGHT / 2) + 1.0f) , CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_DL].Draw(CRect(MENU_X_LEFT_ALIGNED(xpos) - 1.0f, (SCREEN_HEIGHT / 2) - 1.0f, MENU_X_LEFT_ALIGNED(xpos) + (SCREEN_WIDTH / 2) + 2.0f, SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
+	m_aFrontEndSprites[FE2_MAINPANEL_DR].Draw(CRect(MENU_X_LEFT_ALIGNED(xpos) + (SCREEN_WIDTH / 2) - 1.5f, (SCREEN_HEIGHT / 2) - 1.0f, MENU_X_LEFT_ALIGNED(xpos) + MENU_X_RIGHT_ALIGNED(0.0f), SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
 
 	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
 	eFrontendSprites currentSprite;
@@ -5460,10 +5478,12 @@ CMenuManager::SwitchMenuOnAndOff()
 
 		if (m_bMenuActive) {
 			CTimer::StartUserPause();
+			m_nStartPauseTimer = CTimer::GetTimeInMillisecondsPauseMode() + 800;
 		} else {
 #ifdef PS2_LIKE_MENU
 			bottomBarActive = false;
 #endif
+			m_nEndPauseTimer = CTimer::GetTimeInMillisecondsPauseMode() + 800;
 #ifdef FIX_BUGS
 			ThingsToDoBeforeGoingBack();
 #endif
