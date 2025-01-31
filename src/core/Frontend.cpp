@@ -5502,6 +5502,7 @@ CMenuManager::SwitchMenuOnAndOff()
 
 		if (m_bMenuActive) {
 			CTimer::StartUserPause();
+			xpos = ypos = 0.0f;
 			m_nStartPauseTimer = CTimer::GetTimeInMillisecondsPauseMode() + 800;
 			m_nSlidingDir = CGeneral::GetRandomNumber() & (SLIDE_MAX-1);
 		} else {
@@ -5571,7 +5572,7 @@ CMenuManager::SwitchMenuOnAndOff()
 
 	m_bStartUpFrontEndRequested = false;
 	m_bShutDownFrontEndRequested = false;
-	if ( m_nEndPauseTimer != 0 && CTimer::GetTimeInMillisecondsPauseMode() >= m_nEndPauseTimer )
+	if ( m_nEndPauseTimer != 0 && CTimer::GetTimeInMillisecondsPauseMode() <= m_nEndPauseTimer )
 	{
 		m_nEndPauseTimer = 0;
 		m_bMenuActive = false;
