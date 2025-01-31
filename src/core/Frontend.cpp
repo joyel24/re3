@@ -2680,7 +2680,7 @@ CMenuManager::DrawFrontEndNormal()
 		}
 	}
 
-	m_aFrontEndSprites[currentSprite].Draw(CRect(MENU_X_LEFT_ALIGNED(50.0f), MENU_Y(50.0f), MENU_X_RIGHT_ALIGNED(50.0f), SCREEN_SCALE_FROM_BOTTOM(95.0f)), CRGBA(255, 255, 255, m_nMenuFadeAlpha > 255 ? 255 : m_nMenuFadeAlpha));
+	m_aFrontEndSprites[currentSprite].Draw(CRect(xpos + MENU_X_LEFT_ALIGNED(50.0f), MENU_Y(50.0f), xpos + MENU_X_RIGHT_ALIGNED(50.0f), SCREEN_SCALE_FROM_BOTTOM(95.0f)), CRGBA(255, 255, 255, m_nMenuFadeAlpha > 255 ? 255 : m_nMenuFadeAlpha));
 
 	RwRenderStateSet(rwRENDERSTATETEXTUREFILTER, (void*)rwFILTERLINEAR);
 	RwRenderStateSet(rwRENDERSTATETEXTUREADDRESS, (void*)rwTEXTUREADDRESSCLAMP);
@@ -2718,19 +2718,19 @@ CMenuManager::DrawFrontEndNormal()
 
 		default:
 		{
-			CFont::PrintString(MENU_X_LEFT_ALIGNED(52.0f), MENU_Y(360.0f), TheText.Get("FEDS_SE"));
-			CFont::PrintString(MENU_X_LEFT_ALIGNED(52.0f), MENU_Y(372.0f), TheText.Get("FEDS_BA"));
+			CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(52.0f), MENU_Y(360.0f), TheText.Get("FEDS_SE"));
+			CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(52.0f), MENU_Y(372.0f), TheText.Get("FEDS_BA"));
 			if (!m_bGameNotLoaded)
-				CFont::PrintString(MENU_X_LEFT_ALIGNED(52.0f), MENU_Y(384.0f), TheText.Get("FEDS_ST"));
+				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(52.0f), MENU_Y(384.0f), TheText.Get("FEDS_ST"));
 
 			if (bottomBarActive)
-				CFont::PrintString(MENU_X_LEFT_ALIGNED(242.0f), MENU_Y(372.0f), TheText.Get("FEDS_AM")); // <>-CHANGE MENU
+				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(242.0f), MENU_Y(372.0f), TheText.Get("FEDS_AM")); // <>-CHANGE MENU
 			else if (m_nCurrScreen != MENUPAGE_STATS && m_nCurrScreen != MENUPAGE_BRIEFS) {
-				CFont::PrintString(MENU_X_LEFT_ALIGNED(242.0f), MENU_Y(360.0f + 3.5f), TheText.Get("FEA_UP")); // ;
-				CFont::PrintString(MENU_X_LEFT_ALIGNED(242.0f), MENU_Y(384.0f - 3.5f), TheText.Get("FEA_DO")); // =
-				CFont::PrintString(MENU_X_LEFT_ALIGNED(242.0f - 10.0f), MENU_Y(372.0f), TheText.Get("FEA_LE")); // <
-				CFont::PrintString(MENU_X_LEFT_ALIGNED(242.0f + 11.0f), MENU_Y(372.0f), TheText.Get("FEA_RI")); // >
-				CFont::PrintString(MENU_X_LEFT_ALIGNED(242.0f + 20.0f), MENU_Y(372.0f), TheText.Get("FEDSAS3")); // - CHANGE SELECTION
+				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(242.0f), MENU_Y(360.0f + 3.5f), TheText.Get("FEA_UP")); // ;
+				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(242.0f), MENU_Y(384.0f - 3.5f), TheText.Get("FEA_DO")); // =
+				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(242.0f - 10.0f), MENU_Y(372.0f), TheText.Get("FEA_LE")); // <
+				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(242.0f + 11.0f), MENU_Y(372.0f), TheText.Get("FEA_RI")); // >
+				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(242.0f + 20.0f), MENU_Y(372.0f), TheText.Get("FEDSAS3")); // - CHANGE SELECTION
 			}
 
 			break;
@@ -2747,8 +2747,8 @@ CMenuManager::DrawFrontEndNormal()
 	if (curBottomBarOption != -1) {
 
 		// This active tab sprite is needlessly big
-		m_aFrontEndSprites[FE2_TABACTIVE].Draw(CRect(leftPadding - MENU_X(2.0f) + (optionWidth) * curBottomBarOption, optionTop,
-			leftPadding - MENU_X(5.0f) + optionWidth * (curBottomBarOption + 2), optionBottom + MENU_Y(rawOptionHeight - 9.0f)),
+		m_aFrontEndSprites[FE2_TABACTIVE].Draw(CRect(xpos + leftPadding - MENU_X(2.0f) + (optionWidth) * curBottomBarOption, optionTop,
+			xpos + leftPadding - MENU_X(5.0f) + optionWidth * (curBottomBarOption + 2), optionBottom + MENU_Y(rawOptionHeight - 9.0f)),
 			CRGBA(CRGBA(255, 255, 255, 255)));
 
 		for (int i = 0; i < bbTabCount; i++) {
@@ -2770,7 +2770,7 @@ CMenuManager::DrawFrontEndNormal()
 
 			str = TheText.Get(bbNames[i].name);
 			
-			CFont::PrintString(xStart + MENU_X(4.0f), SCREEN_SCALE_FROM_BOTTOM(39.0f), str);
+			CFont::PrintString(xpos + xStart + MENU_X(4.0f), SCREEN_SCALE_FROM_BOTTOM(39.0f), str);
 			
 		}
 	}
