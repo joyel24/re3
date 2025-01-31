@@ -634,7 +634,7 @@ void CHud::Draw()
 
 				CFont::SetColor(ARMOUR_COLOR);
 
-				CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(219.0f), SCREEN_SCALE_Y(65.0f), sPrint);
+				CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(219.0f), SCREEN_SCALE_Y(85.0f), sPrint);
 
 				if (!CWorld::Players[CWorld::PlayerInFocus].m_nTimeLastArmourLoss || CTimer::GetTimeInMilliseconds() > CWorld::Players[CWorld::PlayerInFocus].m_nTimeLastArmourLoss + 2000 || FRAMECOUNTER & 1) {					
 					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(219.0f) - SCREEN_SCALE_X(54.0f) + SCREEN_SCALE_X(2.0f), SCREEN_SCALE_Y(85.0f), sPrintIcon);
@@ -1214,7 +1214,7 @@ void CHud::Draw()
 				CFont::SetJustifyOff();
 				CFont::SetBackgroundOff();
 				CFont::SetBackGroundOnlyTextOff();
-				CFont::SetScale(SCREEN_SCALE_X_PC(1.8f), SCREEN_SCALE_Y_PC(3.6f));
+				CFont::SetScale(SCREEN_SCALE_X_PC(1.35f), SCREEN_SCALE_Y_PC(2.7f));
 				CFont::SetPropOn();
 				CFont::SetCentreOn();
 				CFont::SetCentreSize(SCREEN_SCALE_X(DEFAULT_SCREEN_WIDTH - 25));
@@ -1252,13 +1252,13 @@ void CHud::Draw()
 #if defined(PS2_HUD) && !defined(FIX_BUGS) // yeah, that's right. ps2 uses y=ScaleX(a)
 				CFont::PrintString(SCREEN_WIDTH / 2 + SCREEN_SCALE_X_FIX(2.0f), (SCREEN_WIDTH / 2) - SCREEN_SCALE_X(120.0f) + SCREEN_SCALE_Y_FIX(2.0f), m_BigMessage[0]);
 #else
-				CFont::PrintString(SCREEN_WIDTH / 2 + SCREEN_SCALE_X_FIX(2.0f), (SCREEN_HEIGHT / 2) - SCREEN_SCALE_Y(BIGMESSAGE_Y_OFFSET) + SCREEN_SCALE_Y_FIX(2.0f), m_BigMessage[0]);
+				CFont::PrintString(SCREEN_WIDTH / 2 + SCREEN_SCALE_X_FIX(2.0f), (SCREEN_HEIGHT / 2) + SCREEN_SCALE_Y_FIX(2.0f), m_BigMessage[0]);
 #endif
 				CFont::SetColor(CRGBA(BIGMESSAGE_COLOR.r, BIGMESSAGE_COLOR.g, BIGMESSAGE_COLOR.b, BigMessageAlpha[0]));
 #if defined(PS2_HUD) && !defined(FIX_BUGS) // same
 				CFont::PrintString(SCREEN_WIDTH / 2, (SCREEN_WIDTH  / 2) - SCREEN_SCALE_X(120.0f), m_BigMessage[0]);
 #else
-				CFont::PrintString(SCREEN_WIDTH / 2, (SCREEN_HEIGHT / 2) - SCREEN_SCALE_Y(18.0f), m_BigMessage[0]);
+				CFont::PrintString(SCREEN_WIDTH / 2, (SCREEN_HEIGHT / 2), m_BigMessage[0]);
 #endif
 			}
 			else {
