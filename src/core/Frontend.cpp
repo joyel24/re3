@@ -3998,8 +3998,8 @@ CMenuManager::Process(void)
 	// Just a hack by R* to not make game continuously resume/pause. But we it seems we can live with it.
 	if (CPad::GetPad(0)->GetEscapeJustDown())
 		RequestFrontEndStartUp();
-
-	SwitchMenuOnAndOff();
+	if ( m_nStartPauseTimer == 0 && m_nEndPauseTimer == 0 )
+		SwitchMenuOnAndOff();
 
 	// Be able to re-open menu correctly.
 	if (m_bMenuActive) {
