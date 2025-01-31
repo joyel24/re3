@@ -2744,13 +2744,18 @@ CMenuManager::DrawFrontEndNormal()
 
 		default:
 		{
-			CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(52.0f), ypos + MENU_Y(360.0f), TheText.Get("FEDS_SE"));
-			CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(52.0f), ypos + MENU_Y(372.0f), TheText.Get("FEDS_BA"));
-			if (!m_bGameNotLoaded)
-				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(52.0f), ypos + MENU_Y(384.0f), TheText.Get("FEDS_ST"));
+			if (m_nCurrScreen != MENUPAGE_STATS && m_nCurrScreen != MENUPAGE_BRIEFS) {
+				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(52.0f), ypos + MENU_Y(360.0f), TheText.Get("FEDS_SE"));
+				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(52.0f), ypos + MENU_Y(372.0f), TheText.Get("FEDS_BA"));
+				if (!m_bGameNotLoaded)
+					CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(52.0f), ypos + MENU_Y(384.0f), TheText.Get("FEDS_ST"));
+			}
+			else {
+				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(52.0f), ypos + MENU_Y(360.0f), TheText.Get("FEDS_ST"));
+			}
 
 			if (bottomBarActive)
-				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(242.0f), ypos + MENU_Y(372.0f), TheText.Get("FEDS_AM")); // <>-CHANGE MENU
+				CFont::PrintString(xpos + (m_nCurrScreen == MENUPAGE_STATS ? MENU_X_LEFT_ALIGNED(52.0f) : MENU_X_LEFT_ALIGNED(242.0f)), ypos + MENU_Y(372.0f), TheText.Get("FEDS_AM")); // <>-CHANGE MENU
 			else if (m_nCurrScreen != MENUPAGE_STATS && m_nCurrScreen != MENUPAGE_BRIEFS) {
 				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(242.0f), ypos + MENU_Y(360.0f + 3.5f), TheText.Get("FEA_UP")); // ;
 				CFont::PrintString(xpos + MENU_X_LEFT_ALIGNED(242.0f), ypos + MENU_Y(384.0f - 3.5f), TheText.Get("FEA_DO")); // =
@@ -4592,7 +4597,7 @@ CMenuManager::ProcessButtonPresses(void)
 #endif
 
 #ifdef PS2_LIKE_MENU
-	if (CPad::GetPad(0)->GetLeftMouseJustDown() && hoveredBottomBarOption != -1) {
+	if (CPad::GetPad(0)->GetLeftMouseJustDown() && hoveredBottomBarOption != -1 && m_nCurrScreen != MENUPAGE_STATS && m_nCurrScreen != MENUPAGE_BRIEFS) {
 		DMAudio.PlayFrontEndSound(SOUND_FRONTEND_MENU_NAVIGATION, 0);
 		bottomBarActive = false;
 		curBottomBarOption = hoveredBottomBarOption;
@@ -4601,7 +4606,7 @@ CMenuManager::ProcessButtonPresses(void)
 			DMAudio.PlayFrontEndTrack(m_PrefsRadioStation, TRUE);
 		return;
 	} else if (bottomBarActive) {
-		if (CPad::GetPad(0)->GetEnterJustDown() || CPad::GetPad(0)->GetCrossJustDown()) {
+		if ((CPad::GetPad(0)->GetEnterJustDown() || CPad::GetPad(0)->GetCrossJustDown()) && m_nCurrScreen != MENUPAGE_STATS && m_nCurrScreen != MENUPAGE_BRIEFS ) {
 			DMAudio.PlayFrontEndSound(SOUND_FRONTEND_MENU_NAVIGATION, 0);
 			bottomBarActive = false;
 
