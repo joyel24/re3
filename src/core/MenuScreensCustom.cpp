@@ -103,14 +103,14 @@ void RestoreDefGraphics(int8 action) {
 		return;
 
 	#ifdef PS2_ALPHA_TEST
-		gPS2alphaTest = false;
+		gPS2alphaTest = true;
 	#endif
 	#ifdef MULTISAMPLING
 		FrontEndMenuManager.m_nPrefsMSAALevel = FrontEndMenuManager.m_nDisplayMSAALevel = 0;
 	#endif
 	#ifdef NO_ISLAND_LOADING
 	    	if (!FrontEndMenuManager.m_bGameNotLoaded) {
-	    		FrontEndMenuManager.m_PrefsIslandLoading = FrontEndMenuManager.ISLAND_LOADING_LOW;
+	    		FrontEndMenuManager.m_PrefsIslandLoading = FrontEndMenuManager.ISLAND_LOADING_HIGH;
 			CCollision::bAlreadyLoaded = false;
 			CModelInfo::RemoveColModelsFromOtherLevels(CGame::currLevel);
 			CStreaming::RemoveUnusedBigBuildings(CGame::currLevel);
@@ -118,7 +118,7 @@ void RestoreDefGraphics(int8 action) {
 			CStreaming::RequestIslands(CGame::currLevel);
 			CStreaming::LoadAllRequestedModels(true);
 	    	} else
-	    		FrontEndMenuManager.m_PrefsIslandLoading = FrontEndMenuManager.ISLAND_LOADING_LOW;
+	    		FrontEndMenuManager.m_PrefsIslandLoading = FrontEndMenuManager.ISLAND_LOADING_HIGH;
 	#endif
 	#ifdef GRAPHICS_MENU_OPTIONS // otherwise Frontend will handle those
 		CMenuManager::m_PrefsFrameLimiter = true;
@@ -146,7 +146,7 @@ void RestoreDefDisplay(int8 action) {
 		return;
 
 	#ifdef CUTSCENE_BORDERS_SWITCH
-		CMenuManager::m_PrefsCutsceneBorders = true;
+		CMenuManager::m_PrefsCutsceneBorders = false;
 	#endif
 	#ifdef FREE_CAM
 		TheCamera.bFreeCam = false;
@@ -156,8 +156,8 @@ void RestoreDefDisplay(int8 action) {
 	#endif
 	#ifdef GRAPHICS_MENU_OPTIONS // otherwise Frontend will handle those
 		CMenuManager::m_PrefsBrightness = 256;
-		CMenuManager::m_PrefsLOD = 1.2f;
-		CRenderer::ms_lodDistScale = 1.2f;
+		CMenuManager::m_PrefsLOD = 1.8f;
+		CRenderer::ms_lodDistScale = 1.8f;
 		CMenuManager::m_PrefsShowSubtitles = true;
 		FrontEndMenuManager.SaveSettings();
 	#endif
