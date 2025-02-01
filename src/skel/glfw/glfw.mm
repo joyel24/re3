@@ -2367,10 +2367,10 @@ void CapturePad(RwInt32 padID)
 	// glfw returns 0.0 for non-existent axises(which is bullocks) so we treat it as deadzone, and keep value of previous frame.
 	// otherwise if this axis is present, -1 = released, 1 = pressed
 	if (lt != 0.0f)
-		ControlsManager.m_NewState.mappedButtons[15] = lt > -0.8f;
+		ControlsManager.m_NewState.mappedButtons[15] = lt > 0.2f;
 		ControlsManager.m_NewState.lt = (uint8)((lt) * 255.0f);
 	if (rt != 0.0f)
-		ControlsManager.m_NewState.mappedButtons[16] = rt > -0.8f;
+		ControlsManager.m_NewState.mappedButtons[16] = rt > 0.2f;
 		ControlsManager.m_NewState.rt = (uint8)((rt) * 255.0f);
 	// TODO? L2-R2 axes(not buttons-that's fine) on joysticks that don't have SDL gamepad mapping AREN'T handled, and I think it's impossible to do without mapping.
 
@@ -2399,17 +2399,13 @@ void CapturePad(RwInt32 padID)
 		
 		CPad *pad = CPad::GetPad(bs.padID);
 
-		if ( Abs(positionx)  > 0.3f )
-			pad->PCTempJoyState.LeftStickX	= (int32)(positionx  * 128.0f);
+		pad->PCTempJoyState.LeftStickX	= (int32)(positionx  * 128.0f);
 		
-		if ( Abs(positiony)  > 0.3f )
-			pad->PCTempJoyState.LeftStickY	= (int32)(positiony  * 128.0f);
+		pad->PCTempJoyState.LeftStickY	= (int32)(positiony  * 128.0f);
 		
-		if ( Abs(rightStickx) > 0.3f )
-			pad->PCTempJoyState.RightStickX = (int32)(rightStickx * 128.0f);
+		pad->PCTempJoyState.RightStickX = (int32)(rightStickx * 128.0f);
 
-		if ( Abs(rightSticky) > 0.3f )
-			pad->PCTempJoyState.RightStickY = (int32)(rightSticky * 128.0f);
+		pad->PCTempJoyState.RightStickY = (int32)(rightSticky * 128.0f);
 	}
 
 	_psHandleVibration();
