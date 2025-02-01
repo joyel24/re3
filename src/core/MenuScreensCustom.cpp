@@ -127,7 +127,7 @@ void RestoreDefGraphics(int8 action) {
 		CMenuManager::m_PrefsUseWideScreen = false;
 		FrontEndMenuManager.m_nDisplayVideoMode = FrontEndMenuManager.m_nPrefsVideoMode;
 		CPostFX::MotionBlurOn = true;
-		CPostFX::EffectSwitch = POSTFX_NORMAL;
+		CPostFX::EffectSwitch = CPostFX::POSTFX_NORMAL;
 		CPostFX::Open(Scene.camera);
 		FrontEndMenuManager.SaveSettings();
 	#endif
