@@ -1,15 +1,7 @@
 #pragma once
 
-#ifndef FINAL
-// defined in RwHelpder.cpp
-void PushRendergroup(const char *name);
-void PopRendergroup(void);
-#define PUSH_RENDERGROUP(str) PushRendergroup(str)
-#define POP_RENDERGROUP() PopRendergroup()
-#else
 #define PUSH_RENDERGROUP(str)
 #define POP_RENDERGROUP()
-#endif
 
 struct GlobalScene
 {
@@ -29,10 +21,6 @@ extern bool gbModelViewer;
 extern bool gbShowTimebars;
 #else
 #define gbShowTimebars false
-#endif
-
-#ifndef FINAL
-extern bool gbPrintMemoryUsage;
 #endif
 
 class CSprite2d;
