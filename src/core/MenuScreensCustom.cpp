@@ -126,17 +126,9 @@ void RestoreDefGraphics(int8 action) {
 		CMenuManager::m_PrefsVsync = true;
 		CMenuManager::m_PrefsUseWideScreen = false;
 		FrontEndMenuManager.m_nDisplayVideoMode = FrontEndMenuManager.m_nPrefsVideoMode;
-		#if GTA_VERSION >= GTA3_PC_11
-			if (_dwOperatingSystemVersion == OS_WIN98) {
-				CMBlur::BlurOn = false;
-				CMBlur::MotionBlurClose();
-			} else {
-				CMBlur::BlurOn = true;
-				CMBlur::MotionBlurOpen(Scene.camera);
-			}
-		#else
-			CMBlur::BlurOn = true;
-		#endif
+		CPostFX::MotionBlurOn = true;
+		CPostFX::EffectSwitch = POSTFX_NORMAL;
+		CPostFX::Open(Scene.camera);
 		FrontEndMenuManager.SaveSettings();
 	#endif
 }
