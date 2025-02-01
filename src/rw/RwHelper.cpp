@@ -192,7 +192,8 @@ GetFirstAtomic(RpClump *clump)
 	RpAtomic *atm;
 
 	atm = nil;
-	RpClumpForAllAtomics(clump, GetFirstAtomicCallback, &atm);
+	if (clump != nil)
+		RpClumpForAllAtomics(clump, GetFirstAtomicCallback, &atm);
 	return atm;
 }
 
@@ -229,7 +230,8 @@ RpAtomic*
 IsClumpSkinned(RpClump *clump)
 {
 	RpAtomic *atomic = nil;
-	RpClumpForAllAtomics(clump, isSkinnedCb, &atomic);
+	if (clump != nil)
+		RpClumpForAllAtomics(clump, isSkinnedCb, &atomic);
 	return atomic;
 }
 
