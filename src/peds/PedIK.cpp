@@ -142,7 +142,7 @@ CPedIK::GetComponentPosition(RwV3d &pos, uint32 node)
 	RwFrame *f;
 	RwMatrix *mat;
 #ifdef PED_SKIN
-	if(m_ped->GetClump() != nil && IsClumpSkinned(m_ped->GetClump())){
+	if( (m_ped->GetClump() != nil) && IsClumpSkinned(m_ped->GetClump())){
 		pos.x = 0.0f;
 		pos.y = 0.0f;
 		pos.z = 0.0f;
@@ -152,6 +152,13 @@ CPedIK::GetComponentPosition(RwV3d &pos, uint32 node)
 	}else
 #endif
 	{
+		if (m_ped->GetClump() == nil) {
+			pos.x = 0.0f;
+			pos.y = 0.0f;
+			pos.z = 0.0f;
+			return;
+		}
+		
 		f = m_ped->m_pFrames[node]->frame;
 		mat = RwFrameGetMatrix(f);
 		pos = mat->pos;
