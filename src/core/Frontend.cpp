@@ -4961,7 +4961,6 @@ CMenuManager::ProcessButtonPresses(void)
 
 						CPostFX::MotionBlurOn = true;
 						CPostFX::EffectSwitch = CPostFX::POSTFX_NORMAL;
-						CPostFX::Open(Scene.camera);
 
 #ifdef CUSTOM_FRONTEND_OPTIONS
 						extern void RestoreDefGraphics(int8);
@@ -5351,10 +5350,6 @@ CMenuManager::ProcessOnOffMenuOptions()
 		CPostFX::EffectSwitch = CPostFX::MotionBlurOn ? CPostFX::POSTFX_NORMAL : CPostFX::POSTFX_SIMPLE;
 		DMAudio.PlayFrontEndSound(SOUND_FRONTEND_MENU_SETTING_CHANGE, 0);
 		SaveSettings();
-		if (CPostFX::MotionBlurOn)
-			CPostFX::Open(Scene.camera);
-		else
-			CPostFX::Close();
 		break;
 	case MENUACTION_SUBTITLES:
 		m_PrefsShowSubtitles = !m_PrefsShowSubtitles;
