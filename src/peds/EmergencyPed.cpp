@@ -234,6 +234,7 @@ CEmergencyPed::MedicAI(void)
 				if (nearestAccident) {
 					m_pRevivedPed = nearestAccident->m_pVictim;
 					m_pRevivedPed->RegisterReference((CEntity**)&m_pRevivedPed);
+					assert(m_pRevivedPed != nil);
 					m_pRevivedPed->m_pedIK.GetComponentPosition(midPos, PED_MID);
 					m_pRevivedPed->m_pedIK.GetComponentPosition(headPos, PED_HEAD);
 					SetSeek((headPos + midPos) * 0.5f, 1.0f);
@@ -274,6 +275,7 @@ CEmergencyPed::MedicAI(void)
 							m_nEmergencyPedState = EMERGENCY_PED_STOP;
 							break;
 						}
+						assert(m_pRevivedPed != nil);
 						m_pRevivedPed->m_pedIK.GetComponentPosition(midPos, PED_MID);
 						m_pRevivedPed->m_pedIK.GetComponentPosition(headPos, PED_HEAD);
 						SetSeek((headPos + midPos) * 0.5f, nearestAccident->m_nMedicsPerformingCPR * 0.5f + 1.0f);
@@ -329,6 +331,7 @@ CEmergencyPed::MedicAI(void)
 				if (!m_pRevivedPed || m_pRevivedPed->m_fHealth > 0.0f)
 					m_nEmergencyPedState = EMERGENCY_PED_DETERMINE_NEXT_STATE;
 				else {
+					assert(m_pRevivedPed != nil);
 					m_pRevivedPed->m_pedIK.GetComponentPosition(midPos, PED_MID);
 					m_pRevivedPed->m_pedIK.GetComponentPosition(headPos, PED_HEAD);
 					midPos = (headPos + midPos) * 0.5f;
@@ -351,6 +354,7 @@ CEmergencyPed::MedicAI(void)
 					m_nEmergencyPedState = EMERGENCY_PED_DETERMINE_NEXT_STATE;
 					break;
 				}
+				assert(m_pRevivedPed != nil);
 				m_pRevivedPed->m_pedIK.GetComponentPosition(midPos, PED_MID);
 				m_pRevivedPed->m_pedIK.GetComponentPosition(headPos, PED_HEAD);
 				midPos = (headPos + midPos) * 0.5f;
