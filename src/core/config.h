@@ -380,7 +380,7 @@ enum Config {
 #endif
 
 #ifndef USE_ADVANCED_SCRIPT_DEBUG_OUTPUT
-#define USE_BASIC_SCRIPT_DEBUG_OUTPUT
+//#define USE_BASIC_SCRIPT_DEBUG_OUTPUT
 #endif
 
 #ifdef MASTER
@@ -409,7 +409,7 @@ enum Config {
 //#define PEDS_REPORT_CRIMES_ON_PHONE // requires COMPATIBLE_SAVES
 
 // Camera
-#define PS2_CAM_TRANSITION	// old way of transitioning between cam modes
+//#define PS2_CAM_TRANSITION	// old way of transitioning between cam modes
 #define IMPROVED_CAMERA		// Better Debug cam, and maybe more in the future
 #define FREE_CAM		// Rotating cam
 
