@@ -4960,7 +4960,7 @@ CMenuManager::ProcessButtonPresses(void)
 						m_nDisplayVideoMode = m_nPrefsVideoMode;
 
 						CPostFX::MotionBlurOn = true;
-						CPostFX::EffectSwitch = POSTFX_NORMAL;
+						CPostFX::EffectSwitch = CPostFX::POSTFX_NORMAL;
 						CPostFX::Open(Scene.camera);
 
 #ifdef CUSTOM_FRONTEND_OPTIONS
@@ -5348,7 +5348,7 @@ CMenuManager::ProcessOnOffMenuOptions()
 		break;
 	case MENUACTION_TRAILS:
 		CPostFX::MotionBlurOn = !CPostFX::MotionBlurOn;
-		CPostFX::EffectSwitch = CPostFX::MotionBlurOn ? POSTFX_NORMAL : POSTFX_SIMPLE;
+		CPostFX::EffectSwitch = CPostFX::MotionBlurOn ? CPostFX::POSTFX_NORMAL : CPostFX::POSTFX_SIMPLE;
 		DMAudio.PlayFrontEndSound(SOUND_FRONTEND_MENU_SETTING_CHANGE, 0);
 		SaveSettings();
 		if (CPostFX::MotionBlurOn)
