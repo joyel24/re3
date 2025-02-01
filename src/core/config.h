@@ -301,10 +301,10 @@ enum Config {
 #define ANISOTROPIC_FILTERING	// set all textures to max anisotropic filtering
 //#define USE_TEXTURE_POOL
 #ifdef LIBRW
-#define EXTENDED_COLOURFILTER		// more options for colour filter (replaces mblur)
+//#define EXTENDED_COLOURFILTER		// more options for colour filter (replaces mblur)
 #define EXTENDED_PIPELINES		// custom render pipelines (includes Neo)
 #define SCREEN_DROPLETS			// neo water droplets
-#define NEW_RENDERER		// leeds-like world rendering, needs librw
+//#define NEW_RENDERER		// leeds-like world rendering, needs librw
 #endif
 
 #define FIX_SPRITES	// fix sprites aspect ratio(moon, coronas, particle etc)
@@ -333,7 +333,7 @@ enum Config {
 
 // Hud, frontend and radar
 #define PS2_HUD
-#define HUD_ENHANCEMENTS	// Adjusts some aspects to make the HUD look/behave a little bit better.
+// #define HUD_ENHANCEMENTS	// Adjusts some aspects to make the HUD look/behave a little bit better.
 // #define BETA_SLIDING_TEXT
 #define TRIANGULAR_BLIPS	// height indicating triangular radar blips, as in VC
 #define FIX_RADAR			// use radar size from early version before R* broke it
