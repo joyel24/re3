@@ -4172,6 +4172,7 @@ CMenuManager::Process(void)
 	if ( m_nStartPauseTimer != 0 && CTimer::GetTimeInMillisecondsPauseMode() >= m_nStartPauseTimer )
 	{
 		xpos = ypos = 0.0f;
+		m_someAlpha = 255;
 		m_nStartPauseTimer = 0;
 	}
 
@@ -4179,6 +4180,7 @@ CMenuManager::Process(void)
 	{
 		m_nEndPauseTimer = 0;
 		xpos = ypos = 0.0f;
+		m_someAlpha = 255;
 		CTimer::EndUserPause();
 	}
 }
