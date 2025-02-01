@@ -7,8 +7,8 @@
 #include "main.h"
 #include "Population.h"
 
-float CIniFile::PedNumberMultiplier = 1.0f;
-float CIniFile::CarNumberMultiplier = 1.0f;
+float CIniFile::PedNumberMultiplier = 3.4f;
+float CIniFile::CarNumberMultiplier = 3.4f;
 
 void CIniFile::LoadIniFile()
 {
