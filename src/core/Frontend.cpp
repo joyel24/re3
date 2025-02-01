@@ -144,7 +144,7 @@ int hoveredBottomBarOption = -1;
 #endif
 
 #ifdef CUTSCENE_BORDERS_SWITCH
-bool CMenuManager::m_PrefsCutsceneBorders = true;
+bool CMenuManager::m_PrefsCutsceneBorders = false;
 #endif
 
 #ifdef MULTISAMPLING
@@ -153,11 +153,11 @@ int8 CMenuManager::m_nDisplayMSAALevel = 0;
 #endif
 
 #ifdef NO_ISLAND_LOADING
-int8 CMenuManager::m_PrefsIslandLoading = ISLAND_LOADING_LOW;
+int8 CMenuManager::m_PrefsIslandLoading = ISLAND_LOADING_HIGH;
 #endif
 
-int8 CMenuManager::m_PrefsUseVibration;
-int8 CMenuManager::m_DisplayControllerOnFoot;
+int8 CMenuManager::m_PrefsUseVibration = true;
+int8 CMenuManager::m_DisplayControllerOnFoot = true;
 int8 CMenuManager::m_PrefsVsync = 1;
 int8 CMenuManager::m_PrefsVsyncDisp = 1;
 int8 CMenuManager::m_PrefsFrameLimiter = 1;
