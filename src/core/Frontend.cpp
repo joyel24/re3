@@ -2733,7 +2733,7 @@ CMenuManager::DrawFrontEndNormal()
 	CFont::SetRightJustifyOff();
 	CFont::SetBackGroundOnlyTextOn();
 	CFont::SetWrapx(MENU_X_RIGHT_ALIGNED(MENU_X_MARGIN)); // 600.0f
-	CFont::SetColor(CRGBA(16, 16, 16, 255));
+	CFont::SetColor(CRGBA(16, 16, 16, m_someAlpha));
 	switch (m_nCurrScreen) {
 
 		// Page names overlaps buttons on those.
@@ -2778,8 +2778,8 @@ CMenuManager::DrawFrontEndNormal()
 		
 		if( !bottomBarActive )
 		{
-			CRGBA shadow(41, 101, 102, 255);
-			CRGBA green(40, 48, 57, 255);
+			CRGBA shadow(41, 101, 102, m_someAlpha);
+			CRGBA green(40, 48, 57, m_someAlpha);
 			CSprite2d::DrawRect(
 				CRect(xpos+MENU_X_LEFT_ALIGNED(82.0f), ypos+SCREEN_SCALE_Y(408.0f), xpos+MENU_X_LEFT_ALIGNED(82.0f)+MENU_X_LEFT_ALIGNED(432.0f), ypos+SCREEN_SCALE_Y(408.0f)+SCREEN_SCALE_Y(17.0f)),
 				shadow);
@@ -2802,10 +2802,10 @@ CMenuManager::DrawFrontEndNormal()
 			CFont::SetScale(MENU_X(0.35f), MENU_Y(0.7f));
 			CFont::SetRightJustifyOff();
 			if (hoveredBottomBarOption == i && hoveredBottomBarOption != curBottomBarOption)
-				CFont::SetColor(CRGBA(MENUOPTION_COLOR.r, MENUOPTION_COLOR.g, MENUOPTION_COLOR.b, 255));
+				CFont::SetColor(CRGBA(MENUOPTION_COLOR.r, MENUOPTION_COLOR.g, MENUOPTION_COLOR.b, m_someAlpha));
 			else {
 				if(bottomBarActive || curBottomBarOption == i)
-					CFont::SetColor(CRGBA(HEADER_COLOR.r, HEADER_COLOR.g, HEADER_COLOR.b, 255));
+					CFont::SetColor(CRGBA(HEADER_COLOR.r, HEADER_COLOR.g, HEADER_COLOR.b, m_someAlpha));
 				else
 					CFont::SetColor(CRGBA(HEADER_COLOR.r, HEADER_COLOR.g, HEADER_COLOR.b, 0));
 			}
