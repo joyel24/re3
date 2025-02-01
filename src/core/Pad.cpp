@@ -2622,11 +2622,11 @@ int16 CPad::LookAroundLeftRight(void)
 {
 	float axis = GetPad(0)->NewState.RightStickX;
 
-	if ( Abs(axis) > 85 && !GetLookBehindForPed() )
+	if ( !GetLookBehindForPed() )
 		return (int16) ( (axis + ( ( axis > 0 ) ? -85 : 85) )
 							* (127.0f / 32.0f) ); // 3.96875f
 
-	else if ( TheCamera.Cams[0].Using3rdPersonMouseCam() && Abs(axis) > 10 )
+	else if ( TheCamera.Cams[0].Using3rdPersonMouseCam() )
 		return (int16) ( (axis + ( ( axis > 0 ) ? -10 : 10) )
 							* (127.0f / 64.0f) ); // 1.984375f
 
@@ -2645,11 +2645,11 @@ int16 CPad::LookAroundUpDown(void)
 		axis = -axis;
 #endif
 
-	if ( Abs(axis) > 85 && !GetLookBehindForPed() )
+	if ( !GetLookBehindForPed() )
 		return (int16) ( (axis + ( ( axis > 0 ) ? -85 : 85) )
 							* (127.0f / 32.0f) ); // 3.96875f
 
-	else if ( TheCamera.Cams[0].Using3rdPersonMouseCam() && Abs(axis) > 40 )
+	else if ( TheCamera.Cams[0].Using3rdPersonMouseCam() )
 		return (int16) ( (axis + ( ( axis > 0 ) ? -40 : 40) )
 							* (127.0f / 64.0f) ); // 1.984375f
 
