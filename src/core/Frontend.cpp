@@ -34,6 +34,7 @@
 #include "Messages.h"
 #include "FileLoader.h"
 #include "frontendoption.h"
+#include "postfx.h"
 
 float xpos = 0.0f;
 float ypos = 0.0f;
