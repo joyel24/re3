@@ -180,11 +180,11 @@ enum Config {
 
 // This is enabled for all released games.
 // any debug stuff that isn't left in any game is not in FINAL
-//#define FINAL
+#define FINAL
 
 // This is enabled for all released games except mobile
 // any debug stuff that is only left in mobile, is not in MASTER
-//#define MASTER
+#define MASTER
 
 // once and for all:
 // pc: FINAL & MASTER
@@ -246,6 +246,8 @@ enum Config {
 #ifdef MASTER
 	// only in master builds
 	#undef DRAW_GAME_VERSION_TEXT
+
+	#define VALIDATE_SAVE_SIZE
 #else
 	// not in master builds
 	#define VALIDATE_SAVE_SIZE
@@ -255,7 +257,7 @@ enum Config {
 
 #ifdef FINAL
 	// in all games
-#	define USE_MY_DOCUMENTS	// use my documents directory for user files
+//#	define USE_MY_DOCUMENTS	// use my documents directory for user files
 #else
 	// not in any game
 //#	define TIMEBARS		// print debug timers
@@ -288,8 +290,8 @@ enum Config {
 #endif
 
 // Rendering/display
-#define EXTRA_MODEL_FLAGS	// from mobile to optimize rendering
-# define HARDCODED_MODEL_FLAGS	// sets the flags enabled above from hardcoded model names.
+//#define EXTRA_MODEL_FLAGS	// from mobile to optimize rendering
+//#define HARDCODED_MODEL_FLAGS	// sets the flags enabled above from hardcoded model names.
 				// NB: keep this enabled unless your map IDEs have these flags baked in
 #define ASPECT_RATIO_SCALE	// Not just makes everything scale with aspect ratio, also adds support for all aspect ratios
 #define PROPER_SCALING		// use original DEFAULT_SCREEN_WIDTH/DEFAULT_SCREEN_HEIGHT from PS2 instead of PC(R* changed HEIGHT here to make radar look better, but broke other hud elements aspect ratio).
