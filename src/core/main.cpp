@@ -124,10 +124,6 @@ void TheGame(void);
 void DebugMenuPopulate(void);
 #endif
 
-#ifndef FINAL
-bool gbPrintMemoryUsage;
-#endif
-
 #ifdef PS2_MENU
 #define WANT_TO_LOAD TheMemoryCard.m_bWantToLoad
 #define FOUND_GAME_TO_LOAD TheMemoryCard.b_FoundRecentSavedGameWantToLoad
@@ -1107,16 +1103,6 @@ DisplayGameDebugText()
 {
 	static bool bDisplayPosn = false;
 	static bool bDisplayRate = false;
-#ifndef FINAL
-	{
-		SETTWEAKPATH("Debug");
-		TWEAKBOOL(bDisplayPosn);
-		TWEAKBOOL(bDisplayRate);
-	}
-
-	if(gbPrintMemoryUsage)
-		PrintMemoryUsage();
-#endif
 
 	char str[200];
 	wchar ustr[200];
@@ -1435,13 +1421,6 @@ RenderDebugShit(void)
 {
 	PUSH_RENDERGROUP("RenderDebugShit");
 	CTheScripts::RenderTheScriptDebugLines();
-#ifndef FINAL
-	if(gbShowCollisionLines)
-		CRenderer::RenderCollisionLines();
-	ThePaths.DisplayPathData();
-	CDebug::DrawLines();
-	DefinedState();
-#endif
 	POP_RENDERGROUP();
 }
 
