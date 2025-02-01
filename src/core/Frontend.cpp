@@ -1445,7 +1445,7 @@ CMenuManager::Draw()
 				rightText = TheText.Get(m_PrefsFrameLimiter ? "FEM_ON" : "FEM_OFF");
 				break;
 			case MENUACTION_TRAILS:
-				rightText = TheText.Get(CMBlur::BlurOn ? "FEM_ON" : "FEM_OFF");
+				rightText = TheText.Get(CPostFX::MotionBlurOn ? "FEM_ON" : "FEM_OFF");
 				break;
 			case MENUACTION_SUBTITLES:
 				rightText = TheText.Get(m_PrefsShowSubtitles ? "FEM_ON" : "FEM_OFF");
@@ -3645,11 +3645,6 @@ CMenuManager::LoadSettings()
 	CFileMgr::SetDirMyDocuments();
 	int fileHandle = CFileMgr::OpenFile("gta3.set", "r");
 
-#if GTA_VERSION >= GTA3_PC_11
-	CMBlur::BlurOn = (_dwOperatingSystemVersion != OS_WIN98);
-#else
-	CMBlur::BlurOn = true;
-#endif
 	MousePointerStateHelper.bInvertVertically = true;
 
 	// 50 is silly
@@ -3704,7 +3699,6 @@ CMenuManager::LoadSettings()
 			CFileMgr::Read(fileHandle, (char*)&m_PrefsVsyncDisp, 1);
 			CFileMgr::Read(fileHandle, (char*)&m_PrefsFrameLimiter, 1);
 			CFileMgr::Read(fileHandle, (char*)&m_nDisplayVideoMode, 1);
-			CFileMgr::Read(fileHandle, (char*)&CMBlur::BlurOn, 1);
 			CFileMgr::Read(fileHandle, m_PrefsSkinFile, 256);
 			CFileMgr::Read(fileHandle, (char*)&m_ControlMethod, 1);
 		}
@@ -3788,7 +3782,6 @@ CMenuManager::SaveSettings()
 		CFileMgr::Write(fileHandle, (char*)&m_PrefsVsyncDisp, 1);
 		CFileMgr::Write(fileHandle, (char*)&m_PrefsFrameLimiter, 1);
 		CFileMgr::Write(fileHandle, (char*)&m_nPrefsVideoMode, 1);
-		CFileMgr::Write(fileHandle, (char*)&CMBlur::BlurOn, 1);
 		CFileMgr::Write(fileHandle, m_PrefsSkinFile, 256);
 		CFileMgr::Write(fileHandle, (char*)&m_ControlMethod, 1);
 	}
@@ -4964,17 +4957,11 @@ CMenuManager::ProcessButtonPresses(void)
 #endif
 						m_PrefsShowSubtitles = true;
 						m_nDisplayVideoMode = m_nPrefsVideoMode;
-#if GTA_VERSION >= GTA3_PC_11
-						if (_dwOperatingSystemVersion == OS_WIN98) {
-							CMBlur::BlurOn = false;
-							CMBlur::MotionBlurClose();
-						} else {
-							CMBlur::BlurOn = true;
-							CMBlur::MotionBlurOpen(Scene.camera);
-						}
-#else
-						CMBlur::BlurOn = true;
-#endif
+
+						CPostFX::MotionBlurOn = true;
+						CPostFX::EffectSwitch = POSTFX_NORMAL;
+						CPostFX::Open(Scene.camera);
+
 #ifdef CUSTOM_FRONTEND_OPTIONS
 						extern void RestoreDefGraphics(int8);
 						extern void RestoreDefDisplay(int8);
@@ -5359,13 +5346,14 @@ CMenuManager::ProcessOnOffMenuOptions()
 		SaveSettings();
 		break;
 	case MENUACTION_TRAILS:
-		CMBlur::BlurOn = !CMBlur::BlurOn;
+		CPostFX::MotionBlurOn = !CPostFX::MotionBlurOn;
+		CPostFX::EffectSwitch = CPostFX::MotionBlurOn ? POSTFX_NORMAL : POSTFX_SIMPLE;
 		DMAudio.PlayFrontEndSound(SOUND_FRONTEND_MENU_SETTING_CHANGE, 0);
 		SaveSettings();
-		if (CMBlur::BlurOn)
-			CMBlur::MotionBlurOpen(Scene.camera);
+		if (CPostFX::MotionBlurOn)
+			CPostFX::Open(Scene.camera);
 		else
-			CMBlur::MotionBlurClose();
+			CPostFX::Close();
 		break;
 	case MENUACTION_SUBTITLES:
 		m_PrefsShowSubtitles = !m_PrefsShowSubtitles;
