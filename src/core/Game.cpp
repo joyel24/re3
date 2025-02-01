@@ -48,7 +48,6 @@
 #include "Phones.h"
 #include "Pickups.h"
 #include "Plane.h"
-#include "PlayerSkin.h"
 #include "Population.h"
 #include "Radar.h"
 #include "Record.h"
@@ -269,8 +268,6 @@ CGame::InitialiseRenderWare(void)
 	CFont::Initialise();
 	CHud::Initialise();
 	POP_MEMID();
-	// TODO: define
-	CPlayerSkin::Initialise();
 #endif
 	
 #ifdef EXTENDED_PIPELINES
@@ -297,12 +294,6 @@ void CGame::ShutdownRenderWare(void)
 	DestroySplashScreen();
 	CHud::Shutdown();
 	CFont::Shutdown();
-	
-	for ( int32 i = 0; i < NUMPLAYERS; i++ )
-		CWorld::Players[i].DeletePlayerSkin();
-
-	// TODO: define
-	CPlayerSkin::Shutdown();
 	
 	DestroyDebugFont();
 	
@@ -376,7 +367,6 @@ bool CGame::InitialiseOnceAfterRW(void)
 	DMAudio.SetEffectsFadeVol(127);
 	DMAudio.SetMusicFadeVol(127);
 #endif
-	CWorld::Players[0].SetPlayerSkin(CMenuManager::m_PrefsSkinFile);
 #endif
 	return true;
 }
@@ -523,7 +513,6 @@ bool CGame::Initialise(const char* datFile)
 #if GTA_VERSION > GTA3_PS2_160
 	for (int i = 0; i < NUMPLAYERS; i++)
 		CWorld::Players[i].Clear();
-	CWorld::Players[0].LoadPlayerSkin();
 	TestModelIndices();
 #endif
 
