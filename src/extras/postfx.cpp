@@ -17,7 +17,7 @@ RwRaster *CPostFX::pFrontBuffer;
 RwRaster *CPostFX::pBackBuffer;
 bool CPostFX::bJustInitialised;
 int CPostFX::EffectSwitch = POSTFX_NORMAL;
-bool CPostFX::MotionBlurOn = false;
+bool CPostFX::MotionBlurOn = true;
 
 static RwIm2DVertex Vertex[4];
 static RwIm2DVertex Vertex2[4];
