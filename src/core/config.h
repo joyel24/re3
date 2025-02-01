@@ -31,7 +31,7 @@ enum Config {
 	XTRACOMPSMODELSIZE = 2,
 	TWODFXSIZE = 2000,	// 1210 on PS2
 
-	MAXVEHICLESLOADED = 50, // 70 on mobile
+	MAXVEHICLESLOADED = 70, // 70 on mobile
 
 	NUMOBJECTINFO = 168, // object.dat
 
@@ -172,8 +172,8 @@ enum Config {
 #	ifndef GTA_HANDHELD
 #		define PC_PLAYER_CONTROLS	// mouse player/cam mode
 #	endif
-#	define GTA_REPLAY
-#	define GTA_SCENE_EDIT
+//#	define GTA_REPLAY
+//#	define GTA_SCENE_EDIT
 #	define PC_MENU
 #elif defined GTA_XBOX
 #endif
@@ -250,7 +250,7 @@ enum Config {
 	// not in master builds
 	#define VALIDATE_SAVE_SIZE
 
-	#define DEBUGMENU
+//	#define DEBUGMENU
 #endif
 
 #ifdef FINAL
@@ -267,7 +267,7 @@ enum Config {
 #define FIX_INCOMPATIBLE_SAVES // try to fix incompatible saves, requires COMPATIBLE_SAVES
 #define LOAD_INI_SETTINGS // as the name suggests. fundamental for CUSTOM_FRONTEND_OPTIONS
 
-#define NO_MOVIES	// add option to disable intro videos
+//#define NO_MOVIES	// add option to disable intro videos
 
 #define EXTENDED_OFFSCREEN_DESPAWN_RANGE // Use onscreen despawn range for offscreen peds and vehicles to avoid them despawning in the distance when you look
                                          // away
@@ -288,8 +288,8 @@ enum Config {
 #endif
 
 // Rendering/display
-//#define EXTRA_MODEL_FLAGS	// from mobile to optimize rendering
-//# define HARDCODED_MODEL_FLAGS	// sets the flags enabled above from hardcoded model names.
+#define EXTRA_MODEL_FLAGS	// from mobile to optimize rendering
+# define HARDCODED_MODEL_FLAGS	// sets the flags enabled above from hardcoded model names.
 				// NB: keep this enabled unless your map IDEs have these flags baked in
 #define ASPECT_RATIO_SCALE	// Not just makes everything scale with aspect ratio, also adds support for all aspect ratios
 #define PROPER_SCALING		// use original DEFAULT_SCREEN_WIDTH/DEFAULT_SCREEN_HEIGHT from PS2 instead of PC(R* changed HEIGHT here to make radar look better, but broke other hud elements aspect ratio).
