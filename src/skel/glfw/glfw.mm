@@ -2033,11 +2033,6 @@ main(int argc, char *argv[])
 
 				    case GS_LOGO_MPEG:
 					{
-					    CPad::UpdatePads();
-
-					    if(ControlsManager.GetJoyButtonJustDown() != 0)
-						    CloseClip();
-
 					    if (!movieplaying)
 						    ++gGameState;
 					    break;
@@ -2060,7 +2055,7 @@ main(int argc, char *argv[])
 					{
 					    CPad::UpdatePads();
 
-					    if(ControlsManager.GetJoyButtonJustDown() != 0)
+					    if(CPad::GetPad(0)->GetCrossJustDown() != 0)
 						    CloseClip();
 
 					    if (!movieplaying)
