@@ -1112,18 +1112,7 @@ void CPad::UpdatePads(void)
 #endif
 
 #ifdef DETECT_PAD_INPUT_SWITCH
-	if (GetPad(0)->PCTempJoyState.CheckForInput())
-		IsAffectedByController = true;
-	else {
-#endif
-		ControlsManager.ClearSimButtonPressCheckers();
-		ControlsManager.AffectPadFromKeyBoard();
-		ControlsManager.AffectPadFromMouse();
-
-#ifdef DETECT_PAD_INPUT_SWITCH
-	}
-	if (IsAffectedByController && (GetPad(0)->PCTempKeyState.CheckForInput() || GetPad(0)->PCTempMouseState.CheckForInput()))
-		IsAffectedByController = false;
+	IsAffectedByController = true;
 #endif
 
 	if ( CReplay::IsPlayingBackFromFile() )
@@ -1155,13 +1144,10 @@ void CPad::Update(int16 pad)
 {
 	OldState = NewState;
 
-	if ( ShakeDur )
-	{
-		ShakeDur = Max(ShakeDur - (int32)CTimer::GetTimeStepInMilliseconds(), 0);
-		if (ShakeDur == 0) ShakeFreq = 0;
-	
-		SDL_GameControllerRumble(game_controller, ((float)ShakeFreq / 255.0f) * 0xFFFF, ((float)ShakeFreq / 255.0f) * 0xFFFF, 0xFFFF);
-	}
+	ShakeDur = Max(ShakeDur - (int32)CTimer::GetTimeStepInMilliseconds(), 0);
+	if (ShakeDur == 0) ShakeFreq = 0;
+
+	SDL_GameControllerRumble(game_controller, ((float)ShakeFreq / 255.0f) * 0xFFFF, ((float)ShakeFreq / 255.0f) * 0xFFFF, 0xFFFF);
 
 	if (game_controller == nullptr)
 	{
@@ -1198,16 +1184,24 @@ void CPad::Update(int16 pad)
 		NewState.DPadLeft = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT)?255:0;
 	
 		if ( Abs(positionx)  > 0.25f )		 		
-			NewState.LeftStickX = (int32)(positionx  * 128.0f);		
+			NewState.LeftStickX = (int32)(positionx  * 128.0f);
+		else
+			NewState.LeftStickX = 0;
 	
 		if ( Abs(positiony)  > 0.25f )		 		
-			NewState.LeftStickY = (int32)(positiony  * 128.0f);		
+			NewState.LeftStickY = (int32)(positiony  * 128.0f);
+		else
+			NewState.LeftStickY = 0;
 	
 		if ( Abs(rightStickx) > 0.25f )		 		
-			NewState.RightStickX = (int32)(rightStickx * 128.0f);		
+			NewState.RightStickX = (int32)(rightStickx * 128.0f);	
+		else
+			NewState.RightStickX = 0;
 	
 		if ( Abs(rightSticky) > 0.25f )		 		
 			NewState.RightStickY = (int32)(rightSticky * 128.0f);
+		else
+			NewState.RightStickY = 0;
 	}
 
 	if ( pad == 0 )
