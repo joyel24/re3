@@ -102,7 +102,16 @@ const char ExplosionMediumFiles[][7+1] =
 	"explo03",
 	"explo04",
 	"explo05",
-	"explo06"
+	"explo06",
+	"explo07",
+	"explo08",
+	"explo09",
+	"explo10",
+	"explo11",
+	"explo12",
+	"explo13",
+	"explo14",
+	"explo15"
 };
 
 const char GunFlashFiles[][9+1] =
