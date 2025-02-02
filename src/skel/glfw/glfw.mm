@@ -74,6 +74,8 @@ long _dwOperatingSystemVersion;
 
 rw::EngineOpenParams openParams;
 
+SDL_GameController* game_controller;
+
 SDL_GameController *findController() {
     for (int i = 0; i < SDL_NumJoysticks(); i++) {
         if (SDL_IsGameController(i)) {
