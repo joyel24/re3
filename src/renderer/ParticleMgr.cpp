@@ -166,7 +166,7 @@ void cParticleSystemMgr::LoadParticleData()
 						break;
 
 					case CFG_PARAM_ANIMATION_SPEED:
-						entry->m_nAnimationSpeed = atoi(value);
+						entry->m_nAnimationSpeed = atof(value);
 						break;
 
 					case CFG_PARAM_START_ANIMATION_FRAME:
