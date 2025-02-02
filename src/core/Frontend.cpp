@@ -5528,7 +5528,7 @@ CMenuManager::SwitchMenuOnAndOff()
 #ifdef PS2_LIKE_MENU
 			bottomBarActive = false;
 #endif
-			if (m_nCurrScreen == MENUPAGE_LOADING_IN_PROGRESS || m_bRenderGameInMenu) {
+			if (m_nCurrScreen == MENUPAGE_LOADING_IN_PROGRESS || m_nCurrScreen == MENUPAGE_NEW_GAME_RELOAD || m_bRenderGameInMenu) {
 				ShutdownJustMenu();
 				DMAudio.ChangeMusicMode(MUSICMODE_GAME);
 			}
