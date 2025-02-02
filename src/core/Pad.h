@@ -1,4 +1,7 @@
 #pragma once
+#include "SDL.h"
+
+SDL_GameController* game_controller;
 
 enum {
 	PLAYERCONTROL_ENABLED = 0,
