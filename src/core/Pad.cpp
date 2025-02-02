@@ -1093,60 +1093,6 @@ void CPad::AffectFromXinput(uint32 pad)
 		XInputSetState(pad, &VibrationState);
 	}
 }
-#else
-void CPad::AffectFromXinput(uint32 pad)
-{
-	if (pad != 0) // LoadINIControllerSettings can set it to -1
-		return;
-	
-	int16_t xaxis = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_LEFTX);
-	int16_t yaxis = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_LEFTY);
-	float positionx = float(xaxis)/32768.0f;
-	float positiony = float(yaxis)/32768.0f;
-
-	int16_t xaxis2 = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_RIGHTX);
-	int16_t yaxis2 = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_RIGHTY);
-	float rightStickx = float(xaxis2)/32768.0f;
-	float rightSticky = float(yaxis2)/32768.0f;
-
-	PCTempJoyState.Cross = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_A)?255:0;
-	PCTempJoyState.Circle = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_B)?255:0;
-	PCTempJoyState.Square = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_X)?255:0;
-	PCTempJoyState.Triangle = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_Y)?255:0;
-	PCTempJoyState.LeftShoulder1 = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_LEFTSHOULDER)?255:0;
-	PCTempJoyState.RightShoulder1 = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)?255:0;
-	PCTempJoyState.LeftShoulder2 =  (uint8)(255.0f * float(SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT))/32768.0f);
-	PCTempJoyState.RightShoulder2 = (uint8)(255.0f * float(SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT))/32768.0f);
-	PCTempJoyState.Select = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_BACK)?255:0;
-	PCTempJoyState.Start = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_START)?255:0;
-	PCTempJoyState.LeftShock = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_LEFTSTICK)?255:0;
-	PCTempJoyState.RightShock = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_RIGHTSTICK)?255:0;
-	PCTempJoyState.DPadUp = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_UP)?255:0;
-	PCTempJoyState.DPadRight = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)?255:0;
-	PCTempJoyState.DPadDown = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN)?255:0;
-	PCTempJoyState.DPadLeft = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT)?255:0;
-
-	if ( Abs(positionx)  > 0.25f )		 		
-		PCTempJoyState.LeftStickX = (int32)(positionx  * 128.0f);		
-
-	if ( Abs(positiony)  > 0.25f )		 		
-		PCTempJoyState.LeftStickY = (int32)(positiony  * 128.0f);		
-
-	if ( Abs(rightStickx) > 0.25f )		 		
-		PCTempJoyState.RightStickX = (int32)(rightStickx * 128.0f);		
-
-	if ( Abs(rightSticky) > 0.25f )		 		
-		PCTempJoyState.RightStickY = (int32)(rightSticky * 128.0f);
-
-	if (ShakeDur < CTimer::GetTimeStepInMilliseconds())
-		ShakeDur = 0;
-	else
-		ShakeDur -= CTimer::GetTimeStepInMilliseconds();
-
-	if (ShakeDur == 0) ShakeFreq = 0;
-
-	SDL_GameControllerRumble(game_controller, ((float)ShakeFreq / 255.0f) * 0xFFFF, ((float)ShakeFreq / 255.0f) * 0xFFFF, 0xFFFF);
-}
 #endif
 
 void CPad::UpdatePads(void)
@@ -1154,8 +1100,10 @@ void CPad::UpdatePads(void)
 	bool bUpdate = true;
 
 	GetPad(0)->UpdateMouse();
+#ifdef XINPUT
 	GetPad(0)->AffectFromXinput(m_bMapPadOneToPadTwo ? 1 : 0);
 	GetPad(1)->AffectFromXinput(m_bMapPadOneToPadTwo ? 0 : 1);
+#endif
 
 	// Improve keyboard input latency part 1
 #ifdef FIX_BUGS
@@ -1207,249 +1155,70 @@ void CPad::Update(int16 pad)
 {
 	OldState = NewState;
 
-#ifdef GTA_PS2
-	bObsoleteControllerMessage = false;
-
-	//int iPressureBtn;
-	int id;
-	int ext_id=0;
-	int state;
-	int rterm_id = 0;
-	unsigned short paddata, tpad;
-	unsigned char rdata[32];
-
-	state = scePadGetState(pad, 0);
-
-	switch(Phase)
+	if ( ShakeDur )
 	{
-	case 0:
-		if (state != scePadStateStable && state != scePadStateFindCTP1)
-			break;
-		id = scePadInfoMode(pad, 0, InfoModeCurID, 0);
-		if (id==0) break;
-
-		ext_id = scePadInfoMode(pad, 0, InfoModeCurExID, 0);
-		if (ext_id>0) id = ext_id;
-
-		switch(id)
-		{
-		case 4: // Digital controller
-			Phase = 40; // Try for analog(dualshock)
-			break;
-		case 7: // Dualshock2 controller
-			Phase = 50;
-			break;
-		default:
-			Phase = 99;
-			break;
-		}
-		break;
-
-		// Analog Controller (old dualshock)
-	case 40: // Analog Contoller check valid (otherwise fail phase)
-		if (scePadInfoMode(pad, 0, InfoModeIdTable, -1)==0)
-		{
-			Phase = 99;
-			break;
-		}
-		Phase++;
-
-	case 41: // Analog controller: Request Lock analog mode (asynchronous)
-		if (scePadSetMainMode(pad, 0, 1, 3)==1) Phase++;
-		break;
-
-	case 42: // Analog controller: Check state of previous request
-		if (scePadGetReqState(pad, 0)==scePadReqStateFaild)
-		{
-			Phase--;
-		}
-
-		if (scePadGetReqState(pad, 0)==scePadReqStateComplete)
-		{
-			// Lock mode complete
-			Phase=0; // Accept normal dualshock
-		}
-		break;
-
-		// DualShock 2 Controller
-	case 50: // Analog Contoller check valid (otherwise fail phase)
-		if (scePadInfoMode(pad, 0, InfoModeIdTable, -1)==0)
-		{
-			Phase = 99;
-			break;
-		}
-		Phase++;
-
-	case 51: // Analog controller: Request Lock analog mode (asynchronous)
-		if (scePadSetMainMode(pad, 0, 1, 3)==1) Phase++;
-		break;
-
-	case 52: // Analog controller: Check state of previous request
-		if (scePadGetReqState(pad, 0)==scePadReqStateFaild)
-		{
-			Phase--;
-		}
-
-		if (scePadGetReqState(pad, 0)==scePadReqStateComplete)
-		{
-			// Lock mode complete
-			Phase=0; // Accept normal dualshock
-		}
-		break;
-
-	case 70: // DualShock 2 check pressure sensitive possible
-		if (scePadInfoPressMode(pad, 0)==1)
-		{
-			Phase = 76;
-			break;
-		}
-		Phase = 99;
-		break;
-
-	case 76: // DualShock2 enable pressure sensitive mode (asynchronous function)
-		if (scePadEnterPressMode(pad, 0)==1) Phase++;
-		break;
-
-	case 77: // Dualshock2 check status of request pressure sensitive mode
-		if (scePadGetReqState(pad, 0)==scePadReqStateFaild) Phase--;
-		if (scePadGetReqState(pad, 0)==scePadReqStateComplete)
-		{
-			Phase=80;
-		}
-		break;
-
-		// DualShock 2 Controller
-	case 80: // Set motors
-		if (scePadInfoAct(pad, 0, -1, 0)==0)
-		{
-			Phase = 99;
-		}
-
-		act_align[0] = 0; // Offset 0 for motor0
-		act_align[1] = 1; // Offset 1 for motor1
-
-		act_align[2] = 0xff;
-		act_align[3] = 0xff;
-		act_align[4] = 0xff;
-		act_align[5] = 0xff;
-
-		// Asynchronous function
-		if (scePadSetActAlign(pad, 0, act_align)==0) break;
-		Phase++;
-		break;
-
-
-	case 81:
-		if ( scePadGetState(pad, 0) != scePadStateExecCmd )
-		{
-			Phase = 99;
-		}
-
-		break;
-
-	default:
-		if ( state == scePadStateError ) break;
-
-		if ( state == scePadStateStable || state == scePadStateFindCTP1 )
-		{
-			if ( ShakeDur )
-			{
-				ShakeDur = Max(ShakeDur - (int32)CTimer::GetTimeStepInMilliseconds(), 0);
-
-				if ( ShakeDur == 0 )
-				{
-					act_direct[0] = 0;
-					act_direct[1] = 0;
-					scePadSetActDirect(pad, 0, act_direct);
-				}
-				else
-				{
-					act_direct[0] = 0;
-					act_direct[1] = (unsigned char) ShakeFreq;
-					scePadSetActDirect(pad, 0, act_direct);
-				}
-			}
-
-			if (scePadRead( pad, 0, rdata )==0)
-			{
-				NewState.Clear();
-				break;
-			}
-
-			if ((rdata[0] == 0))
-			{
-				paddata = (unsigned short) ( 0xffff ^ ((rdata[2]<<8)|rdata[3]) );
-				rterm_id = (rdata[1]);
-
-				if ( (rterm_id>>4) == 7 ) // DUALSHOCK
-				{
-					if (!CRecordDataForGame::IsPlayingBack() && !CRecordDataForChase::ShouldThisPadBeLeftAlone(pad))
-					{
-						tpad = paddata;
-
-						NewState.DPadUp			= ( tpad & SCE_PADLup )	   ? 255 : 0;
-						NewState.DPadDown		= ( tpad & SCE_PADLdown )  ? 255 : 0;
-						NewState.DPadLeft		= ( tpad & SCE_PADLleft )  ? 255 : 0;
-						NewState.DPadRight		= ( tpad & SCE_PADLright ) ? 255 : 0;
-						NewState.Triangle		= ( tpad & SCE_PADRup )	   ? 255 : 0;
-						NewState.Cross			= ( tpad & SCE_PADRdown )  ? 255 : 0;
-						NewState.Square			= ( tpad & SCE_PADRleft )  ? 255 : 0;
-						NewState.Circle			= ( tpad & SCE_PADRright ) ? 255 : 0;
-						NewState.Start			= ( tpad & SCE_PADstart )  ? 255 : 0;
-						NewState.Select			= ( tpad & SCE_PADselect ) ? 255 : 0;
-						NewState.LeftShoulder1	= ( tpad & SCE_PADL1 )	   ? 255 : 0;
-						NewState.LeftShoulder2	= ( tpad & SCE_PADL2 )	   ? 255 : 0;
-						NewState.RightShoulder1 = ( tpad & SCE_PADR1 )	   ? 255 : 0;
-						NewState.RightShoulder2 = ( tpad & SCE_PADR2 )	   ? 255 : 0;
-						NewState.LeftShock		= ( tpad & SCE_PADi )	   ? 255 : 0;
-						NewState.RightShock		= ( tpad & SCE_PADj )	   ? 255 : 0;
-						NewState.RightStickX	= (short)rdata[4];
-						NewState.RightStickY	= (short)rdata[5];
-						NewState.LeftStickX		= (short)rdata[6];
-						NewState.LeftStickY		= (short)rdata[7];
-
-						#define CLAMP_AXIS(x) (((x) < 43 && (x) >= -42) ? 0 : (((x) > 0) ? (Max((x)-42, 0)*127/85) : Min((x)+42, 0)*127/85))
-						#define FIX_AXIS(x) CLAMP_AXIS((x)-128)
-
-						NewState.RightStickX = FIX_AXIS(NewState.RightStickX);
-						NewState.RightStickY = FIX_AXIS(NewState.RightStickY);
-						NewState.LeftStickX	 = FIX_AXIS(NewState.LeftStickX);
-						NewState.LeftStickY	 = FIX_AXIS(NewState.LeftStickY);
-
-						#undef FIX_AXIS
-						#undef CLAMP_AXIS
-					}
-				}
-				else if ( (rterm_id>>4) == 4 ) // Controller (digital)
-				{
-					if ( pad == 0 )
-						bObsoleteControllerMessage = true;
-					NewState.Clear();
-				}
-
-				if ( NewState.IsAnyButtonPressed() )
-					LastTimeTouched = CTimer::GetTimeInMilliseconds();
-
-				break;
-			}
-
-			if ( ++iCurrHornHistory >= HORNHISTORY_SIZE )
-				iCurrHornHistory = 0;
-
-			bHornHistory[iCurrHornHistory] = GetHorn();
-			NewState.Clear();
-			return;
-		}
-		break;
+		ShakeDur = Max(ShakeDur - (int32)CTimer::GetTimeStepInMilliseconds(), 0);
+		if (ShakeDur == 0) ShakeFreq = 0;
+	
+		SDL_GameControllerRumble(game_controller, ((float)ShakeFreq / 255.0f) * 0xFFFF, ((float)ShakeFreq / 255.0f) * 0xFFFF, 0xFFFF);
 	}
+
+	if (game_controller == nullptr)
+	{
+		NewState.Clear();
+	}
+
+	if (!CRecordDataForGame::IsPlayingBack() && !CRecordDataForChase::ShouldThisPadBeLeftAlone(pad))
+	{
+		int16_t xaxis = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_LEFTX);
+		int16_t yaxis = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_LEFTY);
+		float positionx = float(xaxis)/32768.0f;
+		float positiony = float(yaxis)/32768.0f;
+	
+		int16_t xaxis2 = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_RIGHTX);
+		int16_t yaxis2 = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_RIGHTY);
+		float rightStickx = float(xaxis2)/32768.0f;
+		float rightSticky = float(yaxis2)/32768.0f;
+	
+		NewState.Cross = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_A)?255:0;
+		NewState.Circle = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_B)?255:0;
+		NewState.Square = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_X)?255:0;
+		NewState.Triangle = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_Y)?255:0;
+		NewState.LeftShoulder1 = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_LEFTSHOULDER)?255:0;
+		NewState.RightShoulder1 = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)?255:0;
+		NewState.LeftShoulder2 =  (uint8)(255.0f * float(SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT))/32768.0f);
+		NewState.RightShoulder2 = (uint8)(255.0f * float(SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT))/32768.0f);
+		NewState.Select = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_BACK)?255:0;
+		NewState.Start = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_START)?255:0;
+		NewState.LeftShock = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_LEFTSTICK)?255:0;
+		NewState.RightShock = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_RIGHTSTICK)?255:0;
+		NewState.DPadUp = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_UP)?255:0;
+		NewState.DPadRight = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)?255:0;
+		NewState.DPadDown = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN)?255:0;
+		NewState.DPadLeft = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT)?255:0;
+	
+		if ( Abs(positionx)  > 0.25f )		 		
+			NewState.LeftStickX = (int32)(positionx  * 128.0f);		
+	
+		if ( Abs(positiony)  > 0.25f )		 		
+			NewState.LeftStickY = (int32)(positiony  * 128.0f);		
+	
+		if ( Abs(rightStickx) > 0.25f )		 		
+			NewState.RightStickX = (int32)(rightStickx * 128.0f);		
+	
+		if ( Abs(rightSticky) > 0.25f )		 		
+			NewState.RightStickY = (int32)(rightSticky * 128.0f);
+	}
+
+	if ( NewState.IsAnyButtonPressed() )
+		LastTimeTouched = CTimer::GetTimeInMilliseconds();
 
 	if ( pad == 0 )
 	{
 		bOldDisplayNoControllerMessage = bDisplayNoControllerMessage;
-		if ( state == scePadStateDiscon )
+		if ( game_controller == nullptr )
 		{
 			bDisplayNoControllerMessage = true;
-			Phase = 0;
 		}
 		else
 			bDisplayNoControllerMessage = false;
@@ -1459,30 +1228,6 @@ void CPad::Update(int16 pad)
 		iCurrHornHistory = 0;
 
 	bHornHistory[iCurrHornHistory] = GetHorn();
-
-	if ( !bDisplayNoControllerMessage )
-		CGame::bDemoMode = false;
-#endif
-
-#if (defined GTA_PS2 || defined FIX_BUGS)
-	if (!CRecordDataForGame::IsPlayingBack() && !CRecordDataForChase::ShouldThisPadBeLeftAlone(pad))
-#endif
-	{
-		NewState = ReconcileTwoControllersInput(PCTempKeyState, PCTempJoyState);
-		NewState = ReconcileTwoControllersInput(PCTempMouseState, NewState);
-	}
-
-	PCTempJoyState.Clear();
-	PCTempKeyState.Clear();
-	PCTempMouseState.Clear();
-
-	ProcessPCSpecificStuff();
-
-	if ( ++iCurrHornHistory >= HORNHISTORY_SIZE )
-		iCurrHornHistory = 0;
-
-	bHornHistory[iCurrHornHistory] = GetHorn();
-
 
 	if ( !bDisplayNoControllerMessage )
 		CGame::bDemoMode = false;
