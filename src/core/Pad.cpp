@@ -1210,9 +1210,6 @@ void CPad::Update(int16 pad)
 			NewState.RightStickY = (int32)(rightSticky * 128.0f);
 	}
 
-	if ( NewState.IsAnyButtonPressed() )
-		LastTimeTouched = CTimer::GetTimeInMilliseconds();
-
 	if ( pad == 0 )
 	{
 		bOldDisplayNoControllerMessage = bDisplayNoControllerMessage;
