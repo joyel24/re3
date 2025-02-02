@@ -47,7 +47,7 @@ CustomMatCopy(void *dst, void *src, int32, int32)
 rw::TexDictionary *neoTxd;
 
 bool bRenderingEnvMap;
-int32 EnvMapSize = 1024;
+int32 EnvMapSize = 2048;
 rw::Camera *EnvMapCam;
 rw::Texture *EnvMapTex;
 rw::Texture *EnvMaskTex;
