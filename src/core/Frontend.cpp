@@ -4175,6 +4175,7 @@ CMenuManager::Process(void)
 		m_nEndPauseTimer = 0;
 		xpos = ypos = 0.0f;
 		m_someAlpha = 255;
+		DMAudio.ChangeMusicMode(MUSICMODE_GAME);
 		CTimer::EndUserPause();
 	}
 }
@@ -5416,7 +5417,6 @@ void
 CMenuManager::RequestFrontEndShutDown()
 {
 	m_bShutDownFrontEndRequested = true;
-	DMAudio.ChangeMusicMode(MUSICMODE_GAME);
 }
 
 void
@@ -5530,6 +5530,7 @@ CMenuManager::SwitchMenuOnAndOff()
 #endif
 			if (m_nCurrScreen == MENUPAGE_LOADING_IN_PROGRESS || m_bRenderGameInMenu) {
 				ShutdownJustMenu();
+				DMAudio.ChangeMusicMode(MUSICMODE_GAME);
 			}
 			else
 			{
