@@ -268,8 +268,8 @@ public:
 #ifdef XINPUT
 	static int XInputJoy1;
 	static int XInputJoy2;
-	void AffectFromXinput(uint32 pad);
 #endif
+	void AffectFromXinput(uint32 pad);
 
 	// mouse
 	bool GetLeftMouseJustDown()           { return !!(NewMouseControllerState.LMB && !OldMouseControllerState.LMB); }
