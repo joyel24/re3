@@ -1137,7 +1137,6 @@ void CPad::AffectFromXinput(uint32 pad)
 
 	if ( Abs(rightSticky) > 0.25f )		 		
 		PCTempJoyState.RightStickY = (int32)(rightSticky * 128.0f);
-	}
 
 	if (ShakeDur < CTimer::GetTimeStepInMilliseconds())
 		ShakeDur = 0;
