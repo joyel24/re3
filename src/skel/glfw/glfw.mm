@@ -74,8 +74,6 @@ long _dwOperatingSystemVersion;
 
 rw::EngineOpenParams openParams;
 
-SDL_GameController* game_controller;
-
 SDL_GameController *findController() {
     for (int i = 0; i < SDL_NumJoysticks(); i++) {
         if (SDL_IsGameController(i)) {
@@ -415,16 +413,7 @@ static void _psHandleVibration()
 #else
 static void _psInitializeVibration() {}
 
-static void _psHandleVibration()
-{
-	CPad* pad = CPad::GetPad(0);
-	if (pad->ShakeDur < CTimer::GetTimeStepInMilliseconds())
-		pad->ShakeDur = 0;
-	else
-		pad->ShakeDur -= CTimer::GetTimeStepInMilliseconds();
-	if (pad->ShakeDur == 0) pad->ShakeFreq = 0;
-	SDL_GameControllerRumble(game_controller, ((float)pad->ShakeFreq / 255.0f) * 0xFFFF, ((float)pad->ShakeFreq / 255.0f) * 0xFFFF, 0xFFFF);
-}
+static void _psHandleVibration() {}
 #endif
 
 /*
@@ -2326,94 +2315,6 @@ RwV2d rightStickPos;
 
 void CapturePad(RwInt32 padID)
 {
-	int8 glfwPad = -1;	
-	int16_t xaxis = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_LEFTX);
-	int16_t yaxis = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_LEFTY);
-	float positionx = float(xaxis)/32768.0f;
-	float positiony = float(yaxis)/32768.0f;
-
-	int16_t xaxis2 = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_RIGHTX);
-	int16_t yaxis2 = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_RIGHTY);
-	float rightStickx = float(xaxis2)/32768.0f;
-	float rightSticky = float(yaxis2)/32768.0f;
-
-	if (ControlsManager.m_bFirstCapture == false) {
-		memcpy(&ControlsManager.m_OldState, &ControlsManager.m_NewState, sizeof(ControlsManager.m_NewState));
-	} else {
-		// In case connected gamepad doesn't have L-R trigger axes.
-		ControlsManager.m_NewState.mappedButtons[15] = ControlsManager.m_NewState.mappedButtons[16] = 0;
-	}
-
-	ControlsManager.m_NewState.numButtons = 17;
-	ControlsManager.m_NewState.id = glfwPad;
-	ControlsManager.m_NewState.isGamepad = true;
-	ControlsManager.m_NewState.mappedButtons[0] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_A)?1:0;
-	ControlsManager.m_NewState.mappedButtons[1] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_B)?1:0;
-	ControlsManager.m_NewState.mappedButtons[2] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_X)?1:0;
-	ControlsManager.m_NewState.mappedButtons[3] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_Y)?1:0;
-	ControlsManager.m_NewState.mappedButtons[4] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_LEFTSHOULDER)?1:0;
-	ControlsManager.m_NewState.mappedButtons[5] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)?1:0;
-	ControlsManager.m_NewState.mappedButtons[6] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_BACK)?1:0;
-	ControlsManager.m_NewState.mappedButtons[7] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_START)?1:0;
-	ControlsManager.m_NewState.mappedButtons[8] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_GUIDE)?1:0;
-	ControlsManager.m_NewState.mappedButtons[9] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_LEFTSTICK)?1:0;
-	ControlsManager.m_NewState.mappedButtons[10] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_RIGHTSTICK)?1:0;
-	ControlsManager.m_NewState.mappedButtons[11] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_UP)?1:0;
-	ControlsManager.m_NewState.mappedButtons[12] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)?1:0;
-	ControlsManager.m_NewState.mappedButtons[13] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN)?1:0;
-	ControlsManager.m_NewState.mappedButtons[14] = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT)?1:0;
-	float lt = float(SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT))/32768.0f, rt = float(SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT))/32768.0f;
-
-	// glfw returns 0.0 for non-existent axises(which is bullocks) so we treat it as deadzone, and keep value of previous frame.
-	// otherwise if this axis is present, -1 = released, 1 = pressed
-	if (lt != 0.0f)
-		ControlsManager.m_NewState.mappedButtons[15] = lt > 0.2f;
-		ControlsManager.m_NewState.lt = (uint8)((lt) * 255.0f);
-	if (rt != 0.0f)
-		ControlsManager.m_NewState.mappedButtons[16] = rt > 0.2f;
-		ControlsManager.m_NewState.rt = (uint8)((rt) * 255.0f);
-	// TODO? L2-R2 axes(not buttons-that's fine) on joysticks that don't have SDL gamepad mapping AREN'T handled, and I think it's impossible to do without mapping.
-
-	if (ControlsManager.m_bFirstCapture == true) {
-		memcpy(&ControlsManager.m_OldState, &ControlsManager.m_NewState, sizeof(ControlsManager.m_NewState));
-		
-		ControlsManager.m_bFirstCapture = false;
-	}
-
-	RsPadButtonStatus bs;
-	bs.padID = padID;
-
-	RsPadEventHandler(rsPADBUTTONUP, (void *)&bs);
-	
-	{
-		if (CPad::m_bMapPadOneToPadTwo)
-			bs.padID = 1;
-		
-		RsPadEventHandler(rsPADBUTTONUP,   (void *)&bs);
-		RsPadEventHandler(rsPADBUTTONDOWN, (void *)&bs);
-	}
-	
-	{
-		if (CPad::m_bMapPadOneToPadTwo)
-			bs.padID = 1;
-		
-		CPad *pad = CPad::GetPad(bs.padID);
-
-		if ( Abs(positionx)  > 0.25f )		 		
- 			pad->PCTempJoyState.LeftStickX	= (int32)(positionx  * 128.0f);		
-
- 		if ( Abs(positiony)  > 0.25f )		 		
- 			pad->PCTempJoyState.LeftStickY	= (int32)(positiony  * 128.0f);		
-
- 		if ( Abs(rightStickx) > 0.25f )		 		
- 			pad->PCTempJoyState.RightStickX = (int32)(rightStickx * 128.0f);		
-
- 		if ( Abs(rightSticky) > 0.25f )		 		
- 			pad->PCTempJoyState.RightStickY = (int32)(rightSticky * 128.0f);
-	}
-
-	_psHandleVibration();
-	
 	return;
 }
 
