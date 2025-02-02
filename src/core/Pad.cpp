@@ -1640,7 +1640,7 @@ int16 CPad::GetHandBrake(void)
 		case 0:
 		case 1:
 		{
-			return NewState.Circle;
+			return NewState.Cross;
 
 			break;
 		}
