@@ -1093,6 +1093,61 @@ void CPad::AffectFromXinput(uint32 pad)
 		XInputSetState(pad, &VibrationState);
 	}
 }
+#else
+void CPad::AffectFromXinput(uint32 pad)
+{
+	if (pad != 0) // LoadINIControllerSettings can set it to -1
+		return;
+	
+	int16_t xaxis = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_LEFTX);
+	int16_t yaxis = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_LEFTY);
+	float positionx = float(xaxis)/32768.0f;
+	float positiony = float(yaxis)/32768.0f;
+
+	int16_t xaxis2 = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_RIGHTX);
+	int16_t yaxis2 = SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_RIGHTY);
+	float rightStickx = float(xaxis2)/32768.0f;
+	float rightSticky = float(yaxis2)/32768.0f;
+
+	PCTempJoyState.Cross = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_A)?255:0;
+	PCTempJoyState.Circle = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_B)?255:0;
+	PCTempJoyState.Square = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_X)?255:0;
+	PCTempJoyState.Triangle = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_Y)?255:0;
+	PCTempJoyState.LeftShoulder1 = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_LEFTSHOULDER)?255:0;
+	PCTempJoyState.RightShoulder1 = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)?255:0;
+	PCTempJoyState.LeftShoulder2 =  (uint8)(255.0f * float(SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT))/32768.0f);
+	PCTempJoyState.RightShoulder2 = (uint8)(255.0f * float(SDL_GameControllerGetAxis(game_controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT))/32768.0f);
+	PCTempJoyState.Select = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_BACK)?255:0;
+	PCTempJoyState.Start = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_START)?255:0;
+	PCTempJoyState.LeftShock = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_LEFTSTICK)?255:0;
+	PCTempJoyState.RightShock = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_RIGHTSTICK)?255:0;
+	PCTempJoyState.DPadUp = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_UP)?255:0;
+	PCTempJoyState.DPadRight = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)?255:0;
+	PCTempJoyState.DPadDown = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN)?255:0;
+	PCTempJoyState.DPadLeft = SDL_GameControllerGetButton(game_controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT)?255:0;
+
+	if ( Abs(positionx)  > 0.25f )		 		
+		PCTempJoyState.LeftStickX = (int32)(positionx  * 128.0f);		
+
+	if ( Abs(positiony)  > 0.25f )		 		
+		PCTempJoyState.LeftStickY = (int32)(positiony  * 128.0f);		
+
+	if ( Abs(rightStickx) > 0.25f )		 		
+		PCTempJoyState.RightStickX = (int32)(rightStickx * 128.0f);		
+
+	if ( Abs(rightSticky) > 0.25f )		 		
+		PCTempJoyState.RightStickY = (int32)(rightSticky * 128.0f);
+	}
+
+	if (ShakeDur < CTimer::GetTimeStepInMilliseconds())
+		ShakeDur = 0;
+	else
+		ShakeDur -= CTimer::GetTimeStepInMilliseconds();
+
+	if (ShakeDur == 0) ShakeFreq = 0;
+
+	SDL_GameControllerRumble(game_controller, ((float)ShakeFreq / 255.0f) * 0xFFFF, ((float)ShakeFreq / 255.0f) * 0xFFFF, 0xFFFF);
+}
 #endif
 
 void CPad::UpdatePads(void)
@@ -1100,12 +1155,8 @@ void CPad::UpdatePads(void)
 	bool bUpdate = true;
 
 	GetPad(0)->UpdateMouse();
-#ifdef XINPUT
 	GetPad(0)->AffectFromXinput(m_bMapPadOneToPadTwo ? 1 : 0);
 	GetPad(1)->AffectFromXinput(m_bMapPadOneToPadTwo ? 0 : 1);
-#else
-	CapturePad(0);
-#endif
 
 	// Improve keyboard input latency part 1
 #ifdef FIX_BUGS
