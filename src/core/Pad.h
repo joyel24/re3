@@ -1,8 +1,6 @@
 #pragma once
 #include "SDL.h"
 
-SDL_GameController* game_controller;
-
 enum {
 	PLAYERCONTROL_ENABLED = 0,
 	PLAYERCONTROL_CAMERA = 1,
@@ -71,6 +69,8 @@ public:
 VALIDATE_SIZE(CMousePointerStateHelper, 0x2);
 
 extern CMousePointerStateHelper MousePointerStateHelper;
+
+extern SDL_GameController* game_controller;
 
 
 class CKeyboardState
