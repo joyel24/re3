@@ -2281,7 +2281,7 @@ int32 CControllerConfigManager::GetNumOfSettingsForAction(e_ControllerAction act
 	     R1,     /* VEHICLE_CHANGE_RADIO_STATION */                                                                                                            \
 	     L3,     /* VEHICLE_HORN */                                                                                                                            \
 	     Q,     /* TOGGLE_SUBMISSIONS */                                                                                                                      \
-	     O,     /* VEHICLE_HANDBRAKE */                                                                                                                       \
+	     X,     /* VEHICLE_HANDBRAKE */                                                                                                                       \
 	     nil,    /* PED_1RST_PERSON_LOOK_LEFT */                                                                                                               \
 	     nil,    /* PED_1RST_PERSON_LOOK_RIGHT */                                                                                                              \
 	     LEFT,     /* VEHICLE_LOOKLEFT */                                                                                                                        \
