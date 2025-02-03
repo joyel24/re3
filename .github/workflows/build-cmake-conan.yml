@@ -16,32 +16,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
-      - uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
       - name: "Setup conan"
         run: |
           python -m pip install conan==1.66
           conan config init
           conan config set log.print_run_commands=True
           conan config set general.revisions_enabled=1
-      - name: "Add os=playstation2 + gcc.version=3.2 to .conan/settings.yml"
-        shell: python
-        run: |
-          import os, yaml
-          settings_path = os.path.expanduser("~/.conan/settings.yml")
-          yml = yaml.safe_load(open(settings_path))
-          yml["os"]["playstation2"] = None
-          yml["compiler"]["gcc"]["version"].append("3.2")
-          yml["compiler"]["gcc"]["version"].sort()
-          yaml.safe_dump(yml, open(settings_path, "w"))
-      - name: "Create host profile"
-        shell: bash
-        run: |
-          cp ~/.conan/profiles/default host_profile
-      - name: "Export Playstation 2 CMake toolchain conan recipe"
-        run: |
-          conan export vendor/librw/cmake/ps2/cmaketoolchain ps2dev-cmaketoolchain/master@
       - name: "Export librw conan recipe"
         run: |
           conan export vendor/librw librw/master@
