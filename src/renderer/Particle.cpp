@@ -1663,8 +1663,7 @@ void CParticle::Render()
 				if ( CSprite::CalcScreenCoors(particle->m_vecPosition, &coors, &w, &h, true) )
 				{
 #ifdef PC_PARTICLE
-					if ( (!particleBanned || SCREEN_WIDTH * fParticleScaleLimit >= w)
-											&& SCREEN_HEIGHT * fParticleScaleLimit >= h )
+					if ( !particleBanned && SCREEN_WIDTH * fParticleScaleLimit >= w && SCREEN_HEIGHT * fParticleScaleLimit >= h )
 #endif
 					{
 						if ( particle->m_nRotation != 0 )
