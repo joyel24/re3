@@ -519,9 +519,7 @@ void CParticle::Initialise()
 
 			case PARTICLE_FLAME:
 			case PARTICLE_CARFLAME:
-				entry->m_ppRaster = gpFlameRaster;
-				break;
-
+			case PARTICLE_CARFLAME_SMOKE:
 			case PARTICLE_FIREBALL:
 				entry->m_ppRaster = gpFlameRaster;
 				break;
@@ -624,10 +622,9 @@ void CParticle::Initialise()
 
 			case PARTICLE_ENGINE_SMOKE:
 			case PARTICLE_ENGINE_SMOKE2:
-			case PARTICLE_CARFLAME_SMOKE:
 			case PARTICLE_FIREBALL_SMOKE:
 			case PARTICLE_TEST:
-				entry->m_ppRaster = gpFlameRaster;
+				entry->m_ppRaster = &gpCloudRaster4;
 				break;
 
 			case PARTICLE_BIRD_FRONT:
