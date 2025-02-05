@@ -179,11 +179,7 @@ CParticleObject::AddObject(uint16 type, CVector const &pos, CVector const &targe
 			{
 				pobj->m_ParticleType     = PARTICLE_STEAM_NY;
 				pobj->m_nNumEffectCycles = 1;
-#ifdef PC_PARTICLE
-				pobj->m_nSkipFrames      = 3;
-#else
 				pobj->m_nSkipFrames      = 1;
-#endif
 				pobj->m_nCreationChance  = 8;
 				break;
 			}
@@ -201,11 +197,7 @@ CParticleObject::AddObject(uint16 type, CVector const &pos, CVector const &targe
 			{
 				pobj->m_ParticleType     = PARTICLE_STEAM_NY;
 				pobj->m_nNumEffectCycles = 1;
-#ifdef PC_PARTICLE
-				pobj->m_nSkipFrames      = 3;
-#else
 				pobj->m_nSkipFrames      = 1;
-#endif
 				pobj->m_nCreationChance  = 8;
 				break;
 			}
@@ -223,11 +215,7 @@ CParticleObject::AddObject(uint16 type, CVector const &pos, CVector const &targe
 			{
 				pobj->m_ParticleType     = PARTICLE_STEAM_NY;
 				pobj->m_nNumEffectCycles = 1;
-#ifdef PC_PARTICLE
-				pobj->m_nSkipFrames      = 3;
-#else
 				pobj->m_nSkipFrames      = 1;
-#endif
 				pobj->m_nCreationChance  = 8;
 				pobj->m_Color            = CRGBA(16, 16, 16, 255);
 				break;
@@ -250,11 +238,7 @@ CParticleObject::AddObject(uint16 type, CVector const &pos, CVector const &targe
 			{
 				pobj->m_ParticleType     = PARTICLE_CAR_SPLASH;
 				pobj->m_nNumEffectCycles = 0;
-#ifdef PC_PARTICLE
 				pobj->m_nSkipFrames      = 1;
-#else
-				pobj->m_nSkipFrames      = 3;
-#endif
 				pobj->m_nCreationChance  = 0;
 #ifdef SCREEN_DROPLETS
 				ScreenDroplets::RegisterSplash(pobj);
@@ -265,12 +249,8 @@ CParticleObject::AddObject(uint16 type, CVector const &pos, CVector const &targe
 			case POBJECT_SPLASHES_AROUND:
 			{
 				pobj->m_ParticleType     = PARTICLE_SPLASH;
-#ifdef PC_PARTICLE
-				pobj->m_nNumEffectCycles = 15;
-#else
 				pobj->m_nNumEffectCycles = 30;
-#endif
-				pobj->m_nSkipFrames      = 2;
+				pobj->m_nSkipFrames      = 1;
 				pobj->m_nCreationChance  = 0;
 				break;
 			}
@@ -279,11 +259,7 @@ CParticleObject::AddObject(uint16 type, CVector const &pos, CVector const &targe
 			{
 				pobj->m_ParticleType     = PARTICLE_FLAME;
 				pobj->m_nNumEffectCycles = 1;
-#ifdef PC_PARTICLE
-				pobj->m_nSkipFrames      = 2;
-#else
 				pobj->m_nSkipFrames      = 1;
-#endif
 				pobj->m_nCreationChance  = 2;
 				pobj->m_vecTarget        = CVector(0.0f, 0.0f, 0.0f);
 				break;
@@ -293,11 +269,7 @@ CParticleObject::AddObject(uint16 type, CVector const &pos, CVector const &targe
 			{
 				pobj->m_ParticleType     = PARTICLE_FLAME;
 				pobj->m_nNumEffectCycles = 1;
-#ifdef PC_PARTICLE
-				pobj->m_nSkipFrames      = 2;
-#else
 				pobj->m_nSkipFrames      = 1;
-#endif
 				pobj->m_nCreationChance  = 4;
 				pobj->m_vecTarget        = CVector(0.0f, 0.0f, 0.0f);
 				break;
@@ -327,11 +299,7 @@ CParticleObject::AddObject(uint16 type, CVector const &pos, CVector const &targe
 			{
 				pobj->m_ParticleType     = PARTICLE_EXPLOSION_MEDIUM;
 				pobj->m_nNumEffectCycles = 1;
-#ifdef PC_PARTICLE
-				pobj->m_nSkipFrames      = 3;
-#else
 				pobj->m_nSkipFrames      = 1;
-#endif
 				pobj->m_nCreationChance  = 2;
 				pobj->m_fRandVal         = 0.01f;
 				break;
@@ -361,7 +329,7 @@ CParticleObject::AddObject(uint16 type, CVector const &pos, CVector const &targe
 			{
 				pobj->m_ParticleType     = PARTICLE_FLAME;
 				pobj->m_nNumEffectCycles = 1;
-				pobj->m_nSkipFrames      = 2;
+				pobj->m_nSkipFrames      = 1;
 				pobj->m_nCreationChance  = 8;
 				pobj->m_fRandVal         = 0.1f;
 				break;
