@@ -13,7 +13,7 @@ jobs:
       run: |
         del ./gamefiles/TEXT/
         cd ./utils/gxt
-        ./convtxd.exe -x particle.txd 
+        convtxd.exe -x particle.txd 
         build.bat
       shell: cmd
     - name: upload
