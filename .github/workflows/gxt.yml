@@ -1,7 +1,7 @@
 name: gxt
 
 on:
-  push:
+  workflow_dispatch:
 
 jobs:
   build:
@@ -14,8 +14,14 @@ jobs:
         del ./gamefiles/TEXT/
         cd ./utils/gxt
         build.bat
+        convtxd -x particle.txd
       shell: cmd
     - name: upload
       uses: actions/upload-artifact@v4.6.0
       with:
         path: gamefiles/TEXT/
+    - name: txd
+      uses: actions/upload-artifact@v4.6.0
+      with:
+        name: txd
+        path: utils/gxt/
