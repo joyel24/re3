@@ -73,12 +73,14 @@ myrand(void)
 	static std::random_device rd;
 	mysrand(rd());
 #ifdef USE_PS2_RAND
-	// Use our own implementation of rand, stolen from PS2
-	return ((myrand_seed >> 32) & 0x7FFFFFFF);
-#else
-	// or original codewarrior rand
-	return((myrand_seed >> 16) & 0x7FFF);
-#endif
+ 	// Use our own implementation of rand, stolen from PS2
+ 	myrand_seed = 0x5851F42D4C957F2D * myrand_seed + 1;
+ 	return ((myrand_seed >> 32) & 0x7FFFFFFF);
+ #else
+ 	// or original codewarrior rand
+ 	myrand_seed = myrand_seed * 1103515245 + 12345;
+ 	return((myrand_seed >> 16) & 0x7FFF);
+ #endif
 }
 
 void
