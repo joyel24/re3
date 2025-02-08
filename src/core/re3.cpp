@@ -1,4 +1,5 @@
 #include <csignal>
+#include <random>
 #define WITHWINDOWS
 #include "common.h"
 #if defined DETECT_JOYSTICK_MENU && defined XINPUT
@@ -69,13 +70,13 @@ unsigned long int myrand_seed = 1;
 int
 myrand(void)
 {
+	std::random_device rd;
+	myrand_seed = rd();
 #ifdef USE_PS2_RAND
 	// Use our own implementation of rand, stolen from PS2
-	myrand_seed = 0x5851F42D4C957F2D * myrand_seed + 1;
 	return ((myrand_seed >> 32) & 0x7FFFFFFF);
 #else
 	// or original codewarrior rand
-	myrand_seed = myrand_seed * 1103515245 + 12345;
 	return((myrand_seed >> 16) & 0x7FFF);
 #endif
 }
