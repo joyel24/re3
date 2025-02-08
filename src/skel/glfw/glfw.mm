@@ -1770,9 +1770,6 @@ main(int argc, char *argv[])
 
 	SDL_Init(SDL_INIT_GAMECONTROLLER);
 
-	// Load our gamepad mappings.
-	SDL_GameControllerAddMappingsFromFile("gamecontrollerdb.txt");
-
 	/* 
 	 * Initialize the platform independent data.
 	 * This will in turn initialize the platform specific data...
