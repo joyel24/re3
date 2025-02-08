@@ -70,7 +70,8 @@ unsigned long int myrand_seed = 1;
 int
 myrand(void)
 {
-	myrand_seed = (unsigned int)std::random_device{}();
+	static std::random_device rd;
+	mysrand(rd());
 #ifdef USE_PS2_RAND
 	// Use our own implementation of rand, stolen from PS2
 	return ((myrand_seed >> 32) & 0x7FFFFFFF);
