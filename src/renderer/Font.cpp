@@ -538,12 +538,12 @@ CFont::PrintChar(float x, float y, wchar c)
 #ifdef FIX_BUGS
 				CRect(x + SCREEN_SCALE_X(Details.dropShadowPosition),
 				      y + SCREEN_SCALE_Y(Details.dropShadowPosition),
-				      x + SCREEN_SCALE_X(Details.dropShadowPosition) + 32.0f * Details.scaleX * 1.0f,
+				      x + SCREEN_SCALE_X(Details.dropShadowPosition) + 32.0f * Details.scaleX * 0.5f,
 				      y + SCREEN_SCALE_Y(Details.dropShadowPosition) + 40.0f * Details.scaleY * 0.5f),
 #else
 				CRect(x + Details.dropShadowPosition,
 				      y + Details.dropShadowPosition,
-				      x + Details.dropShadowPosition + 32.0f * Details.scaleX * 1.0f,
+				      x + Details.dropShadowPosition + 32.0f * Details.scaleX * 0.5f,
 				      y + Details.dropShadowPosition + 40.0f * Details.scaleY * 0.5f),
 #endif
 				Details.dropColor,
@@ -559,7 +559,7 @@ CFont::PrintChar(float x, float y, wchar c)
 			Details.style, // BUG: game doesn't add bank
 #endif
 			CRect(x, y,
-			      x + 32.0f * Details.scaleX * 1.0f,
+			      x + 32.0f * Details.scaleX * 0.5f,
 			      y + 40.0f * Details.scaleY * 0.5f),
 			Details.color,
 			xoff/16.0f,                 yoff/12.8f,
@@ -611,7 +611,7 @@ CFont::PrintChar(float x, float y, wchar c)
 			Details.style, // BUG: game doesn't add bank
 #endif
 			CRect(x, y,
-					x + 32.0f * Details.scaleX * w,
+					x + 32.0f * Details.scaleX * w * 0.5f,
 					y + 32.0f * Details.scaleY * 0.5f),
 			Details.color,
 			xoff/16.0f,               yoff/16.0f,
@@ -1187,9 +1187,9 @@ CFont::GetCharacterSize(wchar c)
 		return Size[LanguageSet][Details.style][192] * Details.scaleX;
 #else
 	if (Details.proportional)
-		return Size[Details.style][c] * Details.scaleX;
+		return Size[Details.style][c] * Details.scaleX * 0.5f;
 	else
-		return Size[Details.style][192] * Details.scaleX;
+		return Size[Details.style][192] * Details.scaleX * 0.5f;
 #endif // MORE_LANGUAGES
 }
 
@@ -1453,7 +1453,7 @@ CFont::SetScale(float x, float y)
 		y *= 1.25f;
 	}*/
 #endif
-	Details.scaleX = (x > (y / 2.0f)) ? (y / 2.0f) : x; 
+	Details.scaleX = y; 
 	Details.scaleY = y;
 }
 
