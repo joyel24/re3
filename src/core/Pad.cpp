@@ -1144,10 +1144,19 @@ void CPad::Update(int16 pad)
 {
 	OldState = NewState;
 
-	ShakeDur = Max(ShakeDur - (int32)CTimer::GetTimeStepInMilliseconds(), 0);
-	if (ShakeDur == 0) ShakeFreq = 0;
+	if ( ShakeDur )
+	{
+		ShakeDur = Max(ShakeDur - (int32)CTimer::GetTimeStepInMilliseconds(), 0);
 
-	SDL_GameControllerRumble(game_controller, ((float)ShakeFreq / 255.0f) * 0xFFFF, ((float)ShakeFreq / 255.0f) * 0xFFFF, 0xFFFF);
+		if ( ShakeDur == 0 )
+		{
+			SDL_GameControllerRumble(game_controller, 0, 0, 0xFFFF);
+		}
+		else
+		{		
+			SDL_GameControllerRumble(game_controller, ((float)ShakeFreq / 255.0f) * 0xFFFF, ((float)ShakeFreq / 255.0f) * 0xFFFF, 0xFFFF);
+		}
+	}
 
 	if (game_controller == nullptr)
 	{
@@ -1283,16 +1292,7 @@ void CPad::StopShaking(int16 pad)
 #ifdef GTA_PS2_STUFF
 	ShakeFreq = 0;
 	ShakeDur = 0;
-
-#ifdef GTA_PS2
-	if ( Phase == 99 )
-	{
-		act_direct[0] = 0;
-		act_direct[1] = 0;
-		scePadSetActDirect(pad, 0, act_direct);
-	}
-#endif
-
+	SDL_GameControllerRumble(game_controller, 0, 0, 0xFFFF);
 #endif
 }
 
