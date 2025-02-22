@@ -125,7 +125,7 @@ CDarkel::DrawMessages()
 					CFont::SetColor(CRGBA(0, 0, 0, 255));
 #if defined(PS2_HUD) || defined(FIX_BUGS)
 	#ifdef FIX_BUGS
-					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(34.0f - 1.0f), SCREEN_SCALE_Y(108.0f + 1.0f), gUString);
+					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(71.0f - 1.0f), SCREEN_SCALE_Y(128.0f + 1.0f), gUString);
 	#else
 					CFont::PrintString(SCREEN_WIDTH-(34.0f - 1.0f), 108.0f + 1.0f, gUString);
 	#endif
@@ -133,21 +133,21 @@ CDarkel::DrawMessages()
 					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(34.0f + 1.0f), SCREEN_SCALE_Y(108.0f + 1.0f), gUString);
 #endif
 					CFont::SetColor(CRGBA(150, 100, 255, 255));
-					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(34.0f), SCREEN_SCALE_Y(108.0f), gUString);
+					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(71.0f), SCREEN_SCALE_Y(128.0f), gUString);
 				}
 			}
 			sprintf(gString, "%d", (CDarkel::KillsNeeded >= 0 ? CDarkel::KillsNeeded : 0));
 			AsciiToUnicode(gString, gUString);
 			CFont::SetColor(CRGBA(0, 0, 0, 255));
 #ifdef FIX_BUGS
-#define DARKEL_COUNTER_HEIGHT 143.0f
+#define DARKEL_COUNTER_HEIGHT 163.0f
 #else
 #define DARKEL_COUNTER_HEIGHT 128.0f
 #endif
 
 #if defined(PS2_HUD) || defined(FIX_BUGS)
 	#ifdef FIX_BUGS
-		    CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(34.0f - 1.0f), SCREEN_SCALE_Y(DARKEL_COUNTER_HEIGHT + 1.0f), gUString);
+		    CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(71.0f - 1.0f), SCREEN_SCALE_Y(DARKEL_COUNTER_HEIGHT + 1.0f), gUString);
 	#else
 		    CFont::PrintString(SCREEN_WIDTH-(34.0f - 1.0f), DARKEL_COUNTER_HEIGHT + 1.0f, gUString);
 	#endif
@@ -155,7 +155,7 @@ CDarkel::DrawMessages()
 		    CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(34.0f + 1.0f), SCREEN_SCALE_Y(DARKEL_COUNTER_HEIGHT + 1.0f), gUString);
 #endif
 			CFont::SetColor(CRGBA(255, 128, 128, 255));
-		    CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(34.0f), SCREEN_SCALE_Y(DARKEL_COUNTER_HEIGHT), gUString);
+		    CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(71.0f), SCREEN_SCALE_Y(DARKEL_COUNTER_HEIGHT), gUString);
 #undef DARKEL_COUNTER_HEIGHT
 			break;
 		}

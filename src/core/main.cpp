@@ -1,5 +1,6 @@
 #include "common.h"
 #include <time.h>
+#include <unistd.h>
 #include "rpmatfx.h"
 #include "rphanim.h"
 #include "rpskin.h"
@@ -121,10 +122,6 @@ void TheGame(void);
 
 #ifdef DEBUGMENU
 void DebugMenuPopulate(void);
-#endif
-
-#ifndef FINAL
-bool gbPrintMemoryUsage;
 #endif
 
 #ifdef PS2_MENU
@@ -347,7 +344,15 @@ DoFade(void)
 			fadeColor.g = 255;
 			fadeColor.b = 255;
 			fadeColor.a = CDraw::FadeValue;
-			splash->Draw(CRect(0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT), fadeColor, fadeColor, fadeColor, fadeColor);
+			if( RwTexDictionaryFindNamedTexture( CTxdStore::GetSlot(CTxdStore::FindTxdSlot("splash"))->texDict, "NEWS") != nil )
+			{
+				CSprite2d::DrawRect(CRect(0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT), CRGBA(0, 0, 0, CDraw::FadeValue));
+				splash->Draw(CRect(SCALE_AND_CENTER_X(0.0f), 0.0f, SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH), SCREEN_HEIGHT), fadeColor, fadeColor, fadeColor, fadeColor);
+			}
+			else
+			{
+				splash->Draw(CRect(0.0f, SCREEN_HEIGHT - (SCREEN_WIDTH * 3.0f/4.0f), SCREEN_WIDTH, SCREEN_HEIGHT), fadeColor, fadeColor, fadeColor, fadeColor);
+			}
 		}
 	}
 }
@@ -569,7 +574,7 @@ LoadSplash(const char *name)
 		return &splash;
 	if(splashTxdId == -1)
 		splashTxdId = CTxdStore::AddTxdSlot("splash");
-
+	
 	txd = CTxdStore::GetSlot(splashTxdId)->texDict;
 	if(txd)
 		tex = RwTexDictionaryFindNamedTexture(txd, name);
@@ -590,7 +595,6 @@ LoadSplash(const char *name)
 		CTxdStore::PopCurrentTxd();
 		CFileMgr::SetDir("");
 	}
-
 	return &splash;
 }
 
@@ -648,6 +652,7 @@ ResetLoadingScreenBar()
 void
 LoadingScreen(const char *str1, const char *str2, const char *splashscreen)
 {
+	usleep(50000);     
 	CSprite2d *splash;
 
 #ifdef DISABLE_LOADING_SCREEN
@@ -675,12 +680,15 @@ LoadingScreen(const char *str1, const char *str2, const char *splashscreen)
 	DoRWStuffStartOfFrame(0, 0, 0, 0, 0, 0, 255);
 #endif
 	{
+#ifdef ASPECT_RATIO_SCALE
+		CDraw::SetAspectRatio(CDraw::FindAspectRatio());
+#endif
 		CSprite2d::SetRecipNearClip();
 		CSprite2d::InitPerFrame();
 		CFont::InitPerFrame();
 		DefinedState();
 		RwRenderStateSet(rwRENDERSTATETEXTUREADDRESS, (void*)rwTEXTUREADDRESSCLAMP);
-		splash->Draw(CRect(0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
+		splash->Draw(CRect(0.0f, SCREEN_HEIGHT - (SCREEN_WIDTH * 3.0f/4.0f), SCREEN_WIDTH, SCREEN_HEIGHT), CRGBA(255, 255, 255, 255));
 
 		if(str1){
 			NumberOfChunksLoaded += 1;
@@ -722,7 +730,7 @@ LoadingScreen(const char *str1, const char *str2, const char *splashscreen)
 
 		CFont::DrawFonts();
  		DoRWStuffEndOfFrame();
-	}
+	}  
 }
 
 void
@@ -1095,16 +1103,6 @@ DisplayGameDebugText()
 {
 	static bool bDisplayPosn = false;
 	static bool bDisplayRate = false;
-#ifndef FINAL
-	{
-		SETTWEAKPATH("Debug");
-		TWEAKBOOL(bDisplayPosn);
-		TWEAKBOOL(bDisplayRate);
-	}
-
-	if(gbPrintMemoryUsage)
-		PrintMemoryUsage();
-#endif
 
 	char str[200];
 	wchar ustr[200];
@@ -1423,13 +1421,6 @@ RenderDebugShit(void)
 {
 	PUSH_RENDERGROUP("RenderDebugShit");
 	CTheScripts::RenderTheScriptDebugLines();
-#ifndef FINAL
-	if(gbShowCollisionLines)
-		CRenderer::RenderCollisionLines();
-	ThePaths.DisplayPathData();
-	CDebug::DrawLines();
-	DefinedState();
-#endif
 	POP_RENDERGROUP();
 }
 
@@ -1536,7 +1527,7 @@ Render2dStuff(void)
 void
 RenderMenus(void)
 {
-	if (FrontEndMenuManager.m_bMenuActive)
+	if (FrontEndMenuManager.m_bMenuActive || FrontEndMenuManager.m_nEndPauseTimer != 0)
 	{
 		PUSH_RENDERGROUP("RenderMenus");
 		PUSH_MEMID(MEMID_FRONTEND);
@@ -1733,6 +1724,9 @@ Idle(void *arg)
 
 #ifdef PS2_MENU
 	if ( TheMemoryCard.m_bWantToLoad )
+		goto popret;
+#else
+	if ( FrontEndMenuManager.m_bWantToLoad )
 		goto popret;
 #endif
 
@@ -2466,7 +2460,7 @@ main(int argc, char *argv[])
 #endif
 
 	PlayIntroMPEGs();
-
+	
 	GameInit();
 
 	if ( CGame::frenchGame || CGame::germanGame )

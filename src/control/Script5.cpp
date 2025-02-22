@@ -1303,7 +1303,7 @@ int16 CRunningScript::GetPadState(uint16 pad, uint16 button)
 	case 16: return pPad->NewState.Cross;
 	case 17: return pPad->NewState.Circle;
 	case 18: return pPad->NewState.LeftShock;
-	case 19: return pPad->NewState.RightShock;
+	case 19: return pPad->NewState.Square; //hack around SCM bullshit
 	default: break;
 	}
 	return 0;

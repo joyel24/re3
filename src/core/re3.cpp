@@ -1,4 +1,5 @@
 #include <csignal>
+#include <random>
 #define WITHWINDOWS
 #include "common.h"
 #if defined DETECT_JOYSTICK_MENU && defined XINPUT
@@ -57,6 +58,8 @@
 extern "C" int vsprintf(char* const _Buffer, char const* const _Format, va_list  _ArgList);
 #endif
 
+const char *_psGetUserFilesFolder();
+
 
 #ifdef USE_PS2_RAND
 unsigned long long myrand_seed = 1;
@@ -67,15 +70,17 @@ unsigned long int myrand_seed = 1;
 int
 myrand(void)
 {
+	static std::random_device rd;
+	mysrand(rd());
 #ifdef USE_PS2_RAND
-	// Use our own implementation of rand, stolen from PS2
-	myrand_seed = 0x5851F42D4C957F2D * myrand_seed + 1;
-	return ((myrand_seed >> 32) & 0x7FFFFFFF);
-#else
-	// or original codewarrior rand
-	myrand_seed = myrand_seed * 1103515245 + 12345;
-	return((myrand_seed >> 16) & 0x7FFF);
-#endif
+ 	// Use our own implementation of rand, stolen from PS2
+ 	myrand_seed = 0x5851F42D4C957F2D * myrand_seed + 1;
+ 	return ((myrand_seed >> 32) & 0x7FFFFFFF);
+ #else
+ 	// or original codewarrior rand
+ 	myrand_seed = myrand_seed * 1103515245 + 12345;
+ 	return((myrand_seed >> 16) & 0x7FFF);
+ #endif
 }
 
 void
@@ -86,38 +91,6 @@ mysrand(unsigned int seed)
 
 #ifdef CUSTOM_FRONTEND_OPTIONS
 #include "frontendoption.h"
-
-#ifdef MORE_LANGUAGES
-void LangPolSelect(int8 action)
-{
-	if (action == FEOPTION_ACTION_SELECT) {
-		FrontEndMenuManager.m_PrefsLanguage = CMenuManager::LANGUAGE_POLISH;
-		FrontEndMenuManager.m_bFrontEnd_ReloadObrTxtGxt = true;
-		FrontEndMenuManager.InitialiseChangedLanguageSettings();
-		FrontEndMenuManager.SaveSettings();
-	}
-}
-
-void LangRusSelect(int8 action)
-{
-	if (action == FEOPTION_ACTION_SELECT) {
-		FrontEndMenuManager.m_PrefsLanguage = CMenuManager::LANGUAGE_RUSSIAN;
-		FrontEndMenuManager.m_bFrontEnd_ReloadObrTxtGxt = true;
-		FrontEndMenuManager.InitialiseChangedLanguageSettings();
-		FrontEndMenuManager.SaveSettings();
-	}
-}
-
-void LangJapSelect(int8 action)
-{
-	if (action == FEOPTION_ACTION_SELECT) {
-		FrontEndMenuManager.m_PrefsLanguage = CMenuManager::LANGUAGE_JAPANESE;
-		FrontEndMenuManager.m_bFrontEnd_ReloadObrTxtGxt = true;
-		FrontEndMenuManager.InitialiseChangedLanguageSettings();
-		FrontEndMenuManager.SaveSettings();
-	}
-}
-#endif
 
 void
 CustomFrontendOptionsPopulate(void)
@@ -148,43 +121,14 @@ CustomFrontendOptionsPopulate(void)
 	}
 #endif
 
-	// Add outsourced language translations, if files are found
-#ifdef MORE_LANGUAGES
-	int fd2;
-	FrontendOptionSetCursor(MENUPAGE_LANGUAGE_SETTINGS, 5, false);
-	if (fd = CFileMgr::OpenFile("text/polish.gxt","r")) {
-		if (fd2 = CFileMgr::OpenFile("models/fonts_p.txd","r")) {
-			FrontendOptionAddDynamic("FEL_POL", nil, nil, LangPolSelect, nil, nil);
-			CFileMgr::CloseFile(fd2);
-		}
-		CFileMgr::CloseFile(fd);
-	}
-
-	if (fd = CFileMgr::OpenFile("text/russian.gxt","r")) {
-		if (fd2 = CFileMgr::OpenFile("models/fonts_r.txd","r")) {
-			FrontendOptionAddDynamic("FEL_RUS", nil, nil, LangRusSelect, nil, nil);
-			CFileMgr::CloseFile(fd2);
-		}
-		CFileMgr::CloseFile(fd);
-	}
-
-	if (fd = CFileMgr::OpenFile("text/japanese.gxt","r")) {
-		if (fd2 = CFileMgr::OpenFile("models/fonts_j.txd","r")) {
-			FrontendOptionAddDynamic("FEL_JAP", nil, nil, LangJapSelect, nil, nil);
-			CFileMgr::CloseFile(fd2);
-		}
-		CFileMgr::CloseFile(fd);
-	}
-#endif
-
 }
 #endif
 
 #ifdef LOAD_INI_SETTINGS
 #define MINI_CASE_SENSITIVE
 #include "ini.h"
-
-mINI::INIFile ini("re3.ini");
+std::string buf(_psGetUserFilesFolder());
+mINI::INIFile ini(buf.append("/re3.ini"));
 mINI::INIStructure cfg;
 
 bool ReadIniIfExists(const char *cat, const char *key, uint32 *out)
@@ -506,7 +450,6 @@ bool LoadINISettings()
 	ReadIniIfExists("Graphics", "Trails", &CMBlur::BlurOn);
 	ReadIniIfExists("General", "SkinFile", FrontEndMenuManager.m_PrefsSkinFile, 256);
 	ReadIniIfExists("Controller", "Method", &FrontEndMenuManager.m_ControlMethod);
-	ReadIniIfExists("General", "Language", &FrontEndMenuManager.m_PrefsLanguage);
 
 #ifdef EXTENDED_COLOURFILTER
 	ReadIniIfExists("CustomPipesValues", "PostFXIntensity", &CPostFX::Intensity);
@@ -608,7 +551,6 @@ void SaveINISettings()
 	StoreIni("Graphics", "Trails", CMBlur::BlurOn);
 	StoreIni("General", "SkinFile", FrontEndMenuManager.m_PrefsSkinFile, 256);
 	StoreIni("Controller", "Method", FrontEndMenuManager.m_ControlMethod);
-	StoreIni("General", "Language", FrontEndMenuManager.m_PrefsLanguage);
 
 #ifdef EXTENDED_COLOURFILTER
 	StoreIni("CustomPipesValues", "PostFXIntensity", CPostFX::Intensity);

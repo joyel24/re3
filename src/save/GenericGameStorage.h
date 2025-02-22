@@ -9,6 +9,7 @@ bool GenericSave(int file);
 bool GenericLoad();
 bool ReadInSizeofSaveFileBuffer(int32 &file, uint32 &size);
 bool ReadDataFromFile(int32 file, uint8 *buf, uint32 size);
+bool FindMostRecentFileName(char *filename);
 bool CloseFile(int32 file);
 void DoGameSpecificStuffAfterSucessLoad();
 bool CheckSlotDataValid(int32 slot);

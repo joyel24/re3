@@ -1018,7 +1018,7 @@ CPlayerPed::ProcessPlayerWeapon(CPad *padUsed)
 	}
 	if (!m_pFire) {
 		if (GetWeapon()->m_eWeaponType == WEAPONTYPE_ROCKETLAUNCHER ||
-			GetWeapon()->m_eWeaponType == WEAPONTYPE_SNIPERRIFLE || GetWeapon()->m_eWeaponType == WEAPONTYPE_M16) {
+			GetWeapon()->m_eWeaponType == WEAPONTYPE_SNIPERRIFLE) {
 			if (padUsed->TargetJustDown()) {
 				SetStoredState();
 				SetPedState(PED_SNIPER_MODE);
@@ -1429,11 +1429,7 @@ CPlayerPed::ProcessControl(void)
 			}
 			break;
 		case PED_SNIPER_MODE:
-			if (FindPlayerPed()->GetWeapon()->m_eWeaponType == WEAPONTYPE_M16) {
-				if (padUsed)
-					PlayerControlM16(padUsed);
-
-			} else if (padUsed) {
+			if (padUsed) {
 				PlayerControlSniper(padUsed);
 			}
 			break;

@@ -133,11 +133,9 @@ public:
 	bool IsDummy(void) { return m_type == ENTITY_TYPE_DUMMY; }
 
 	RpAtomic *GetAtomic(void) {
-		assert(RwObjectGetType(m_rwObject) == rpATOMIC);
 		return (RpAtomic*)m_rwObject;
 	}
 	RpClump *GetClump(void) {
-		assert(RwObjectGetType(m_rwObject) == rpCLUMP);
 		return (RpClump*)m_rwObject;
 	}
 

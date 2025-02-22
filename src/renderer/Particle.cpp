@@ -47,6 +47,8 @@
 //(4)
 #define MAX_RAINDROP_FILES        ARRAY_SIZE(RaindropFiles)
 
+#define MAX_FLAME_FILES           ARRAY_SIZE(FlameFiles)
+
 
 
 const char SmokeFiles[][6+1] =
@@ -100,7 +102,16 @@ const char ExplosionMediumFiles[][7+1] =
 	"explo03",
 	"explo04",
 	"explo05",
-	"explo06"
+	"explo06",
+	"explo07",
+	"explo08",
+	"explo09",
+	"explo10",
+	"explo11",
+	"explo12",
+	"explo13",
+	"explo14",
+	"explo15"
 };
 
 const char GunFlashFiles[][9+1] =
@@ -133,6 +144,55 @@ const char BirdfrontFiles[][8+1] =
 	"birdf_04"
 };
 
+const char FlameFiles[][8 + 1] =
+{
+	"flame01",
+	"flame02",
+	"flame03",
+	"flame04",
+	"flame05",
+	"flame06",
+	"flame07",
+	"flame08",
+	"flame09",
+	"flame10",
+	"flame11",
+	"flame12",
+	"flame13",
+	"flame14",
+	"flame15",
+	"flame16",
+	"flame17",
+	"flame18",
+	"flame19",
+	"flame20",
+	"flame21",
+	"flame22",
+	"flame23",
+	"flame24",
+	"flame25",
+	"flame26",
+	"flame27",
+	"flame28",
+	"flame29",
+	"flame30",
+	"flame31",
+	"flame32",
+	"flame33",
+	"flame34",
+	"flame35",
+	"flame36",
+	"flame37",
+	"flame38",
+	"flame39",
+	"flame40",
+	"flame41",
+	"flame42",
+	"flame43",
+	"flame44",
+	"flame45"
+};
+
 const char CardebrisFiles[][12+1] =
 {
 	"cardebris_01",
@@ -162,9 +222,8 @@ RwTexture *gpRainSplashupTex[MAX_RAINSPLASHUP_FILES];
 RwTexture *gpBirdfrontTex[MAX_BIRDFRONT_FILES];
 RwTexture *gpCarDebrisTex[MAX_CARDEBRIS_FILES];
 RwTexture *gpCarSplashTex[MAX_CARSPLASH_FILES];
+RwTexture *gpFlameTex[MAX_FLAME_FILES];
 
-RwTexture *gpFlame1Tex;
-RwTexture *gpFlame5Tex;
 RwTexture *gpRainDropSmallTex;
 RwTexture *gpBloodTex;
 RwTexture *gpLeafTex;
@@ -189,9 +248,8 @@ RwRaster  *gpRainSplashupRaster[MAX_RAINSPLASHUP_FILES];
 RwRaster  *gpBirdfrontRaster[MAX_BIRDFRONT_FILES];
 RwRaster  *gpCarDebrisRaster[MAX_CARDEBRIS_FILES];
 RwRaster  *gpCarSplashRaster[MAX_CARSPLASH_FILES];
+RwRaster  *gpFlameRaster[MAX_FLAME_FILES];
 
-RwRaster  *gpFlame1Raster;
-RwRaster  *gpFlame5Raster;
 RwRaster  *gpRainDropSmallRaster;
 RwRaster  *gpBloodRaster;
 RwRaster  *gpLeafRaster;
@@ -386,18 +444,11 @@ void CParticle::Initialise()
 		gpCarSplashRaster[i] = RwTextureGetRaster(gpCarSplashTex[i]);
 	}
 
-	gpFlame1Tex = RwTextureRead("flame1", NULL);
-	gpFlame1Raster = RwTextureGetRaster(gpFlame1Tex);
-
-	gpFlame5Tex = RwTextureRead("flame5", nil);
-	
-//#ifdef FIX_BUGS
-#if 0
-	gpFlame5Raster = RwTextureGetRaster(gpFlame5Tex);
-#else
-	// this seems to have become more of a design choice
-	gpFlame5Raster = RwTextureGetRaster(gpFlame1Tex);	// copy-paste bug ?
-#endif
+	for ( int32 i = 0; i < MAX_FLAME_FILES; i++ )
+	{
+		gpFlameTex[i] = RwTextureRead(FlameFiles[i], nil);
+		gpFlameRaster[i] = RwTextureGetRaster(gpFlameTex[i]);
+	}
 
 	gpRainDropSmallTex = RwTextureRead("rainsmall", nil);
 	gpRainDropSmallRaster = RwTextureGetRaster(gpRainDropSmallTex);
@@ -468,11 +519,9 @@ void CParticle::Initialise()
 
 			case PARTICLE_FLAME:
 			case PARTICLE_CARFLAME:
-				entry->m_ppRaster = &gpFlame1Raster;
-				break;
-
+			case PARTICLE_CARFLAME_SMOKE:
 			case PARTICLE_FIREBALL:
-				entry->m_ppRaster = &gpFlame5Raster;
+				entry->m_ppRaster = gpFlameRaster;
 				break;
 
 			case PARTICLE_RAIN_SPLASH:
@@ -573,7 +622,6 @@ void CParticle::Initialise()
 
 			case PARTICLE_ENGINE_SMOKE:
 			case PARTICLE_ENGINE_SMOKE2:
-			case PARTICLE_CARFLAME_SMOKE:
 			case PARTICLE_FIREBALL_SMOKE:
 			case PARTICLE_TEST:
 				entry->m_ppRaster = &gpCloudRaster4;
@@ -722,15 +770,13 @@ void CParticle::Shutdown()
 #endif
 	}
 	
-	RwTextureDestroy(gpFlame1Tex);
+	for ( int32 i = 0; i < MAX_FLAME_FILES; i++ )
+	{
+		RwTextureDestroy(gpFlameTex[i]);
 #if GTA_VERSION >= GTA3_PC_11
-	gpFlame1Tex = nil;
+		gpFlameTex[i] = nil;
 #endif
-
-	RwTextureDestroy(gpFlame5Tex);
-#if GTA_VERSION >= GTA3_PC_11
-	gpFlame5Tex = nil;
-#endif
+	}
 	
 	RwTextureDestroy(gpRainDropSmallTex);
 #if GTA_VERSION >= GTA3_PC_11
@@ -1614,8 +1660,7 @@ void CParticle::Render()
 				if ( CSprite::CalcScreenCoors(particle->m_vecPosition, &coors, &w, &h, true) )
 				{
 #ifdef PC_PARTICLE
-					if ( (!particleBanned || SCREEN_WIDTH * fParticleScaleLimit >= w)
-											&& SCREEN_HEIGHT * fParticleScaleLimit >= h )
+					if ( !particleBanned && SCREEN_WIDTH * fParticleScaleLimit >= w && SCREEN_HEIGHT * fParticleScaleLimit >= h )
 #endif
 					{
 						if ( particle->m_nRotation != 0 )

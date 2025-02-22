@@ -1,0 +1,27 @@
+name: gxt
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: make
+      run: |
+        del ./gamefiles/TEXT/
+        cd ./utils/gxt
+        convtxd.exe -x particle.txd 
+        build.bat
+      shell: cmd
+    - name: upload
+      uses: actions/upload-artifact@v4.6.0
+      with:
+        path: gamefiles/TEXT/
+    - name: txd
+      uses: actions/upload-artifact@v4.6.0
+      with:
+        name: txd
+        path: utils/gxt/

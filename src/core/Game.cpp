@@ -48,7 +48,6 @@
 #include "Phones.h"
 #include "Pickups.h"
 #include "Plane.h"
-#include "PlayerSkin.h"
 #include "Population.h"
 #include "Radar.h"
 #include "Record.h"
@@ -109,13 +108,12 @@ int gameTxdSlot;
 
 bool DoRWStuffStartOfFrame(int16 TopRed, int16 TopGreen, int16 TopBlue, int16 BottomRed, int16 BottomGreen, int16 BottomBlue, int16 Alpha);
 void DoRWStuffEndOfFrame(void);
-#ifdef PS2_MENU
 void MessageScreen(char *msg)
 {
-	CRect rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	CRect rect(0.0f, SCREEN_HEIGHT - (SCREEN_WIDTH * 3.0f/4.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
 	CRGBA color(255, 255, 255, 255);
 
-	DoRWStuffStartOfFrame(50, 50, 50, 0, 0, 0, 255);
+	DoRWStuffStartOfFrame(0, 0, 0, 0, 0, 0, 255);
 	
 	CSprite2d::InitPerFrame();
 	CFont::InitPerFrame();
@@ -124,20 +122,20 @@ void MessageScreen(char *msg)
 	CSprite2d *splash = LoadSplash(NULL);
 	splash->Draw(rect, color, color, color, color);
 #ifdef FIX_BUGS
-	splash->DrawRect(CRect(SCREEN_SCALE_X(20.0f), SCREEN_SCALE_Y(110.0f), SCREEN_WIDTH-SCREEN_SCALE_X(20.0f), SCREEN_SCALE_Y(300.0f)), CRGBA(50, 50, 50, 192));
+	splash->DrawRect(CRect(SCALE_AND_CENTER_X(20.0f), SCREEN_SCALE_Y(110.0f), SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH - 20.0f), SCREEN_SCALE_Y(300.0f)), CRGBA(50, 50, 50, 192));
 #else
 	splash->DrawRect(CRect(20.0f, 110.0f, SCREEN_WIDTH-20.0f, 300.0f), CRGBA(50, 50, 50, 192));
 #endif
 	CFont::SetFontStyle(FONT_BANK);
 	CFont::SetBackgroundOff();
-	CFont::SetWrapx(SCREEN_SCALE_FROM_RIGHT(190));
+	CFont::SetWrapx(SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH - 190));
 #ifdef FIX_BUGS
 	CFont::SetScale(SCREEN_SCALE_X(1.0f), SCREEN_SCALE_Y(1.0f));
 #else
 	CFont::SetScale(1.0f, 1.0f);
 #endif
 	CFont::SetCentreOn();
-	CFont::SetCentreSize(SCREEN_SCALE_X(DEFAULT_SCREEN_WIDTH - 190)); // 450.0f
+	CFont::SetCentreSize(SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH - 190)); // 450.0f
 	CFont::SetJustifyOff();
 	CFont::SetColor(CRGBA(255, 255, 255, 255));
 	CFont::SetDropColor(CRGBA(32, 32, 32, 255));
@@ -153,7 +151,6 @@ void MessageScreen(char *msg)
 	
 	DoRWStuffEndOfFrame();
 }
-#endif
 
 bool
 CGame::InitialiseOnceBeforeRW(void)
@@ -271,8 +268,6 @@ CGame::InitialiseRenderWare(void)
 	CFont::Initialise();
 	CHud::Initialise();
 	POP_MEMID();
-	// TODO: define
-	CPlayerSkin::Initialise();
 #endif
 	
 #ifdef EXTENDED_PIPELINES
@@ -299,12 +294,6 @@ void CGame::ShutdownRenderWare(void)
 	DestroySplashScreen();
 	CHud::Shutdown();
 	CFont::Shutdown();
-	
-	for ( int32 i = 0; i < NUMPLAYERS; i++ )
-		CWorld::Players[i].DeletePlayerSkin();
-
-	// TODO: define
-	CPlayerSkin::Shutdown();
 	
 	DestroyDebugFont();
 	
@@ -378,7 +367,6 @@ bool CGame::InitialiseOnceAfterRW(void)
 	DMAudio.SetEffectsFadeVol(127);
 	DMAudio.SetMusicFadeVol(127);
 #endif
-	CWorld::Players[0].SetPlayerSkin(CMenuManager::m_PrefsSkinFile);
 #endif
 	return true;
 }
@@ -451,9 +439,7 @@ bool CGame::Initialise(const char* datFile)
 	CWeather::Init();
 	CCullZones::Init();
 	CCollision::Init();
-#ifdef PS2_MENU	// TODO: is this the right define?
 	TheText.Load();
-#endif
 	CTheZones::Init();
 	CUserDisplay::Init();
 	CMessages::Init();
@@ -527,7 +513,6 @@ bool CGame::Initialise(const char* datFile)
 #if GTA_VERSION > GTA3_PS2_160
 	for (int i = 0; i < NUMPLAYERS; i++)
 		CWorld::Players[i].Clear();
-	CWorld::Players[0].LoadPlayerSkin();
 	TestModelIndices();
 #endif
 
@@ -650,6 +635,8 @@ bool CGame::Initialise(const char* datFile)
 	LoadingScreen("Loading the Game", "Start script", nil);
 #ifdef PS2_MENU
 	if ( !TheMemoryCard.m_bWantToLoad )
+#else
+	if ( !FrontEndMenuManager.m_bWantToLoad )	
 #endif
 	{
 		CTheScripts::StartTestScript();
@@ -725,6 +712,8 @@ void CGame::ReInitGameObjectVariables(void)
 	CGameLogic::InitAtStartOfGame();
 #ifdef PS2_MENU
 	if ( !TheMemoryCard.m_bWantToLoad )
+#else
+	if ( !FrontEndMenuManager.m_bWantToLoad )	
 #endif
 	{
 		TheCamera.Init();
@@ -863,7 +852,7 @@ void CGame::ShutDownForRestart(void)
 
 void CGame::InitialiseWhenRestarting(void)
 {
-	CRect rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	CRect rect(0.0f, SCREEN_HEIGHT - (SCREEN_WIDTH * 3.0f/4.0f), SCREEN_WIDTH, SCREEN_HEIGHT);
 	CRGBA color(255, 255, 255, 255);
 	
 	CTimer::Initialise();
@@ -876,6 +865,17 @@ void CGame::InitialiseWhenRestarting(void)
 			MessageScreen("MCLOAD");  // Loading Data. Please do not remove the Memory Card (PS2) in MEMORY CARD slot 1, reset or switch off the console.
 		else
 			MessageScreen("RESTART"); // Starting new game
+	}
+#else
+	if ( b_FoundRecentSavedGameWantToLoad == true || FrontEndMenuManager.m_bWantToLoad == false )
+	{
+		for ( int32 i = 0; i < 50; i++ )
+		{
+			if ( FrontEndMenuManager.m_bWantToLoad == true )
+				MessageScreen("MCLOAD");  // Loading Data. Please do not remove the Memory Card (PS2) in MEMORY CARD slot 1, reset or switch off the console.
+			else
+				MessageScreen("RESTART"); // Starting new game
+		}
 	}
 #endif
 	
@@ -981,6 +981,11 @@ void CGame::InitialiseWhenRestarting(void)
 	{
 		if ( GenericLoad() == true )
 		{
+			for ( int32 i = 0; i < 35; i++ )
+			{
+				MessageScreen("FESZ_LS"); // Load Successful.
+			}
+			
 			DMAudio.ResetTimers(CTimer::GetTimeInMilliseconds());
 			CTrain::InitTrains();
 			CPlane::InitPlanes();
@@ -989,8 +994,45 @@ void CGame::InitialiseWhenRestarting(void)
 		{
 			for ( int32 i = 0; i < 50; i++ )
 			{
-				HandleExit();
-				FrontEndMenuManager.MessageScreen("FED_LFL"); // Loading save game has failed. The game will restart now. 
+				DoRWStuffStartOfFrame(0, 0, 0, 0, 0, 0, 255);
+				
+				CSprite2d::InitPerFrame();
+				CFont::InitPerFrame();
+				DefinedState();
+				
+				CSprite2d *splash = LoadSplash(NULL);
+				splash->Draw(rect, color, color, color, color);		
+#ifdef FIX_BUGS
+				splash->DrawRect(CRect(SCALE_AND_CENTER_X(20.0f), SCREEN_SCALE_Y(110.0f), SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH - 20.0f), SCREEN_SCALE_Y(300.0f)), CRGBA(50, 50, 50, 192));
+#else
+				splash->DrawRect(CRect(20.0f, 110.0f, SCREEN_WIDTH-20.0f, 300.0f), CRGBA(50, 50, 50, 192));
+#endif
+
+				CFont::SetBackgroundOff();
+#ifdef ASPECT_RATIO_SCALE
+				CFont::SetWrapx(SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH - 160.0f)); // because SCREEN_SCALE_FROM_RIGHT(x) != SCREEN_SCALE_X(640-x)
+#else
+				CFont::SetWrapx(SCREEN_SCALE_X(480.0f));
+#endif
+				CFont::SetScale(SCREEN_SCALE_X(1.0f), SCREEN_SCALE_Y(1.0f));
+				CFont::SetCentreOn();
+				CFont::SetCentreSize(SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH - 160.0f));
+				CFont::SetJustifyOff();
+				CFont::SetColor(CRGBA(255, 255, 255, 255));
+				CFont::SetBackGroundOnlyTextOff();
+				CFont::SetDropColor(CRGBA(32, 32, 32, 255));
+				CFont::SetDropShadowPosition(3);
+				CFont::SetPropOn();
+#ifdef FIX_BUGS
+				CFont::PrintString(SCREEN_WIDTH/2, SCREEN_SCALE_Y(130.0f), TheText.Get("MC_LDFL")); // Load Failed!
+				CFont::PrintString(SCREEN_WIDTH/2, SCREEN_SCALE_Y(170.0f), TheText.Get("MC_NWRE")); // Now Restarting Game.
+#else
+				CFont::PrintString(SCREEN_WIDTH/2, 130.0f, TheText.Get("MC_LDFL")); // Load Failed!
+				CFont::PrintString(SCREEN_WIDTH/2, 170.0f, TheText.Get("MC_NWRE")); // Now Restarting Game.
+#endif
+				CFont::DrawFonts();
+				
+				DoRWStuffEndOfFrame();
 			}
 			
 			ShutDownForRestart();
@@ -1000,6 +1042,8 @@ void CGame::InitialiseWhenRestarting(void)
 			ReInitGameObjectVariables();
 			currLevel = LEVEL_INDUSTRIAL;
 			CCollision::SortOutCollisionAfterLoad();
+			DMAudio.SetMusicMasterVolume(CMenuManager::m_PrefsMusicVolume);
+			DMAudio.SetEffectsMasterVolume(CMenuManager::m_PrefsSfxVolume);
 		}
 	}
 #endif

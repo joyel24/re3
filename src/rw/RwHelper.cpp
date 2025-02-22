@@ -115,36 +115,6 @@ SetCullMode(uint32 mode)
 		RwRenderStateSet(rwRENDERSTATECULLMODE, (void*)rwCULLMODECULLNONE);
 }
 
-#ifndef FINAL
-void
-PushRendergroup(const char *name)
-{
-	if(!bDebugRenderGroups)
-		return;
-#if defined(RW_OPENGL)
-	if(GLAD_GL_KHR_debug)
-		glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, name);
-#elif defined(RW_D3D9)
-	static WCHAR tmp[256];
-	MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, name, -1, tmp, sizeof(tmp));
-	D3DPERF_BeginEvent(0xFFFFFFFF, tmp);
-#endif
-}
-
-void
-PopRendergroup(void)
-{
-	if(!bDebugRenderGroups)
-		return;
-#if defined(RW_OPENGL)
-	if(GLAD_GL_KHR_debug)
-		glPopDebugGroup();
-#elif defined(RW_D3D9)
-	D3DPERF_EndEvent();
-#endif
-}
-#endif
-
 RwFrame*
 GetFirstFrameCallback(RwFrame *child, void *data)
 {
@@ -192,7 +162,8 @@ GetFirstAtomic(RpClump *clump)
 	RpAtomic *atm;
 
 	atm = nil;
-	RpClumpForAllAtomics(clump, GetFirstAtomicCallback, &atm);
+	if (clump != nil)
+		RpClumpForAllAtomics(clump, GetFirstAtomicCallback, &atm);
 	return atm;
 }
 
@@ -229,7 +200,8 @@ RpAtomic*
 IsClumpSkinned(RpClump *clump)
 {
 	RpAtomic *atomic = nil;
-	RpClumpForAllAtomics(clump, isSkinnedCb, &atomic);
+	if (clump != nil)
+		RpClumpForAllAtomics(clump, isSkinnedCb, &atomic);
 	return atomic;
 }
 

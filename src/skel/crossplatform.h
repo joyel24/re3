@@ -106,7 +106,7 @@ RwBool IsForegroundApp();
 
 // Codes compatible with Windows and Linux
 #ifndef _WIN32
-#define DeleteFile unlink
+#define DeleteFile remove
 
 // Needed for save games
 struct SYSTEMTIME {

@@ -715,105 +715,6 @@ KeyboardHandler(RsEvent event, void *param)
 	}
 }
 
-/*
- *****************************************************************************
- */
-static RsEventStatus
-HandlePadButtonDown(RsPadButtonStatus *padButtonStatus)
-{
-	bool bPadTwo = false;
-	int32 padNumber = padButtonStatus->padID;
-	
-	CPad *pad = CPad::GetPad(padNumber);
-	
-	if ( CPad::m_bMapPadOneToPadTwo )
-		padNumber = 1;
-	
-	if ( padNumber == 1 )
-		bPadTwo = true;
-	
-	ControlsManager.UpdateJoyButtonState(padNumber);
-	
-	for ( int32 i = 0; i < _TODOCONST(16); i++ )
-	{
-		RsPadButtons btn = rsPADNULL;
-		if ( ControlsManager.m_aButtonStates[i] == TRUE )
-			btn = (RsPadButtons)(i + 1);
-
-		if ( FrontEndMenuManager.m_bMenuActive || bPadTwo )
-			ControlsManager.UpdateJoyInConfigMenus_ButtonDown(btn, padNumber);
-		else
-			ControlsManager.AffectControllerStateOn_ButtonDown(btn, JOYSTICK);
-	}
-	
-	return rsEVENTPROCESSED;
-}
-
-
-/*
- *****************************************************************************
- */
-static RsEventStatus
-HandlePadButtonUp(RsPadButtonStatus *padButtonStatus)
-{
-	bool bPadTwo = false;
-	int32 padNumber = padButtonStatus->padID;
-
-	CPad *pad = CPad::GetPad(padNumber);
-	
-	if ( CPad::m_bMapPadOneToPadTwo )
-		padNumber = 1;
-
-	if ( padNumber == 1 )
-		bPadTwo = true;
-	
-	bool bCam = false;
-	int16 mode = TheCamera.Cams[TheCamera.ActiveCam].Mode;
-	if ( mode == CCam::MODE_FLYBY || mode == CCam::MODE_FIXED )
-		bCam = true;
-	
-	ControlsManager.UpdateJoyButtonState(padNumber);
-	
-	for ( int32 i = 1; i < _TODOCONST(16); i++ )
-	{
-		RsPadButtons btn = rsPADNULL;
-		if ( ControlsManager.m_aButtonStates[i] == FALSE )
-			btn = (RsPadButtons)(i + 1); // bug ?, cycle begins from 1(not zero), 1+1==2==rsPADBUTTON2, so we skip rsPADBUTTON1, right ?
-		
-		if ( FrontEndMenuManager.m_bMenuActive || bPadTwo || bCam )
-			ControlsManager.UpdateJoyInConfigMenus_ButtonUp(btn, padNumber);
-		else
-			ControlsManager.AffectControllerStateOn_ButtonUp(btn, JOYSTICK);
-	}
-
-	return rsEVENTPROCESSED;
-}
-
-/*
- *****************************************************************************
- */
-static RsEventStatus 
-PadHandler(RsEvent event, void *param)
-{
-	switch( event )
-	{
-		case rsPADBUTTONDOWN:
-		{
-			return HandlePadButtonDown((RsPadButtonStatus *)param);
-		}
-
-		case rsPADBUTTONUP:
-		{
-			return HandlePadButtonUp((RsPadButtonStatus *)param);
-		}
-
-		default:
-		{
-			return rsEVENTNOTPROCESSED;
-		}
-	}
-}
-
 
 /*
  *****************************************************************************
@@ -824,8 +725,5 @@ AttachInputDevices(void)
 #ifndef IGNORE_MOUSE_KEYBOARD
 	RsInputDeviceAttach(rsKEYBOARD, KeyboardHandler);
 #endif
-
-	RsInputDeviceAttach(rsPAD, PadHandler);
-
 	return TRUE;
 }

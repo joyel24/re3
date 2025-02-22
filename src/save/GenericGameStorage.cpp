@@ -415,6 +415,80 @@ ReadDataFromFile(int32 file, uint8 *buf, uint32 size)
 	return true;
 }
 
+
+bool
+FindMostRecentFileName(char *filename)
+{
+	CDate date1, date2;
+	int successfulslot = -1;
+	
+	CTimer::Stop();
+
+	for (int i = 0; i < SLOT_COUNT; i++) {
+		Slots[i + 1] = SLOT_EMPTY;
+		SlotFileName[i][0] = '\0';
+		SlotSaveDate[i][0] = '\0';
+	}
+	for (int i = 0; i < SLOT_COUNT; i++) {
+#ifdef FIX_BUGS
+		char savename[MAX_PATH];
+#else
+		char savename[52];
+#endif
+		struct {
+			int size;
+			wchar FileName[24];
+			SYSTEMTIME SaveDateTime;
+		} header;
+		sprintf(savename, "%s%i%s", DefaultPCSaveFileName, i + 1, ".b");
+		int file = CFileMgr::OpenFile(savename, "rb");
+		if (file != 0) {
+			CFileMgr::Read(file, (char*)&header, sizeof(header));
+			if (strncmp((char*)&header, TopLineEmptyFile, sizeof(TopLineEmptyFile)-1) != 0) {
+				Slots[i + 1] = SLOT_OK;
+				memcpy(SlotFileName[i], &header.FileName, sizeof(header.FileName));
+				
+				SlotFileName[i][24] = '\0';
+			}
+			CFileMgr::CloseFile(file);
+		}
+		if (Slots[i + 1] == SLOT_OK) {
+			SYSTEMTIME st;
+			memcpy(&st, &header.SaveDateTime, sizeof(SYSTEMTIME));
+						
+			date1.m_nSecond = st.wSecond;
+			date1.m_nMinute = st.wMinute;
+			date1.m_nHour   = st.wHour; 
+			date1.m_nDay    = st.wDay;
+			date1.m_nMonth  = st.wMonth;
+			date1.m_nYear   = st.wYear;
+			
+			if (date1 > date2 || date1 == date2)
+			{
+				date2 = date1;
+				strcpy(filename, savename);
+				successfulslot = i;
+			}
+		}
+	}
+		
+	if ((successfulslot != -1) && (date2.m_nSecond != 0
+		|| date2.m_nMinute != 0
+		|| date2.m_nHour   != 0
+		|| date2.m_nDay    != 0
+		|| date2.m_nMonth  != 0
+		|| date2.m_nYear   != 0) && (CheckDataNotCorrupt(successfulslot, filename)) 
+#ifdef FIX_INCOMPATIBLE_SAVES
+		&& (FixSave(successfulslot, GetSaveType(filename)))
+#endif
+		)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 bool
 CloseFile(int32 file)
 {

@@ -22,14 +22,14 @@
 #include "World.h"
 
 #ifdef PS2_HUD
-#define MONEY_X 100.0f
-#define WEAPON_X 91.0f
-#define AMMO_X 59.0f
-#define HEALTH_X 100.0f
-#define STARS_X 49.0f
+#define MONEY_X 137.0f
+#define WEAPON_X 128.0f
+#define AMMO_X 96.0f
+#define HEALTH_X 137.0f
+#define STARS_X 86.0f
 #define ZONE_Y 61.0f
 #define VEHICLE_Y 81.0f
-#define CLOCK_X 101.0f
+#define CLOCK_X 138.0f
 #define SUBS_Y 83.0f
 #define WASTEDBUSTED_Y 122.0f
 #define BIGMESSAGE_Y 80.0f
@@ -48,8 +48,8 @@
 #endif
 
 #ifdef FIX_BUGS
-#define TIMER_RIGHT_OFFSET 34.0f // Taken from VC frenzy timer
-#define BIGMESSAGE_Y_OFFSET 18.0f
+#define TIMER_RIGHT_OFFSET 71.0f // Taken from VC frenzy timer
+#define BIGMESSAGE_Y_OFFSET 40.0f
 #else
 #define TIMER_RIGHT_OFFSET 27.0f
 #define BIGMESSAGE_Y_OFFSET 20.0f
@@ -508,9 +508,9 @@ void CHud::Draw()
 		CFont::SetFontStyle(FONT_HEADING);
 		CFont::SetPropOff();
 		CFont::SetColor(CRGBA(0, 0, 0, 255));
-		CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(MONEY_X) + SCREEN_SCALE_X_FIX(2.0f), SCREEN_SCALE_Y(43.0f) + SCREEN_SCALE_Y_FIX(2.0f), sPrint);
+		CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(MONEY_X) + SCREEN_SCALE_X_FIX(2.0f), SCREEN_SCALE_Y(63.0f) + SCREEN_SCALE_Y_FIX(2.0f), sPrint);
 		CFont::SetColor(MONEY_COLOR);
-		CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(MONEY_X), SCREEN_SCALE_Y(43.0f), sPrint);
+		CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(MONEY_X), SCREEN_SCALE_Y(63.0f), sPrint);
 
 		/*
 			DrawAmmo
@@ -545,9 +545,9 @@ void CHud::Draw()
 		Sprites[WeaponType].Draw(
 			CRect(
 				SCREEN_SCALE_FROM_RIGHT(WEAPON_X),
-				SCREEN_SCALE_Y(27.0f),
+				SCREEN_SCALE_Y(47.0f),
 				SCREEN_SCALE_FROM_RIGHT(WEAPON_X)+SCREEN_SCALE_X(64.0f),
-				SCREEN_SCALE_Y(27.0f)+SCREEN_SCALE_Y(64.0f)),
+				SCREEN_SCALE_Y(47.0f)+SCREEN_SCALE_Y(64.0f)),
 			CRGBA(255, 255, 255, 255),
 			0.015f,
 			0.015f,
@@ -568,7 +568,7 @@ void CHud::Draw()
 
 		if (!CDarkel::FrenzyOnGoing() && WeaponType != WEAPONTYPE_UNARMED && WeaponType != WEAPONTYPE_BASEBALLBAT) {
 			CFont::SetColor(AMMO_COLOR);
-			CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(AMMO_X), SCREEN_SCALE_Y(73.0f), sPrint);
+			CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(AMMO_X), SCREEN_SCALE_Y(93.0f), sPrint);
 		}
 
 		/*
@@ -598,17 +598,17 @@ void CHud::Draw()
 #endif
 				AsciiToUnicode(sTemp, sPrint);
 				CFont::SetColor(CRGBA(0, 0, 0, 255));
-				CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(HEALTH_X) + SCREEN_SCALE_X_FIX(2.0f), SCREEN_SCALE_Y(65.0f) + SCREEN_SCALE_Y_FIX(2.0f), sPrint);
+				CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(HEALTH_X) + SCREEN_SCALE_X_FIX(2.0f), SCREEN_SCALE_Y(85.0f) + SCREEN_SCALE_Y_FIX(2.0f), sPrint);
 
 				if (!CWorld::Players[CWorld::PlayerInFocus].m_nTimeLastHealthLoss || CTimer::GetTimeInMilliseconds() > CWorld::Players[CWorld::PlayerInFocus].m_nTimeLastHealthLoss + 2000 || FRAMECOUNTER & 4)
-					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(HEALTH_X) + SCREEN_SCALE_X_FIX(2.0f) - SCREEN_SCALE_X(56.0f) + SCREEN_SCALE_X(2.0f), SCREEN_SCALE_Y(65.0f) + SCREEN_SCALE_Y_FIX(2.0f), sPrintIcon);
+					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(HEALTH_X) + SCREEN_SCALE_X_FIX(2.0f) - SCREEN_SCALE_X(56.0f) + SCREEN_SCALE_X(2.0f), SCREEN_SCALE_Y(85.0f) + SCREEN_SCALE_Y_FIX(2.0f), sPrintIcon);
 				
 				CFont::SetColor(HEALTH_COLOR);
 
-				CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(HEALTH_X), SCREEN_SCALE_Y(65.0f), sPrint);
+				CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(HEALTH_X), SCREEN_SCALE_Y(85.0f), sPrint);
 
 				if (!CWorld::Players[CWorld::PlayerInFocus].m_nTimeLastHealthLoss || CTimer::GetTimeInMilliseconds() > CWorld::Players[CWorld::PlayerInFocus].m_nTimeLastHealthLoss + 2000 || FRAMECOUNTER & 4)
-					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(HEALTH_X) + SCREEN_SCALE_X_FIX(2.0f) - SCREEN_SCALE_X(56.0f), SCREEN_SCALE_Y(65.0f), sPrintIcon);
+					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(HEALTH_X) + SCREEN_SCALE_X_FIX(2.0f) - SCREEN_SCALE_X(56.0f), SCREEN_SCALE_Y(85.0f), sPrintIcon);
 			}
 		}
 
@@ -627,17 +627,17 @@ void CHud::Draw()
 				AsciiToUnicode(sTemp, sPrint);
 
 				CFont::SetColor(CRGBA(0, 0, 0, 255));
-				CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(182.0f) + SCREEN_SCALE_X_FIX(2.0f), SCREEN_SCALE_Y(65.0f) + SCREEN_SCALE_Y_FIX(2.0f), sPrint);
+				CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(219.0f) + SCREEN_SCALE_X_FIX(2.0f), SCREEN_SCALE_Y(85.0f) + SCREEN_SCALE_Y_FIX(2.0f), sPrint);
 
 				if (!CWorld::Players[CWorld::PlayerInFocus].m_nTimeLastArmourLoss || CTimer::GetTimeInMilliseconds() > CWorld::Players[CWorld::PlayerInFocus].m_nTimeLastArmourLoss + 2000 || FRAMECOUNTER & 4)
-					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(182.0f) + SCREEN_SCALE_X_FIX(2.0f) - SCREEN_SCALE_X(54.0f) + SCREEN_SCALE_X(2.0f), SCREEN_SCALE_Y(65.0f) + SCREEN_SCALE_Y_FIX(2.0f), sPrintIcon);
+					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(219.0f) + SCREEN_SCALE_X_FIX(2.0f) - SCREEN_SCALE_X(54.0f) + SCREEN_SCALE_X(2.0f), SCREEN_SCALE_Y(85.0f) + SCREEN_SCALE_Y_FIX(2.0f), sPrintIcon);
 
 				CFont::SetColor(ARMOUR_COLOR);
 
-				CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(182.0f), SCREEN_SCALE_Y(65.0f), sPrint);
+				CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(219.0f), SCREEN_SCALE_Y(85.0f), sPrint);
 
 				if (!CWorld::Players[CWorld::PlayerInFocus].m_nTimeLastArmourLoss || CTimer::GetTimeInMilliseconds() > CWorld::Players[CWorld::PlayerInFocus].m_nTimeLastArmourLoss + 2000 || FRAMECOUNTER & 1) {					
-					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(182.0f) - SCREEN_SCALE_X(54.0f) + SCREEN_SCALE_X(2.0f), SCREEN_SCALE_Y(65.0f), sPrintIcon);
+					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(219.0f) - SCREEN_SCALE_X(54.0f) + SCREEN_SCALE_X(2.0f), SCREEN_SCALE_Y(85.0f), sPrintIcon);
 				}
 			}
 		}
@@ -659,14 +659,14 @@ void CHud::Draw()
 
 		for (int i = 0; i < 6; i++) {
 			CFont::SetColor(CRGBA(0, 0, 0, 255));
-			CFont::PrintString(fStarsX + SCREEN_SCALE_X_FIX(2.0f), SCREEN_SCALE_Y(87.0f) + SCREEN_SCALE_Y_FIX(2.0f), sPrintIcon);
+			CFont::PrintString(fStarsX + SCREEN_SCALE_X_FIX(2.0f), SCREEN_SCALE_Y(107.0f) + SCREEN_SCALE_Y_FIX(2.0f), sPrintIcon);
 
 			if (FindPlayerPed()->m_pWanted->GetWantedLevel() > i
 				&& (CTimer::GetTimeInMilliseconds() > FindPlayerPed()->m_pWanted->m_nLastWantedLevelChange
 					+ 2000 || FRAMECOUNTER & 4)) {
 
 				CFont::SetColor(WANTED_COLOR);
-				CFont::PrintString(fStarsX, SCREEN_SCALE_Y(87.0f), sPrintIcon);
+				CFont::PrintString(fStarsX, SCREEN_SCALE_Y(107.0f), sPrintIcon);
 			}
 			
 			fStarsX -= SCREEN_SCALE_X(23.0f);
@@ -750,19 +750,16 @@ void CHud::Draw()
 					CFont::SetPropOn();
 					CFont::SetBackgroundOff();
 
-					if (FrontEndMenuManager.m_PrefsLanguage == CMenuManager::LANGUAGE_SPANISH)
-						CFont::SetScale(SCREEN_SCALE_X(1.2f * 0.8f), SCREEN_SCALE_Y(1.2f));
-					else
-						CFont::SetScale(SCREEN_SCALE_X(1.2f), SCREEN_SCALE_Y(1.2f));
+					CFont::SetScale(SCREEN_SCALE_X(1.2f), SCREEN_SCALE_Y(1.2f));
 
 					CFont::SetRightJustifyOn();
 					CFont::SetRightJustifyWrap(0.0f);
 					CFont::SetBackGroundOnlyTextOff();
 					CFont::SetFontStyle(FONT_BANK);
 					CFont::SetColor(CRGBA(0, 0, 0, fZoneAlpha));
-					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(32.0f) + SCREEN_SCALE_X_FIX(1.0f), SCREEN_SCALE_FROM_BOTTOM(ZONE_Y) + SCREEN_SCALE_Y_FIX(1.0f), m_ZoneToPrint);
+					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(69.0f) + SCREEN_SCALE_X_FIX(1.0f), SCREEN_SCALE_FROM_BOTTOM(ZONE_Y) + SCREEN_SCALE_Y_FIX(1.0f), m_ZoneToPrint);
 					CFont::SetColor(CRGBA(ZONE_COLOR.r, ZONE_COLOR.g, ZONE_COLOR.b, fZoneAlpha));
-					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(32.0f), SCREEN_SCALE_FROM_BOTTOM(ZONE_Y), m_ZoneToPrint);
+					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(69.0f), SCREEN_SCALE_FROM_BOTTOM(ZONE_Y), m_ZoneToPrint);
 				}
 			}
 		}
@@ -844,19 +841,16 @@ void CHud::Draw()
 					CFont::SetPropOn();
 					CFont::SetBackgroundOff();
 
-					if (FrontEndMenuManager.m_PrefsLanguage != CMenuManager::LANGUAGE_ITALIAN && FrontEndMenuManager.m_PrefsLanguage != CMenuManager::LANGUAGE_SPANISH)
-						CFont::SetScale(SCREEN_SCALE_X(1.2f), SCREEN_SCALE_Y(1.2f));
-					else
-						CFont::SetScale(SCREEN_SCALE_X(1.2f * 0.85f), SCREEN_SCALE_Y(1.2f));
+					CFont::SetScale(SCREEN_SCALE_X(1.2f), SCREEN_SCALE_Y(1.2f));
 
 					CFont::SetRightJustifyOn();
 					CFont::SetRightJustifyWrap(0.0f);
 					CFont::SetBackGroundOnlyTextOff();
 					CFont::SetFontStyle(FONT_BANK);
 					CFont::SetColor(CRGBA(0, 0, 0, fVehicleAlpha));
-					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(32.0f) + SCREEN_SCALE_X_FIX(1.0f), SCREEN_SCALE_FROM_BOTTOM(VEHICLE_Y) + SCREEN_SCALE_Y_FIX(1.0f), m_pVehicleNameToPrint);
+					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(69.0f) + SCREEN_SCALE_X_FIX(1.0f), SCREEN_SCALE_FROM_BOTTOM(VEHICLE_Y) + SCREEN_SCALE_Y_FIX(1.0f), m_pVehicleNameToPrint);
 					CFont::SetColor(CRGBA(VEHICLE_COLOR.r, VEHICLE_COLOR.g, VEHICLE_COLOR.b, fVehicleAlpha));
-					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(32.0f), SCREEN_SCALE_FROM_BOTTOM(VEHICLE_Y), m_pVehicleNameToPrint);
+					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(69.0f), SCREEN_SCALE_FROM_BOTTOM(VEHICLE_Y), m_pVehicleNameToPrint);
 				}
 			}
 		}
@@ -884,9 +878,9 @@ void CHud::Draw()
 		AsciiToUnicode(sTemp, sPrint);
 
 		CFont::SetColor(CRGBA(0, 0, 0, 255));
-		CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(CLOCK_X) + SCREEN_SCALE_X_FIX(2.0f), SCREEN_SCALE_Y(22.0f) + SCREEN_SCALE_Y_FIX(2.0f), sPrint);
+		CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(CLOCK_X) + SCREEN_SCALE_X_FIX(2.0f), SCREEN_SCALE_Y(42.0f) + SCREEN_SCALE_Y_FIX(2.0f), sPrint);
 		CFont::SetColor(CLOCK_COLOR);
-		CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(CLOCK_X), SCREEN_SCALE_Y(22.0f), sPrint);
+		CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(CLOCK_X), SCREEN_SCALE_Y(42.0f), sPrint);
 
 		/*
 			DrawOnScreenTimer
@@ -921,18 +915,18 @@ void CHud::Draw()
 					CFont::SetPropOff();
 					CFont::SetBackGroundOnlyTextOn();
 					CFont::SetColor(CRGBA(0, 0, 0, 255));
-					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(TIMER_RIGHT_OFFSET) + SCREEN_SCALE_X_FIX(2.0f), SCREEN_SCALE_Y(110.0f) + SCREEN_SCALE_Y_FIX(2.0f), sTimer);
+					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(TIMER_RIGHT_OFFSET) + SCREEN_SCALE_X_FIX(2.0f), SCREEN_SCALE_Y(130.0f) + SCREEN_SCALE_Y_FIX(2.0f), sTimer);
 					CFont::SetScale(SCREEN_SCALE_X(0.8f), SCREEN_SCALE_Y(1.35f));
 					CFont::SetColor(TIMER_COLOR);
-					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(TIMER_RIGHT_OFFSET), SCREEN_SCALE_Y(110.0f), sTimer);
+					CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(TIMER_RIGHT_OFFSET), SCREEN_SCALE_Y(130.0f), sTimer);
 
 					if (CUserDisplay::OnscnTimer.m_sEntries[0].m_aTimerText[0]) {
 						CFont::SetPropOn();
 						CFont::SetColor(CRGBA(0, 0, 0, 255));
 						CFont::SetScale(SCREEN_SCALE_X(0.8f * 0.8f), SCREEN_SCALE_Y(1.35f));
-						CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(TIMER_RIGHT_OFFSET) - SCREEN_SCALE_X(80.0f) + SCREEN_SCALE_X(2.0f), SCREEN_SCALE_Y(110.0f) + SCREEN_SCALE_Y_FIX(2.0f), TheText.Get(CUserDisplay::OnscnTimer.m_sEntries[0].m_aTimerText));
+						CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(TIMER_RIGHT_OFFSET) - SCREEN_SCALE_X(80.0f) + SCREEN_SCALE_X(2.0f), SCREEN_SCALE_Y(130.0f) + SCREEN_SCALE_Y_FIX(2.0f), TheText.Get(CUserDisplay::OnscnTimer.m_sEntries[0].m_aTimerText));
 						CFont::SetColor(TIMER_COLOR);
-						CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(TIMER_RIGHT_OFFSET) - SCREEN_SCALE_X(80.0f), SCREEN_SCALE_Y(110.0f), TheText.Get(CUserDisplay::OnscnTimer.m_sEntries[0].m_aTimerText));
+						CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(TIMER_RIGHT_OFFSET) - SCREEN_SCALE_X(80.0f), SCREEN_SCALE_Y(130.0f), TheText.Get(CUserDisplay::OnscnTimer.m_sEntries[0].m_aTimerText));
 					}
 				}
 			}
@@ -962,9 +956,9 @@ void CHud::Draw()
 						CFont::SetPropOff();
 						CFont::SetBackGroundOnlyTextOn();
 						CFont::SetColor(CRGBA(0, 0, 0, 255));
-						CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(TIMER_RIGHT_OFFSET) + SCREEN_SCALE_X_FIX(2.0f), SCREEN_SCALE_Y(132.0f) + SCREEN_SCALE_Y_FIX(2.0f), sTimer);
+						CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(TIMER_RIGHT_OFFSET) + SCREEN_SCALE_X_FIX(2.0f), SCREEN_SCALE_Y(152.0f) + SCREEN_SCALE_Y_FIX(2.0f), sTimer);
 						CFont::SetColor(COUNTER_COLOR);
-						CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(TIMER_RIGHT_OFFSET), SCREEN_SCALE_Y(132.0f), sTimer);
+						CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(TIMER_RIGHT_OFFSET), SCREEN_SCALE_Y(152.0f), sTimer);
 					} else {
 						int counter = atoi(CUserDisplay::OnscnTimer.m_sEntries[0].m_bCounterBuffer);
 #ifdef FIX_BUGS
@@ -975,9 +969,9 @@ void CHud::Draw()
 							CRect
 							(
 								SCREEN_SCALE_FROM_RIGHT(TIMER_RIGHT_OFFSET) - SCREEN_SCALE_X(100.0f) / 2 + SCREEN_SCALE_X_FIX(4.0f),
-								SCREEN_SCALE_Y(132.0f) + SCREEN_SCALE_Y(8.0f),
+								SCREEN_SCALE_Y(152.0f) + SCREEN_SCALE_Y(8.0f),
 								SCREEN_SCALE_FROM_RIGHT(TIMER_RIGHT_OFFSET) + SCREEN_SCALE_X_FIX(4.0f),
-								SCREEN_SCALE_Y(132.0f) + SCREEN_SCALE_Y_PC(11.0f) + SCREEN_SCALE_Y(8.0f)
+								SCREEN_SCALE_Y(152.0f) + SCREEN_SCALE_Y_PC(11.0f) + SCREEN_SCALE_Y(8.0f)
 							),
 							CRGBA(0, 106, 164, 80)
 						);
@@ -987,9 +981,9 @@ void CHud::Draw()
 							CRect
 							(
 								SCREEN_SCALE_FROM_RIGHT(TIMER_RIGHT_OFFSET) - SCREEN_SCALE_X(100.0f) / 2 + SCREEN_SCALE_X_FIX(4.0f), 
-								SCREEN_SCALE_Y(132.0f) + SCREEN_SCALE_Y(8.0f),
+								SCREEN_SCALE_Y(152.0f) + SCREEN_SCALE_Y(8.0f),
 								SCREEN_SCALE_X_PC((float)counter) / 2.0f + SCREEN_SCALE_FROM_RIGHT(TIMER_RIGHT_OFFSET) - SCREEN_SCALE_X(100.0f) / 2.0f + SCREEN_SCALE_X_FIX(4.0f),
-								SCREEN_SCALE_Y(132.0f) + SCREEN_SCALE_Y_PC(11.0f) + SCREEN_SCALE_Y(8.0f)
+								SCREEN_SCALE_Y(152.0f) + SCREEN_SCALE_Y_PC(11.0f) + SCREEN_SCALE_Y(8.0f)
 							),
 							CRGBA(0, 106, 164, 255)
 						);
@@ -999,9 +993,9 @@ void CHud::Draw()
 						CFont::SetPropOn();
 						CFont::SetScale(SCREEN_SCALE_X(0.8f), SCREEN_SCALE_Y(1.35f));
 						CFont::SetColor(CRGBA(0, 0, 0, 255));
-						CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(TIMER_RIGHT_OFFSET) - SCREEN_SCALE_X(61.0f) + SCREEN_SCALE_X(2.0f), SCREEN_SCALE_Y(132.0f) + SCREEN_SCALE_Y_FIX(2.0f), TheText.Get(CUserDisplay::OnscnTimer.m_sEntries[0].m_aCounterText));
+						CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(TIMER_RIGHT_OFFSET) - SCREEN_SCALE_X(61.0f) + SCREEN_SCALE_X(2.0f), SCREEN_SCALE_Y(152.0f) + SCREEN_SCALE_Y_FIX(2.0f), TheText.Get(CUserDisplay::OnscnTimer.m_sEntries[0].m_aCounterText));
 						CFont::SetColor(COUNTER_COLOR);
-						CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(TIMER_RIGHT_OFFSET) - SCREEN_SCALE_X(61.0f), SCREEN_SCALE_Y(132.0f), TheText.Get(CUserDisplay::OnscnTimer.m_sEntries[0].m_aCounterText));
+						CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(TIMER_RIGHT_OFFSET) - SCREEN_SCALE_X(61.0f), SCREEN_SCALE_Y(152.0f), TheText.Get(CUserDisplay::OnscnTimer.m_sEntries[0].m_aCounterText));
 					}
 				}
 			}
@@ -1042,7 +1036,7 @@ void CHud::Draw()
 					PagerOn = 0;
 				}
 			}
-			Sprites[HUD_PAGER].Draw(CRect(SCREEN_SCALE_X(26.0f) - SCREEN_SCALE_X_FIX(PagerXOffset), SCREEN_SCALE_Y(27.0f), SCREEN_SCALE_X(160.0f) + SCREEN_SCALE_X(26.0f) - SCREEN_SCALE_X_FIX(PagerXOffset), SCREEN_SCALE_Y(80.0f) + SCREEN_SCALE_Y(27.0f)), CRGBA(255, 255, 255, 255));		
+			Sprites[HUD_PAGER].Draw(CRect(SCREEN_SCALE_X(63.0f) - SCREEN_SCALE_X_FIX(PagerXOffset), SCREEN_SCALE_Y(47.0f), SCREEN_SCALE_X(160.0f) + SCREEN_SCALE_X(63.0f) - SCREEN_SCALE_X_FIX(PagerXOffset), SCREEN_SCALE_Y(80.0f) + SCREEN_SCALE_Y(47.0f)), CRGBA(255, 255, 255, 255));		
 			CFont::SetBackgroundOff();
 			CFont::SetScale(SCREEN_SCALE_X(0.84f), SCREEN_SCALE_Y(1.0f));
 			CFont::SetColor(PAGER_COLOR);
@@ -1053,7 +1047,7 @@ void CHud::Draw()
 			CFont::SetJustifyOff();
 			CFont::SetPropOff();
 			CFont::SetFontStyle(FONT_PAGER);
-			CFont::PrintString(SCREEN_SCALE_X(52.0f) - SCREEN_SCALE_X_FIX(PagerXOffset), SCREEN_SCALE_Y(54.0f), m_PagerMessage);
+			CFont::PrintString(SCREEN_SCALE_X(111.0f) - SCREEN_SCALE_X_FIX(PagerXOffset), SCREEN_SCALE_Y(74.0f), m_PagerMessage);
 		}
 
 		/*
@@ -1187,8 +1181,8 @@ void CHud::Draw()
 			CFont::SetFontStyle(FONT_LOCALE(FONT_BANK));
 
 #ifdef XBOX_SUBTITLES
-			float radarBulge = SCREEN_SCALE_X(45.0f) + SCREEN_SCALE_X(16.0f);
-			float rectWidth = SCREEN_WIDTH - SCREEN_SCALE_X(45.0f) - SCREEN_SCALE_X(16.0f) - radarBulge;
+			float radarBulge = SCREEN_SCALE_X(56.0f) + SCREEN_SCALE_X(16.0f);
+			float rectWidth = SCREEN_WIDTH - SCREEN_SCALE_X(56.0f) - SCREEN_SCALE_X(16.0f) - radarBulge;
 			CFont::SetCentreSize(rectWidth);
 			CFont::SetColor(CRGBA(180, 180, 180, 255));
 
@@ -1220,15 +1214,10 @@ void CHud::Draw()
 				CFont::SetJustifyOff();
 				CFont::SetBackgroundOff();
 				CFont::SetBackGroundOnlyTextOff();
-				
-				if (CGame::frenchGame || CGame::germanGame)
-					CFont::SetScale(SCREEN_SCALE_X_PC(1.8f), SCREEN_SCALE_Y_PC(1.8f));
-				else
-					CFont::SetScale(SCREEN_SCALE_X_PC(1.8f), SCREEN_SCALE_Y_PC(1.8f));
-				
+				CFont::SetScale(SCREEN_SCALE_X_PC(1.35f), SCREEN_SCALE_Y_PC(2.7f));
 				CFont::SetPropOn();
 				CFont::SetCentreOn();
-				CFont::SetCentreSize(SCREEN_SCALE_X(DEFAULT_SCREEN_WIDTH - 25));
+				CFont::SetCentreSize(SCALE_AND_CENTER_X(DEFAULT_SCREEN_WIDTH - 280.0f));
 				CFont::SetColor(CRGBA(255, 255, 0, 255));
 				CFont::SetFontStyle(FONT_HEADING);
 
@@ -1269,7 +1258,7 @@ void CHud::Draw()
 #if defined(PS2_HUD) && !defined(FIX_BUGS) // same
 				CFont::PrintString(SCREEN_WIDTH / 2, (SCREEN_WIDTH  / 2) - SCREEN_SCALE_X(120.0f), m_BigMessage[0]);
 #else
-				CFont::PrintString(SCREEN_WIDTH / 2, (SCREEN_HEIGHT / 2) - SCREEN_SCALE_Y(18.0f), m_BigMessage[0]);
+				CFont::PrintString(SCREEN_WIDTH / 2, (SCREEN_HEIGHT / 2) - SCREEN_SCALE_Y(40.0f), m_BigMessage[0]);
 #endif
 			}
 			else {
@@ -1302,9 +1291,9 @@ void CHud::Draw()
 				CFont::SetFontStyle(FONT_HEADING);
 
 				CFont::SetColor(CRGBA(0, 0, 0, BigMessageAlpha[2]*0.75f));
-				CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(20.0f) + SCREEN_SCALE_X_FIX(4.0f), SCREEN_SCALE_FROM_BOTTOM(WASTEDBUSTED_Y) + SCREEN_SCALE_Y(4.0f), m_BigMessage[2]);
+				CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(57.0f) + SCREEN_SCALE_X_FIX(4.0f), SCREEN_SCALE_FROM_BOTTOM(WASTEDBUSTED_Y) + SCREEN_SCALE_Y(4.0f), m_BigMessage[2]);
 				CFont::SetColor(CRGBA(WASTEDBUSTED_COLOR.r, WASTEDBUSTED_COLOR.g, WASTEDBUSTED_COLOR.b, BigMessageAlpha[2]));
-				CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(20.0f), SCREEN_SCALE_FROM_BOTTOM(WASTEDBUSTED_Y), m_BigMessage[2]);
+				CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(57.0f), SCREEN_SCALE_FROM_BOTTOM(WASTEDBUSTED_Y), m_BigMessage[2]);
 			}
 			else {
 				BigMessageAlpha[2] = 0.0f;
@@ -1395,29 +1384,17 @@ void CHud::DrawAfterFade()
 			CFont::SetCentreOff();
 			CFont::SetPropOn();
 
-			if (CGame::germanGame)
-				CFont::SetScale(SCREEN_SCALE_X(0.52f * 0.85f), SCREEN_SCALE_Y(1.1f * 0.85f));
-#ifdef MORE_LANGUAGES
-			else if (CFont::IsJapanese())
-				CFont::SetScale(SCREEN_SCALE_X(0.52f) * 1.35f, SCREEN_SCALE_Y(1.1f) * 1.25f);
-#endif
-			else
-				CFont::SetScale(SCREEN_SCALE_X(0.52f), SCREEN_SCALE_Y(1.1f));
+			CFont::SetScale(SCREEN_SCALE_X(0.52f), SCREEN_SCALE_Y(1.1f));
 
 			CFont::SetColor(CRGBA(175, 175, 175, 255));
 			CFont::SetJustifyOff();			
-#ifdef MORE_LANGUAGES
-			if (CFont::IsJapanese())
-				CFont::SetWrapx(SCREEN_SCALE_X(229.0f) + SCREEN_SCALE_X(26.0f) - SCREEN_SCALE_X_FIX(4.0f));
-			else
-#endif
-				CFont::SetWrapx(SCREEN_SCALE_X(200.0f) + SCREEN_SCALE_X(26.0f) - SCREEN_SCALE_X_FIX(4.0f));
+			CFont::SetWrapx(SCREEN_SCALE_X(200.0f) + SCREEN_SCALE_X(63.0f) - SCREEN_SCALE_X_FIX(4.0f));
 			CFont::SetFontStyle(FONT_LOCALE(FONT_BANK));
 			CFont::SetBackgroundOn();
 			CFont::SetBackGroundOnlyTextOff();
 			CFont::SetBackgroundColor(CRGBA(0, 0, 0, fAlpha * 0.9f));
 			CFont::SetColor(CRGBA(175, 175, 175, 255));
-			CFont::PrintString(SCREEN_SCALE_X(26.0f), SCREEN_SCALE_Y(28.0f) + SCREEN_SCALE_Y_FIX((150.0f - PagerXOffset) * 0.6f), m_HelpMessageToPrint);
+			CFont::PrintString(SCREEN_SCALE_X(63.0f), SCREEN_SCALE_Y(48.0f) + SCREEN_SCALE_Y_FIX((150.0f - PagerXOffset) * 0.6f), m_HelpMessageToPrint);
 			CFont::SetAlphaFade(255.0f);
 		}
 	}
@@ -1597,10 +1574,7 @@ void CHud::DrawAfterFade()
 			CFont::SetJustifyOff();
 			CFont::SetBackgroundOff();
 
-			if (CGame::frenchGame || FrontEndMenuManager.m_PrefsLanguage == CMenuManager::LANGUAGE_SPANISH)
-				CFont::SetScale(SCREEN_SCALE_X_PC(0.884f), SCREEN_SCALE_Y_PC(1.36f));
-			else
-				CFont::SetScale(SCREEN_SCALE_X_PC(1.04f), SCREEN_SCALE_Y_PC(1.6f));
+			CFont::SetScale(SCREEN_SCALE_X_PC(1.04f), SCREEN_SCALE_Y_PC(1.6f));
 
 			CFont::SetPropOn();
 #ifdef FIX_BUGS
@@ -1637,9 +1611,9 @@ void CHud::DrawAfterFade()
 			CFont::SetColor(CRGBA(MISSIONTITLE_COLOR.r, MISSIONTITLE_COLOR.g, MISSIONTITLE_COLOR.b, BigMessageAlpha[1]));
 			CFont::PrintString(BigMessageX[1], SCREEN_SCALE_FROM_BOTTOM(120.0f), m_BigMessage[1]);
 #else
-			CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(20.0f) + SCREEN_SCALE_X_FIX(2.0f), SCREEN_SCALE_FROM_BOTTOM(120.0f) + SCREEN_SCALE_Y_PC(2.0f), m_BigMessage[1]);
+			CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(57.0f) + SCREEN_SCALE_X_FIX(2.0f), SCREEN_SCALE_FROM_BOTTOM(120.0f) + SCREEN_SCALE_Y_PC(2.0f), m_BigMessage[1]);
 			CFont::SetColor(CRGBA(MISSIONTITLE_COLOR.r, MISSIONTITLE_COLOR.g, MISSIONTITLE_COLOR.b, BigMessageAlpha[1]));
-			CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(20.0f), SCREEN_SCALE_FROM_BOTTOM(120.0f), m_BigMessage[1]);
+			CFont::PrintString(SCREEN_SCALE_FROM_RIGHT(57.0f), SCREEN_SCALE_FROM_BOTTOM(120.0f), m_BigMessage[1]);
 #endif
 		}
 		else {

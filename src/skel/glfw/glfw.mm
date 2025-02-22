@@ -17,7 +17,11 @@ long _dwOperatingSystemVersion;
 #include <sys/sysinfo.h>
 #else
 #include <mach/mach_host.h>
+#include <mach-o/dyld.h> 
 #include <sys/sysctl.h>
+#include <CoreServices/CoreServices.h>
+#include <CoreFoundation/CoreFoundation.h>
+#include <AVKit/AVKit.h>
 #endif
 #endif
 #include <errno.h>
@@ -25,7 +29,9 @@ long _dwOperatingSystemVersion;
 #include <signal.h>
 #include <stddef.h>
 #endif
-
+#include <SDL.h>
+#include <SDL_gamecontroller.h>
+#include <SDL_haptic.h>
 #include "common.h"
 #if (defined(_MSC_VER))
 #include <tchar.h>
@@ -45,6 +51,7 @@ long _dwOperatingSystemVersion;
 #include "ControllerConfig.h"
 #include "Frontend.h"
 #include "Game.h"
+#include "GenericGameStorage.h"
 #include "PCSave.h"
 #include "MemoryCard.h"
 #include "Sprite2d.h"
@@ -60,14 +67,23 @@ long _dwOperatingSystemVersion;
 #include <GLFW/glfw3native.h>
 #endif
 
-#ifdef _WIN32
-#define GLFW_EXPOSE_NATIVE_WIN32
+#define GLFW_EXPOSE_NATIVE_COCOA
 #include <GLFW/glfw3native.h>
-#endif
 
 #define MAX_SUBSYSTEMS		(16)
 
 rw::EngineOpenParams openParams;
+
+SDL_GameController* game_controller;
+
+SDL_GameController *findController() {
+    for (int i = 0; i < SDL_NumJoysticks(); i++) {
+        if (SDL_IsGameController(i)) {
+            return SDL_GameControllerOpen(i);
+        }
+    }
+    return nullptr;
+}
 
 static RwBool		  ForegroundApp = TRUE;
 static RwBool		  WindowIconified = FALSE;
@@ -90,6 +106,7 @@ static RwInt32 bestWndMode = -1;
 #endif
 
 static psGlobalType PsGlobal;
+bool movieplaying = false;
 
 
 #define PSGLOBAL(var) (((psGlobalType *)(RsGlobal.ps))->var)
@@ -168,8 +185,14 @@ const char *_psGetUserFilesFolder()
 	strcpy(szUserFiles, "data");
 	return szUserFiles;
 #else
+	FSRef ref;
+	OSType folderType = kApplicationSupportFolderType;
+	char path[PATH_MAX];
+	FSFindFolder( kUserDomain, folderType, kCreateFolder, &ref );
+	FSRefMakePath( &ref, (UInt8*)&path, PATH_MAX );
 	static char szUserFiles[256];
-	strcpy(szUserFiles, "userfiles");
+	strcat(path, "/com.rockstargames.gta3/userfiles");
+	strcpy(szUserFiles, path);
 	_psCreateFolder(szUserFiles);
 	return szUserFiles;
 #endif
@@ -391,6 +414,7 @@ static void _psHandleVibration()
 }
 #else
 static void _psInitializeVibration() {}
+
 static void _psHandleVibration() {}
 #endif
 
@@ -443,34 +467,19 @@ psInitialize(void)
 	WORD lang	= PRIMARYLANGID(GetSystemDefaultLCID());
 #endif
 
-	if ( lang  == LANG_ITALIAN )
-		CMenuManager::m_PrefsLanguage = CMenuManager::LANGUAGE_ITALIAN;
-	else if ( lang  == LANG_SPANISH )
-		CMenuManager::m_PrefsLanguage = CMenuManager::LANGUAGE_SPANISH;
-	else if ( lang  == LANG_GERMAN )
-	{
-		CGame::germanGame = true;
-		CGame::nastyGame = false;
-		CMenuManager::m_PrefsAllowNastyGame = false;
-		CMenuManager::m_PrefsLanguage = CMenuManager::LANGUAGE_GERMAN;
-	}
-	else if ( lang  == LANG_FRENCH )
-	{
-		CGame::frenchGame = true;
-		CGame::nastyGame = false;
-		CMenuManager::m_PrefsAllowNastyGame = false;
-		CMenuManager::m_PrefsLanguage = CMenuManager::LANGUAGE_FRENCH;
-	}
-	else
-		CMenuManager::m_PrefsLanguage = CMenuManager::LANGUAGE_AMERICAN;
-
 	FrontEndMenuManager.InitialiseMenuContentsAfterLoadingGame();
 
 	TheMemoryCard.Init();
 #else
-	C_PcSave::SetSaveDirectory(_psGetUserFilesFolder());
+	CPad::Initialise();
+	CPad::GetPad(0)->Mode = 0;
+
+	CGame::frenchGame = false;
+	CGame::germanGame = false;
+	CGame::nastyGame = true;
+	CMenuManager::m_PrefsAllowNastyGame = true;
 	
-	InitialiseLanguage();
+	C_PcSave::SetSaveDirectory(_psGetUserFilesFolder());
 
 #if GTA_VERSION < GTA3_PC_11
 	FrontEndMenuManager.LoadSettings();
@@ -823,9 +832,12 @@ psSelectDevice()
 		   FrontEndMenuManager.m_nPrefsHeight == 0 ||
 		   FrontEndMenuManager.m_nPrefsDepth == 0){
 			// Defaults if nothing specified
+			float xscale, yscale;
+			glfwGetMonitorContentScale(glfwGetPrimaryMonitor(), &xscale, &yscale);
 			const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-			FrontEndMenuManager.m_nPrefsWidth = mode->width;
-			FrontEndMenuManager.m_nPrefsHeight = mode->height;
+			FrontEndMenuManager.m_nPrefsWidth = xscale * mode->width;
+			FrontEndMenuManager.m_nPrefsHeight = yscale * mode->height;
+			printf("Wide: %d , Tall: %d", FrontEndMenuManager.m_nPrefsWidth, FrontEndMenuManager.m_nPrefsHeight);
 			FrontEndMenuManager.m_nPrefsDepth = 32;
 			FrontEndMenuManager.m_nPrefsWindowed = 0;
 		}
@@ -876,10 +888,6 @@ psSelectDevice()
 	FrontEndMenuManager.m_nPrefsWidth = vm.width;
 	FrontEndMenuManager.m_nPrefsHeight = vm.height;
 	FrontEndMenuManager.m_nPrefsDepth = vm.depth;
-#endif
-
-#ifndef PS2_MENU
-	FrontEndMenuManager.m_nCurrOption = 0;
 #endif
 	
 	/* Set up the video mode and set the apps window
@@ -962,55 +970,8 @@ void _InputInitialiseJoys()
 	PSGLOBAL(joy1id) = -1;
 	PSGLOBAL(joy2id) = -1;
 
-	// Load our gamepad mappings.
-#define SDL_GAMEPAD_DB_PATH "gamecontrollerdb.txt"
-	FILE *f = fopen(SDL_GAMEPAD_DB_PATH, "rb");
-	if (f) {
-		fseek(f, 0, SEEK_END);
-		size_t fsize = ftell(f);
-		fseek(f, 0, SEEK_SET);
-
-		char *db = (char*)malloc(fsize + 1);
-		if (fread(db, 1, fsize, f) == fsize) {
-			db[fsize] = '\0';
-
-			if (glfwUpdateGamepadMappings(db) == GLFW_FALSE)
-				Error("glfwUpdateGamepadMappings didn't succeed, check " SDL_GAMEPAD_DB_PATH ".\n");
-		} else
-			Error("fread on " SDL_GAMEPAD_DB_PATH " wasn't successful.\n");
-
-		free(db);
-		fclose(f);
-	} else
-		printf("You don't seem to have copied " SDL_GAMEPAD_DB_PATH " file from re3/gamefiles to GTA3 directory. Some gamepads may not be recognized.\n");
-
-#undef SDL_GAMEPAD_DB_PATH
-
-	// But always overwrite it with the one in SDL_GAMECONTROLLERCONFIG.
-	char const* EnvControlConfig = getenv("SDL_GAMECONTROLLERCONFIG");
-	if (EnvControlConfig != nil) {
-		glfwUpdateGamepadMappings(EnvControlConfig);
-	}
-
-	for (int i = 0; i <= GLFW_JOYSTICK_LAST; i++) {
-		if (glfwJoystickPresent(i) && !IsThisJoystickBlacklisted(i)) {
-			if (PSGLOBAL(joy1id) == -1)
-				PSGLOBAL(joy1id) = i;
-			else if (PSGLOBAL(joy2id) == -1)
-				PSGLOBAL(joy2id) = i;
-			else
-				break;
-		}
-	}
-
-	if (PSGLOBAL(joy1id) != -1) {
-		int count;
-		glfwGetJoystickButtons(PSGLOBAL(joy1id), &count);
-#ifdef DETECT_JOYSTICK_MENU
-		strcpy(gSelectedJoystickName, glfwGetJoystickName(PSGLOBAL(joy1id)));
-#endif
-		ControlsManager.InitDefaultControlConfigJoyPad(count);
-	}
+	SDL_GameController* game_controller = findController();
+	SDL_GameControllerSetLED(game_controller, 0, 0, 255);
 }
 
 long _InputInitialiseMouse()
@@ -1178,145 +1139,54 @@ CommandLineToArgv(RwChar *cmdLine, RwInt32 *argCount)
 /*
  *****************************************************************************
  */
-void InitialiseLanguage()
+
+AVPlayer *avPlayer; 
+
+void CloseClip()
 {
-#ifndef _WIN32
-	// Mandatory for Linux(Unix? Posix?) to set lang. to environment lang.
-	setlocale(LC_ALL, "");	
-
-	char *systemLang, *keyboardLang;
-
-	systemLang = setlocale (LC_ALL, NULL);
-	keyboardLang = setlocale (LC_CTYPE, NULL);
-	
-	short primUserLCID, primSystemLCID;
-	primUserLCID = primSystemLCID = !strncmp(systemLang, "fr_",3) ? LANG_FRENCH :
-					!strncmp(systemLang, "de_",3) ? LANG_GERMAN :
-					!strncmp(systemLang, "en_",3) ? LANG_ENGLISH :
-					!strncmp(systemLang, "it_",3) ? LANG_ITALIAN :
-					!strncmp(systemLang, "es_",3) ? LANG_SPANISH :
-					LANG_OTHER;
-
-	short primLayout = !strncmp(keyboardLang, "fr_",3) ? LANG_FRENCH : (!strncmp(keyboardLang, "de_",3) ? LANG_GERMAN : LANG_ENGLISH);
-
-	short subUserLCID, subSystemLCID;
-	subUserLCID = subSystemLCID = !strncmp(systemLang, "en_AU",5) ? SUBLANG_ENGLISH_AUS : SUBLANG_OTHER;
-	short subLayout = !strncmp(keyboardLang, "en_AU",5) ? SUBLANG_ENGLISH_AUS : SUBLANG_OTHER;
-
-#else
-	WORD primUserLCID	= PRIMARYLANGID(GetSystemDefaultLCID());
-	WORD primSystemLCID = PRIMARYLANGID(GetUserDefaultLCID());
-	WORD primLayout		= PRIMARYLANGID((DWORD)GetKeyboardLayout(0));
-	
-	WORD subUserLCID	= SUBLANGID(GetSystemDefaultLCID());
-	WORD subSystemLCID	= SUBLANGID(GetUserDefaultLCID());
-	WORD subLayout		= SUBLANGID((DWORD)GetKeyboardLayout(0));
-#endif
-	if (   primUserLCID	  == LANG_GERMAN
-		|| primSystemLCID == LANG_GERMAN
-		|| primLayout	  == LANG_GERMAN )
-	{
-		CGame::nastyGame = false;
-		CMenuManager::m_PrefsAllowNastyGame = false;
-		CGame::germanGame = true;
-	}
-	
-	if (   primUserLCID	  == LANG_FRENCH
-		|| primSystemLCID == LANG_FRENCH
-		|| primLayout	  == LANG_FRENCH )
-	{
-		CGame::nastyGame = false;
-		CMenuManager::m_PrefsAllowNastyGame = false;
-		CGame::frenchGame = true;
-	}
-	
-	if (   subUserLCID	 == SUBLANG_ENGLISH_AUS
-		|| subSystemLCID == SUBLANG_ENGLISH_AUS
-		|| subLayout	 == SUBLANG_ENGLISH_AUS )
-		CGame::noProstitutes = true;
-
-#ifdef NASTY_GAME
-	CGame::nastyGame = true;
-	CMenuManager::m_PrefsAllowNastyGame = true;
-	CGame::noProstitutes = false;
-#endif
-	
-	int32 lang;
-	
-	switch ( primSystemLCID )
-	{
-		case LANG_GERMAN:
-		{
-			lang = LANG_GERMAN;
-			break;
-		}
-		case LANG_FRENCH:
-		{
-			lang = LANG_FRENCH;
-			break;
-		}
-		case LANG_SPANISH:
-		{
-			lang = LANG_SPANISH;
-			break;
-		}
-		case LANG_ITALIAN:
-		{
-			lang = LANG_ITALIAN;
-			break;
-		}
-		default:
-		{
-			lang = ( subSystemLCID == SUBLANG_ENGLISH_AUS ) ? -99 : LANG_ENGLISH;
-			break;
-		}
-	}
-	
-	CMenuManager::OS_Language = primUserLCID;
-
-	switch ( lang )
-	{
-		case LANG_GERMAN:
-		{
-			CMenuManager::m_PrefsLanguage = CMenuManager::LANGUAGE_GERMAN;
-			break;
-		}
-		case LANG_SPANISH:
-		{
-			CMenuManager::m_PrefsLanguage = CMenuManager::LANGUAGE_SPANISH;
-			break;
-		}
-		case LANG_FRENCH:
-		{
-			CMenuManager::m_PrefsLanguage = CMenuManager::LANGUAGE_FRENCH;
-			break;
-		}
-		case LANG_ITALIAN:
-		{
-			CMenuManager::m_PrefsLanguage = CMenuManager::LANGUAGE_ITALIAN;
-			break;
-		}
-		default:
-		{
-			CMenuManager::m_PrefsLanguage = CMenuManager::LANGUAGE_AMERICAN;
-			break;
-		}
-	}
-
-#ifndef _WIN32
-	// TODO this is needed for strcasecmp to work correctly across all languages, but can these cause other problems??
-	setlocale(LC_CTYPE, "C");
-	setlocale(LC_COLLATE, "C");
-	setlocale(LC_NUMERIC, "C");
-#endif
-
-	TheText.Unload();
-	TheText.Load();
+    NSView* view = ((NSWindow *)glfwGetCocoaWindow(PSGLOBAL(window))).contentView;
+    for (id child in [view subviews])
+    {
+	[child removeFromSuperview];
+    }
+    [avPlayer replaceCurrentItemWithPlayerItem:nil];
+    movieplaying = false;
+    return;
 }
 
-/*
- *****************************************************************************
- */
+static void notificationHandler(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
+{
+    CloseClip();
+}
+
+void PlayMovieInWindow(const char* szFile)
+{
+    NSView* view = ((NSWindow *)glfwGetCocoaWindow(PSGLOBAL(window))).contentView;
+    avPlayer = [[AVPlayer alloc] initWithURL:[NSURL fileURLWithPath:[NSString stringWithCString:szFile encoding:[NSString defaultCStringEncoding]]]];
+    AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer: avPlayer];
+    int left, top, right, bottom;
+    glfwGetWindowFrameSize(PSGLOBAL(window), &left, &top, &right, &bottom);
+    auto containerView = [[NSView alloc] initWithFrame: NSMakeRect(left, top, right, bottom)];
+    [containerView setWantsLayer:YES];
+    playerLayer.frame = view.frame;
+    [containerView.layer addSublayer: playerLayer];
+    [playerLayer setVideoGravity: AVLayerVideoGravityResizeAspect];
+    [playerLayer setNeedsDisplay];
+    [containerView needsDisplay];
+    [view addSubview:containerView];
+    [avPlayer play];
+    movieplaying = true;
+    CFNotificationCenterAddObserver
+    (
+        CFNotificationCenterGetLocalCenter(),
+        NULL,
+        &notificationHandler,
+        CFSTR("AVPlayerItemDidPlayToEndTimeNotification"),
+        NULL,
+        CFNotificationSuspensionBehaviorDeliverImmediately
+    );
+    return;
+}
 
 void HandleExit()
 {
@@ -1861,6 +1731,20 @@ int
 main(int argc, char *argv[])
 {
 #endif
+#ifdef __APPLE__
+	char path[1024];
+	uint32_t size = sizeof(path);
+	if (_NSGetExecutablePath(path, &size) == 0)
+		printf("executable path is %s\n", path);
+	else
+		printf("buffer too small; need size %u\n", size);
+
+	unsigned found = std::string(path).find_last_of("/");
+	std::string final = std::string(path).substr(0,found);
+	found = final.find_last_of("/");
+	final = std::string(path).substr(0,found) + std::string("/Resources/");
+	chdir(final.c_str());
+#endif
 	RwV2d pos;
 	RwInt32 i;
 
@@ -1881,6 +1765,10 @@ main(int argc, char *argv[])
 	sigaction(SIGUSR1, &sa, NULL);
 #endif
 #endif
+	
+	SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI, "0");
+
+	SDL_Init(SDL_INIT_GAMECONTROLLER);
 
 	/* 
 	 * Initialize the platform independent data.
@@ -2011,13 +1899,11 @@ main(int argc, char *argv[])
 		CFileMgr::SetDir("");
 
 #ifdef LOAD_INI_SETTINGS
-		LoadINIControllerSettings();
 		if (connectedPadButtons != 0)
 			ControlsManager.InitDefaultControlConfigJoyPad(connectedPadButtons); // add (connected-saved) amount of new button assignments on top of ours
 
 		// these have 2 purposes: creating .ini at the start, and adding newly introduced settings to old .ini at the start
 		SaveINISettings();
-		SaveINIControllerSettings();
 #endif
 	}
 	
@@ -2081,10 +1967,34 @@ main(int argc, char *argv[])
 		
 		while( !RsGlobal.quit && !(FrontEndMenuManager.m_bWantToRestart || TheMemoryCard.b_FoundRecentSavedGameWantToLoad) && !glfwWindowShouldClose(PSGLOBAL(window)) )
 #else
-		while( !RsGlobal.quit && !FrontEndMenuManager.m_bWantToRestart && !glfwWindowShouldClose(PSGLOBAL(window)))
+		if (FrontEndMenuManager.m_bWantToLoad)
+			LoadSplash(GetLevelSplashScreen(CGame::currLevel));
+		
+		FrontEndMenuManager.m_bWantToLoad = false;
+		
+		CTimer::Update();
+		
+		while( !RsGlobal.quit && !(FrontEndMenuManager.m_bWantToRestart || b_FoundRecentSavedGameWantToLoad) && !glfwWindowShouldClose(PSGLOBAL(window)))
 #endif
 		{
 			glfwPollEvents();
+			SDL_Event event;
+			while (SDL_PollEvent( &event ) != 0) {
+			    switch (event.type) {
+			    case SDL_CONTROLLERDEVICEADDED:
+				if (!game_controller) {
+				    game_controller = SDL_GameControllerOpen(event.cdevice.which);
+				    SDL_GameControllerSetLED(game_controller, 0, 0, 255);
+				}
+				break;
+			    case SDL_CONTROLLERDEVICEREMOVED:
+				if (game_controller && event.cdevice.which == SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(game_controller))) {
+				    SDL_GameControllerClose(game_controller);
+				    game_controller = findController();
+				}
+				break;
+			    }
+			}
 #ifdef GET_KEYBOARD_INPUT_FROM_X11
 			checkKeyPresses();
 #endif
@@ -2100,19 +2010,19 @@ main(int argc, char *argv[])
 				{
 					case GS_START_UP:
 					{
-#ifdef NO_MOVIES
-						gGameState = GS_INIT_ONCE;
-#else
 						gGameState = GS_INIT_LOGO_MPEG;
-#endif
 						TRACE("gGameState = GS_INIT_ONCE");
 						break;
 					}
 
 				    case GS_INIT_LOGO_MPEG:
 					{
-					    //if (!startupDeactivate)
-						//    PlayMovieInWindow(cmdShow, "movies\\Logo.mpg");
+					    int32 movie = CFileMgr::OpenFile("movies/Logo.mp4", "r");
+					    if ( movie )
+					    {
+					        CFileMgr::CloseFile(movie);
+					    	PlayMovieInWindow("movies/Logo.mp4");
+					    }
 					    gGameState = GS_LOGO_MPEG;
 					    TRACE("gGameState = GS_LOGO_MPEG;");
 					    break;
@@ -2120,36 +2030,19 @@ main(int argc, char *argv[])
 
 				    case GS_LOGO_MPEG:
 					{
-//					    CPad::UpdatePads();
-
-//					    if (startupDeactivate || ControlsManager.GetJoyButtonJustDown() != 0)
+					    if (!movieplaying)
 						    ++gGameState;
-//					    else if (CPad::GetPad(0)->GetLeftMouseJustDown())
-//						    ++gGameState;
-//					    else if (CPad::GetPad(0)->GetEnterJustDown())
-//						    ++gGameState;
-//					    else if (CPad::GetPad(0)->GetCharJustDown(' '))
-//						    ++gGameState;
-//					    else if (CPad::GetPad(0)->GetAltJustDown())
-//						    ++gGameState;
-//					    else if (CPad::GetPad(0)->GetTabJustDown())
-//						    ++gGameState;
-
 					    break;
 				    }
 
 				    case GS_INIT_INTRO_MPEG:
 					{
-//#ifndef NO_MOVIES
-//					    CloseClip();
-//					    CoUninitialize();
-//#endif
-//
-//					    if (CMenuManager::OS_Language == LANG_FRENCH || CMenuManager::OS_Language == LANG_GERMAN)
-//						    PlayMovieInWindow(cmdShow, "movies\\GTAtitlesGER.mpg");
-//					    else
-//						    PlayMovieInWindow(cmdShow, "movies\\GTAtitles.mpg");
-
+					    int32 movie = CFileMgr::OpenFile("movies/GTATitles.mp4", "r");
+					    if ( movie )
+					    {
+					        CFileMgr::CloseFile(movie);
+					    	PlayMovieInWindow("movies/GTATitles.mp4");
+					    }
 					    gGameState = GS_INTRO_MPEG;
 					    TRACE("gGameState = GS_INTRO_MPEG;");
 					    break;
@@ -2157,48 +2050,29 @@ main(int argc, char *argv[])
 
 				    case GS_INTRO_MPEG:
 					{
-//					    CPad::UpdatePads();
-//
-//					    if (startupDeactivate || ControlsManager.GetJoyButtonJustDown() != 0)
+					    CPad::UpdatePads();
+
+					    if(CPad::GetPad(0)->GetCrossJustDown() != 0)
+						    CloseClip();
+
+					    if (!movieplaying)
 						    ++gGameState;
-//					    else if (CPad::GetPad(0)->GetLeftMouseJustDown())
-//						    ++gGameState;
-//					    else if (CPad::GetPad(0)->GetEnterJustDown())
-//						    ++gGameState;
-//					    else if (CPad::GetPad(0)->GetCharJustDown(' '))
-//						    ++gGameState;
-//					    else if (CPad::GetPad(0)->GetAltJustDown())
-//						    ++gGameState;
-//					    else if (CPad::GetPad(0)->GetTabJustDown())
-//						    ++gGameState;
 
 					    break;
 				    }
 
 					case GS_INIT_ONCE:
 					{
-						//CoUninitialize();
-						
-#ifdef PS2_MENU
 						extern char version_name[64];
-						if ( CGame::frenchGame || CGame::germanGame )
-							LoadingScreen(NULL, version_name, "loadsc24");
-						else
-							LoadingScreen(NULL, version_name, "loadsc0");
+						LoadingScreen(NULL, version_name, "loadsc0");
+						usleep(1000000);
 						
 						printf("Into TheGame!!!\n");
-#else				
-						LoadingScreen(nil, nil, "loadsc0");
-#endif
+						
 						if ( !CGame::InitialiseOnceAfterRW() )
 							RsGlobal.quit = TRUE;
 						
-#ifdef PS2_MENU
 						gGameState = GS_INIT_PLAYING_GAME;
-#else
-						gGameState = GS_INIT_FRONTEND;
-						TRACE("gGameState = GS_INIT_FRONTEND;");
-#endif
 						break;
 					}
 					
@@ -2278,7 +2152,14 @@ main(int argc, char *argv[])
 							CGame::currLevel = (eLevelName)TheMemoryCard.GetLevelToLoad();
 						}
 #else
-						InitialiseGame();
+						CGame::Initialise("DATA\\GTA3.DAT");
+
+						if ( FindMostRecentFileName(LoadFileName) == true )
+						{
+							b_FoundRecentSavedGameWantToLoad = true;
+					
+							CGame::currLevel = (eLevelName)m_LevelToLoad;
+						}
 
 						FrontEndMenuManager.m_bGameNotLoaded = false;
 #endif
@@ -2322,7 +2203,7 @@ main(int argc, char *argv[])
 		if ( !(FrontEndMenuManager.m_bWantToRestart || TheMemoryCard.b_FoundRecentSavedGameWantToLoad))
 			break;
 #else
-		if ( !FrontEndMenuManager.m_bWantToRestart )
+		if ( !(FrontEndMenuManager.m_bWantToRestart || b_FoundRecentSavedGameWantToLoad) )
 			break;
 #endif
 		
@@ -2331,9 +2212,7 @@ main(int argc, char *argv[])
 		
 		DMAudio.ChangeMusicMode(MUSICMODE_DISABLE);
 		
-#ifdef PS2_MENU
 		CGame::ShutDownForRestart();
-#endif
 		
 		CTimer::Stop();
 		
@@ -2358,40 +2237,25 @@ main(int argc, char *argv[])
 		
 		break;
 #else
-		if ( FrontEndMenuManager.m_bWantToLoad )
+		if (FrontEndMenuManager.m_bWantToRestart || b_FoundRecentSavedGameWantToLoad)
 		{
-			CGame::ShutDownForRestart();
+			if (b_FoundRecentSavedGameWantToLoad)
+			{
+				FrontEndMenuManager.m_bWantToRestart = true;
+				FrontEndMenuManager.m_bWantToLoad = true;
+			}
+
 			CGame::InitialiseWhenRestarting();
 			DMAudio.ChangeMusicMode(MUSICMODE_GAME);
-			LoadSplash(GetLevelSplashScreen(CGame::currLevel));
-			FrontEndMenuManager.m_bWantToLoad = false;
-		}
-		else
-		{
-#ifndef MASTER
-			if ( gbModelViewer )
-				CAnimViewer::Shutdown();
-			else
-#endif
-			if ( gGameState == GS_PLAYING_GAME )
-				CGame::ShutDown();
+			FrontEndMenuManager.m_bWantToRestart = false;
 			
-			CTimer::Stop();
-			
-			if ( FrontEndMenuManager.m_bFirstTime == true )
-			{
-				gGameState = GS_INIT_FRONTEND;
-				TRACE("gGameState = GS_INIT_FRONTEND;");
-			}
-			else
-			{
-				gGameState = GS_INIT_PLAYING_GAME;
-				TRACE("gGameState = GS_INIT_PLAYING_GAME;");
-			}
+			continue;
 		}
 		
-		FrontEndMenuManager.m_bFirstTime = false;
-		FrontEndMenuManager.m_bWantToRestart = false;
+		CGame::ShutDown();	
+		CTimer::Stop();
+		
+		break;
 #endif
 	}
 	
@@ -2407,6 +2271,8 @@ main(int argc, char *argv[])
 	DMAudio.Terminate();
 	
 	_psFreeVideoModeList();
+
+	SDL_Quit();
 
 
 	/*
@@ -2443,98 +2309,6 @@ RwV2d rightStickPos;
 
 void CapturePad(RwInt32 padID)
 {
-	int8 glfwPad = -1;
-
-	if( padID == 0 )
-		glfwPad = PSGLOBAL(joy1id);
-	else if( padID == 1)
-		glfwPad = PSGLOBAL(joy2id);
-	else
-		assert("invalid padID");
-	
-	if ( glfwPad == -1 )
-		return;
-	
-	int numButtons, numAxes;
-	const uint8 *buttons = glfwGetJoystickButtons(glfwPad, &numButtons);
-	const float *axes = glfwGetJoystickAxes(glfwPad, &numAxes);
-	GLFWgamepadstate gamepadState;
-
-	if (ControlsManager.m_bFirstCapture == false) {
-		memcpy(&ControlsManager.m_OldState, &ControlsManager.m_NewState, sizeof(ControlsManager.m_NewState));
-	} else {
-		// In case connected gamepad doesn't have L-R trigger axes.
-		ControlsManager.m_NewState.mappedButtons[15] = ControlsManager.m_NewState.mappedButtons[16] = 0;
-	}
-
-	ControlsManager.m_NewState.buttons = (uint8*)buttons;
-	ControlsManager.m_NewState.numButtons = numButtons;
-	ControlsManager.m_NewState.id = glfwPad;
-	ControlsManager.m_NewState.isGamepad = glfwGetGamepadState(glfwPad, &gamepadState);
-	if (ControlsManager.m_NewState.isGamepad) {
-		memcpy(&ControlsManager.m_NewState.mappedButtons, gamepadState.buttons, sizeof(gamepadState.buttons));
-		float lt = gamepadState.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER], rt = gamepadState.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER];
-
-		// glfw returns 0.0 for non-existent axises(which is bullocks) so we treat it as deadzone, and keep value of previous frame.
-		// otherwise if this axis is present, -1 = released, 1 = pressed
-		if (lt != 0.0f)
-			ControlsManager.m_NewState.mappedButtons[15] = lt > -0.8f;
-
-		if (rt != 0.0f)
-			ControlsManager.m_NewState.mappedButtons[16] = rt > -0.8f;
-	}
-	// TODO? L2-R2 axes(not buttons-that's fine) on joysticks that don't have SDL gamepad mapping AREN'T handled, and I think it's impossible to do without mapping.
-
-	if (ControlsManager.m_bFirstCapture == true) {
-		memcpy(&ControlsManager.m_OldState, &ControlsManager.m_NewState, sizeof(ControlsManager.m_NewState));
-		
-		ControlsManager.m_bFirstCapture = false;
-	}
-
-	RsPadButtonStatus bs;
-	bs.padID = padID;
-
-	RsPadEventHandler(rsPADBUTTONUP, (void *)&bs);
-	
-	// Gamepad axes are guaranteed to return 0.0f if that particular gamepad doesn't have that axis.
-	// And that's really good for sticks, because gamepads return 0.0 for them when sticks are in released state.
-	if ( glfwPad != -1 ) {
-		leftStickPos.x = ControlsManager.m_NewState.isGamepad ? gamepadState.axes[GLFW_GAMEPAD_AXIS_LEFT_X] : numAxes >= 1 ? axes[0] : 0.0f;
-		leftStickPos.y = ControlsManager.m_NewState.isGamepad ? gamepadState.axes[GLFW_GAMEPAD_AXIS_LEFT_Y] : numAxes >= 2 ? axes[1] : 0.0f;
-
-		rightStickPos.x = ControlsManager.m_NewState.isGamepad ? gamepadState.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] : numAxes >= 3 ? axes[2] : 0.0f;
-		rightStickPos.y = ControlsManager.m_NewState.isGamepad ? gamepadState.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] : numAxes >= 4 ? axes[3] : 0.0f;
-	}
-	
-	{
-		if (CPad::m_bMapPadOneToPadTwo)
-			bs.padID = 1;
-		
-		RsPadEventHandler(rsPADBUTTONUP,   (void *)&bs);
-		RsPadEventHandler(rsPADBUTTONDOWN, (void *)&bs);
-	}
-	
-	{
-		if (CPad::m_bMapPadOneToPadTwo)
-			bs.padID = 1;
-		
-		CPad *pad = CPad::GetPad(bs.padID);
-
-		if ( Abs(leftStickPos.x)  > 0.3f )
-			pad->PCTempJoyState.LeftStickX	= (int32)(leftStickPos.x  * 128.0f);
-		
-		if ( Abs(leftStickPos.y)  > 0.3f )
-			pad->PCTempJoyState.LeftStickY	= (int32)(leftStickPos.y  * 128.0f);
-		
-		if ( Abs(rightStickPos.x) > 0.3f )
-			pad->PCTempJoyState.RightStickX = (int32)(rightStickPos.x * 128.0f);
-
-		if ( Abs(rightStickPos.y) > 0.3f )
-			pad->PCTempJoyState.RightStickY = (int32)(rightStickPos.y * 128.0f);
-	}
-
-	_psHandleVibration();
-	
 	return;
 }
 

@@ -348,9 +348,9 @@ CFont::Initialise(void)
 	SetDropShadowPosition(0);
 	CTxdStore::PopCurrentTxd();
 
-#if !defined(GAMEPAD_MENU) && defined(BUTTON_ICONS)
+#if defined(BUTTON_ICONS)
 	// loaded in CMenuManager with GAMEPAD_MENU defined
-	LoadButtons("MODELS/X360BTNS.TXD");
+	LoadButtons("MODELS/PS3BTNS.TXD");
 #endif
 }
 
@@ -371,12 +371,10 @@ CFont::LoadButtons(const char* txdPath)
 		CTxdStore::AddRef(ButtonsSlot);
 		CTxdStore::PushCurrentTxd();
 		CTxdStore::SetCurrentTxd(ButtonsSlot);
-#if 0  // unused
 		ButtonSprite[BUTTON_UP].SetTexture("up");
 		ButtonSprite[BUTTON_DOWN].SetTexture("down");
 		ButtonSprite[BUTTON_LEFT].SetTexture("left");
 		ButtonSprite[BUTTON_RIGHT].SetTexture("right");
-#endif
 		ButtonSprite[BUTTON_CROSS].SetTexture("cross");
 		ButtonSprite[BUTTON_CIRCLE].SetTexture("circle");
 		ButtonSprite[BUTTON_SQUARE].SetTexture("square");
@@ -540,12 +538,12 @@ CFont::PrintChar(float x, float y, wchar c)
 #ifdef FIX_BUGS
 				CRect(x + SCREEN_SCALE_X(Details.dropShadowPosition),
 				      y + SCREEN_SCALE_Y(Details.dropShadowPosition),
-				      x + SCREEN_SCALE_X(Details.dropShadowPosition) + 32.0f * Details.scaleX * 1.0f,
+				      x + SCREEN_SCALE_X(Details.dropShadowPosition) + 32.0f * Details.scaleX * 0.5f,
 				      y + SCREEN_SCALE_Y(Details.dropShadowPosition) + 40.0f * Details.scaleY * 0.5f),
 #else
 				CRect(x + Details.dropShadowPosition,
 				      y + Details.dropShadowPosition,
-				      x + Details.dropShadowPosition + 32.0f * Details.scaleX * 1.0f,
+				      x + Details.dropShadowPosition + 32.0f * Details.scaleX * 0.5f,
 				      y + Details.dropShadowPosition + 40.0f * Details.scaleY * 0.5f),
 #endif
 				Details.dropColor,
@@ -561,7 +559,7 @@ CFont::PrintChar(float x, float y, wchar c)
 			Details.style, // BUG: game doesn't add bank
 #endif
 			CRect(x, y,
-			      x + 32.0f * Details.scaleX * 1.0f,
+			      x + 32.0f * Details.scaleX * 0.5f,
 			      y + 40.0f * Details.scaleY * 0.5f),
 			Details.color,
 			xoff/16.0f,                 yoff/12.8f,
@@ -613,7 +611,7 @@ CFont::PrintChar(float x, float y, wchar c)
 			Details.style, // BUG: game doesn't add bank
 #endif
 			CRect(x, y,
-					x + 32.0f * Details.scaleX * w,
+					x + 32.0f * Details.scaleX * w * 0.5f,
 					y + 32.0f * Details.scaleY * 0.5f),
 			Details.color,
 			xoff/16.0f,               yoff/16.0f,
@@ -1189,9 +1187,9 @@ CFont::GetCharacterSize(wchar c)
 		return Size[LanguageSet][Details.style][192] * Details.scaleX;
 #else
 	if (Details.proportional)
-		return Size[Details.style][c] * Details.scaleX;
+		return Size[Details.style][c] * Details.scaleX * 0.5f;
 	else
-		return Size[Details.style][192] * Details.scaleX;
+		return Size[Details.style][192] * Details.scaleX * 0.5f;
 #endif // MORE_LANGUAGES
 }
 
@@ -1212,12 +1210,10 @@ CFont::GetStringWidth(wchar *s, bool spaces)
 						s++;
 #ifdef BUTTON_ICONS
 						switch (*s) {
-#if 0 // unused
 						case 'U':
 						case 'D':
 						case '<':
 						case '>':
-#endif
 						case 'X':
 						case 'O':
 						case 'Q':
@@ -1250,12 +1246,10 @@ CFont::GetStringWidth(wchar *s, bool spaces)
 				s++;
 #ifdef BUTTON_ICONS
 				switch (*s) {
-#if 0 // unused
 				case 'U':
 				case 'D':
 				case '<':
 				case '>':
-#endif
 				case 'X':
 				case 'O':
 				case 'Q':
@@ -1367,12 +1361,10 @@ CFont::ParseToken(wchar *s, wchar* ss, bool japShit)
 		case 'w': SetColor(CRGBA(175, 175, 175, 255)); break;
 		case 'y': SetColor(CRGBA(210, 196, 106, 255)); break;
 #ifdef BUTTON_ICONS
-#if 0 // unused
 		case 'U': PS2Symbol = BUTTON_UP; break;
 		case 'D': PS2Symbol = BUTTON_DOWN; break;
 		case '<': PS2Symbol = BUTTON_LEFT; break;
 		case '>': PS2Symbol = BUTTON_RIGHT; break;
-#endif
 		case 'X': PS2Symbol = BUTTON_CROSS; break;
 		case 'O': PS2Symbol = BUTTON_CIRCLE; break;
 		case 'Q': PS2Symbol = BUTTON_SQUARE; break;
@@ -1418,12 +1410,10 @@ CFont::ParseToken(wchar *s, wchar*)
 		case 'w': SetColor(CRGBA(175, 175, 175, 255)); break;
 		case 'y': SetColor(CRGBA(210, 196, 106, 255)); break;
 #ifdef BUTTON_ICONS
-#if 0 // unused
 		case 'U': PS2Symbol = BUTTON_UP; break;
 		case 'D': PS2Symbol = BUTTON_DOWN; break;
 		case '<': PS2Symbol = BUTTON_LEFT; break;
 		case '>': PS2Symbol = BUTTON_RIGHT; break;
-#endif
 		case 'X': PS2Symbol = BUTTON_CROSS; break;
 		case 'O': PS2Symbol = BUTTON_CIRCLE; break;
 		case 'Q': PS2Symbol = BUTTON_SQUARE; break;
@@ -1463,7 +1453,7 @@ CFont::SetScale(float x, float y)
 		y *= 1.25f;
 	}*/
 #endif
-	Details.scaleX = x;
+	Details.scaleX = y; 
 	Details.scaleY = y;
 }
 

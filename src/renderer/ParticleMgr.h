@@ -44,7 +44,7 @@ struct tParticleSystemData
 	int16         m_nFadeAlphaAmount;
 	uint16        m_nStartAnimationFrame;
 	uint16        m_nFinalAnimationFrame;
-	uint16        m_nAnimationSpeed;
+	float        m_nAnimationSpeed;
 	uint16        m_nRotationSpeed;
 	float         m_fGravitationalAcceleration;
 	int32         m_nFrictionDecceleration;
